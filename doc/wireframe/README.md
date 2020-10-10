@@ -1,2 +1,2 @@
-
-Notes for wireframe
+## Wireframe mock-up notes:
+<img src="Wireframe.png" />

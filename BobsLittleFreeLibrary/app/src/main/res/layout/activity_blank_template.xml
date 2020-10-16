@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".templates.BlankTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp"
+    >
+
+    <!--        Top buttons begin-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_buttons">
+
+        <Button
+            android:id="@+id/back_button"
+            android:text="Back"
+            style="@style/BackButton"/>
+
+        <Button
+            android:id="@+id/other_button"
+            android:text="Filter?"
+            android:layout_alignParentRight="true"
+            style="@style/RightCornerButton"/>
+
+    </RelativeLayout>
+    <!--        Top buttons end-->
+
+    <!--        Activity's title: most activities should have this but remove-->
+    <!--        this block if your activity doesn't need it-->
+    <TextView
+        android:id="@+id/view_title"
+        android:text="Title eg. new Book"
+        android:layout_below="@+id/top_buttons"
+        style="@style/ViewTitle"
+        />
+    <!--        Activity title end-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/form_container"
+        android:layout_below="@+id/form_title">
+
+        <!--            Your stuff goes here-->
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

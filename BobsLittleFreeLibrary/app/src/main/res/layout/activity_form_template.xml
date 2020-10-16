@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".templates.FormTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="start"
+        >
+
+        <!--        Top buttons begin-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/top_buttons">
+
+            <Button
+                android:id="@+id/back_button"
+                android:text="Back"
+                style="@style/BackButton"/>
+
+        </RelativeLayout>
+        <!--        Top buttons end-->
+
+        <TextView
+            android:id="@+id/form_title"
+            android:text="Form Title"
+            android:layout_below="@+id/top_buttons"
+            style="@style/ViewTitle"
+            />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_container"
+            android:layout_below="@+id/form_title">
+
+            <!-- Username Field Start-->
+            <TextView
+                android:id="@+id/username_label"
+                android:text="Username"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/username_input"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/username_label"
+                style="@style/FormInput"
+                />
+            <!--Username Field End-->
+
+            <!-- Password Field Start-->
+            <TextView
+                android:id="@+id/password_label"
+                android:text="Password"
+                android:layout_below="@+id/username_input"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_below="@+id/password_label"
+                android:inputType="textPassword"
+                style="@style/FormInput"
+                />
+            <!--Password Field End-->
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/form_container"
+            android:text="Submit"
+            style="@style/SubmitButton"
+
+            />
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>

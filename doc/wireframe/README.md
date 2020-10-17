@@ -1,4 +1,4 @@
-# Wirefram Mockup
+# Wireframe Mockup
 <img src="Wireframe.png" />
 
 ## Notes for each numbered section in diagrarm: 

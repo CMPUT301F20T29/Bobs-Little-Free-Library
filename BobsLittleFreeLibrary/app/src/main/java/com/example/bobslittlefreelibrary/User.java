@@ -11,13 +11,15 @@ public class User implements Serializable
     private String address;
     private ArrayList<Book> bookArrayList;
 
-    public User(String username, String password, String email, String address, ArrayList<Book> bookArrayList) {
+    public User(String username, String password, String email, String address) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.address = address;
-        this.bookArrayList = bookArrayList;
+        this.bookArrayList = new ArrayList<Book>();
     }
+
+
 
     public String getUsername() { return username; }
 

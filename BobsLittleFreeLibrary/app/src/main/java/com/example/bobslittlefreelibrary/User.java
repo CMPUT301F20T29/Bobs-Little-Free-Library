@@ -11,6 +11,7 @@ public class User implements Serializable
     private String address;
     private ArrayList<Book> bookArrayList;
 
+    //Constructor
     public User(String username, String password, String email, String address) {
         this.username = username;
         this.password = password;
@@ -20,7 +21,7 @@ public class User implements Serializable
     }
 
 
-
+    //getters
     public String getUsername() { return username; }
 
     public String getPassword() { return password; }
@@ -32,7 +33,7 @@ public class User implements Serializable
     public ArrayList<Book> getBooks() { return bookArrayList; }
 
 
-
+    //setters
     public void setUsername(String username) { this.username = username; }
 
     public void setPassword(String password) { this.password = password; }
@@ -43,11 +44,11 @@ public class User implements Serializable
 
 
 
-    public void addBook(ArrayList<Book> bookArrayList, Book someBook) {
+    public void addBook(Book someBook) {
         bookArrayList.add(someBook);
 
     }
-    public void removeBook(ArrayList<Book> bookArrayList, Book someBook) {
+    public void removeBook(Book someBook) {
         bookArrayList.remove(someBook);
 
     }

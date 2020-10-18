@@ -8,22 +8,35 @@ public class Book implements Serializable
     private String status;
     private String description;
     private String author;
-    private String picture;
+    private String picture;//temp type, till we decide on how we gonna handle images
     private User owner;
     private String ISBN;
 
-    Book(String title, String status, String description, String author, String picture, User owner, String ISBN){
+    //Constructor where picture is specified
+    public Book(String title, String status, String description, String author, String picture, User owner, String ISBN){
         this.title = title;
         this.status = status;
         this.description = description;
         this.author = author;
-        this.picture = picture;
+        this.picture = picture;//temp type, till we decide on how we gonna handle images
         this.owner = owner;
         this.ISBN = ISBN;
 
     }
 
+    //Constructor if picture is left out
+    public Book(String title, String status, String description, String author, User owner, String ISBN){
+        this.title = title;
+        this.status = status;
+        this.description = description;
+        this.author = author;
+        this.picture = "Default"; //temp type, till we decide on how we gonna handle images
+        this.owner = owner;
+        this.ISBN = ISBN;
 
+    }
+
+    //Getters
     public String getTitle() { return this.title; }
 
     public String getStatus() { return this.status; }
@@ -39,7 +52,7 @@ public class Book implements Serializable
     public String getISBN() { return this.ISBN; }
 
 
-
+    //Setters
     public void setTitle(String title) { this.title = title; }
 
     public void setStatus(String status) { this.status = status; }

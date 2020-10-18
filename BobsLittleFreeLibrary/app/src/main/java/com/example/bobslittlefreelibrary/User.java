@@ -44,11 +44,11 @@ public class User implements Serializable
 
 
     public void addBook(ArrayList<Book> bookArrayList, Book someBook) {
-        getBooks().add(someBook);
+        bookArrayList.add(someBook);
 
     }
     public void removeBook(ArrayList<Book> bookArrayList, Book someBook) {
-        getBooks().remove(someBook);
+        bookArrayList.remove(someBook);
 
     }
 

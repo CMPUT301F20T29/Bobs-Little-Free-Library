@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_1"
+        android:id="@+id/books_page"
         android:enabled="true"
-        android:icon="@drawable/circle"
-        android:title="test1"/>
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:title="Books"/>
     <item
-        android:id="@+id/page_2"
+        android:id="@+id/home_page"
         android:enabled="true"
-        android:icon="@drawable/user_icon"
-        android:title="test2"/>
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Dashboard"/>
     <item
-        android:id="@+id/page_3"
+        android:id="@+id/requests_page"
         android:enabled="true"
-        android:icon="@drawable/back_button_icon"
-        android:title="test3"/>
+        android:icon="@drawable/ic_baseline_send_24"
+        android:title="Requests"/>
 </menu>

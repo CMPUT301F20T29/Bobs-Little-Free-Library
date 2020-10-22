@@ -1,15 +1,20 @@
 package com.example.bobslittlefreelibrary;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.templates.BlankTemplateActivity;
 import com.example.bobslittlefreelibrary.templates.FormTemplateActivity;
 import com.example.bobslittlefreelibrary.templates.SomeAssetsActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +56,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.home_page);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new HomeFragment()).commit();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
+
+                    switch (item.getItemId()) {
+                        case R.id.books_page:
+                            selectedFragment = new BooksFragment();
+                            break;
+                        case R.id.home_page:
+                            selectedFragment = new HomeFragment();
+                            break;
+                        case R.id.requests_page:
+                            selectedFragment = new RequestsFragment();
+                            break;
+                    }
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+                    return true; // true means we select the current item, fragments would still show if this is false.
+                }
+            };
 
 
 

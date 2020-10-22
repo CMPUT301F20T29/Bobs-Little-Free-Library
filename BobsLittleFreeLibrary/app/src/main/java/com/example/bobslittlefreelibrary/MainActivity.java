@@ -59,33 +59,30 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home_page);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
+        // Set default screen as home screen
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
+            item -> {
+                Fragment selectedFragment = null;
 
-                    switch (item.getItemId()) {
-                        case R.id.books_page:
-                            selectedFragment = new BooksFragment();
-                            break;
-                        case R.id.home_page:
-                            selectedFragment = new HomeFragment();
-                            break;
-                        case R.id.requests_page:
-                            selectedFragment = new RequestsFragment();
-                            break;
-                    }
-
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragment).commit();
-                    return true; // true means we select the current item, fragments would still show if this is false.
+                switch (item.getItemId()) {
+                    case R.id.books_page:
+                        selectedFragment = new BooksFragment();
+                        break;
+                    case R.id.home_page:
+                        selectedFragment = new HomeFragment();
+                        break;
+                    case R.id.requests_page:
+                        selectedFragment = new RequestsFragment();
+                        break;
                 }
+                // Switch to selected fragment
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        selectedFragment).commit();
+                return true; // true means we select the current item, fragments would still show if this is false.
             };
 
 

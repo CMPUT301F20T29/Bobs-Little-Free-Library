@@ -6,4 +6,5 @@
     <color name="colorAccent">#8B85C1</color>
     <color name="colorNegative">#86092C</color>
     <color name="colorPositive">#6BB378</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

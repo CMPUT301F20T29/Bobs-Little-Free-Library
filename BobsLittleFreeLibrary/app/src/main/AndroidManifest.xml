@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".templates.SomeAssetsActivity"></activity>
+        <activity android:name=".AddBookActivity"></activity>
+        <activity android:name=".templates.SomeAssetsActivity" />
         <activity android:name=".templates.BlankTemplateActivity" />
         <activity android:name=".templates.FormTemplateActivity" />
         <activity android:name=".templates.BlankActivityTemplate" />

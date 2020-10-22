@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScanFragment"
+    android:padding="11dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_container"
+            android:layout_below="@+id/top_buttons">
+
+            <!-- Username Field Start-->
+            <TextView
+                android:id="@+id/isbn_label"
+                android:text="ISBN"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/isbn_input"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/isbn_label"
+                style="@style/FormInput"
+                />
+            <!--Username Field End-->
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/form_container"
+            android:text="Submit"
+            style="@style/SubmitButton"
+
+            />
+    </RelativeLayout>
+
+</FrameLayout>

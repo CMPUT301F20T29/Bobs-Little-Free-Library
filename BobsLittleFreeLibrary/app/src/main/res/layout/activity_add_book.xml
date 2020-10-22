@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".templates.FormTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="start"
+        >
+
+        <!--        Top buttons begin-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/top_buttons">
+
+            <Button
+                android:id="@+id/back_button"
+                android:text="Back"
+                style="@style/BackButton"/>
+
+        </RelativeLayout>
+        <!--        Top buttons end-->
+
+        <!--        Image Label begin-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_title"
+            android:layout_below="@+id/top_buttons">
+
+            <TextView
+                android:id="@+id/form_title_text"
+                android:text="Add Book"
+                style="@style/ViewTitle"
+                />
+
+            <Button
+                android:id="@+id/scan_button"
+                android:text="Scan"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/circle"
+                android:textColor="@color/colorLight"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
+                style="@style/RightCornerButton"/>
+
+        </RelativeLayout>
+        <!--        Image Label begin-->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_container"
+            android:layout_below="@+id/form_title">
+
+            <!-- ISBN Field Start-->
+            <TextView
+                android:id="@+id/isbn_label"
+                android:text="ISBN"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/isbn_input"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/isbn_label"
+                style="@style/FormInput"
+                />
+            <!--ISBN Field End-->
+
+            <!-- Title Field Start-->
+            <TextView
+                android:id="@+id/title_label"
+                android:text="Title"
+                android:layout_below="@+id/isbn_input"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/title_input"
+                android:layout_below="@+id/title_label"
+                android:inputType="textPersonName"
+                style="@style/FormInput"
+                />
+            <!--Title Field End-->
+
+            <!-- Author Field Start-->
+            <TextView
+                android:id="@+id/author_label"
+                android:text="Author"
+                android:layout_below="@+id/title_input"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/author_input"
+                android:layout_below="@+id/author_label"
+                android:inputType="textPersonName"
+                style="@style/FormInput"
+                />
+            <!--Author Field End-->
+
+            <!-- Description Field Start-->
+            <TextView
+                android:id="@+id/desc_label"
+                android:text="Description"
+                android:layout_below="@+id/author_input"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/desc_input"
+                android:layout_below="@+id/desc_label"
+                android:inputType="textPersonName"
+                style="@style/FormInput"
+                />
+            <!--Description Field End-->
+
+            <!--        Image Label begin-->
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/image_label"
+                android:layout_below="@+id/desc_input">
+
+                <TextView
+                    android:id="@+id/image_label_text"
+                    android:text="Image"
+                    style="@style/FormLabel"
+                    />
+
+                <Button
+                    android:id="@+id/image_label_button"
+                    android:text="Select"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/circle"
+                    android:textColor="@color/colorLight"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="25dp"
+                    style="@style/RightCornerButton"/>
+
+            </RelativeLayout>
+            <!--        Image Label begin-->
+
+            <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/blue_book"
+                    android:layout_centerHorizontal="true"
+                    android:maxWidth="40dp"
+                    android:layout_below="@+id/image_label"
+                    />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_below="@+id/form_container"
+            android:text="ADD"
+            style="@style/SubmitButton"
+
+            />
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>
+

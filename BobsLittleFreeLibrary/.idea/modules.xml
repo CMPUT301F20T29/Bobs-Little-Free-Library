@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bobs_Little_Free_Library.iml" filepath="$PROJECT_DIR$/.idea/modules/Bobs_Little_Free_Library.iml" group="Bobs_Little_Free_Library" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="Bobs Little Free Library/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bobs_Little_Free_Library.iml" filepath="$PROJECT_DIR$/.idea/modules/Bobs_Little_Free_Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Bobs_Little_Free_Library.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Bobs_Little_Free_Library.app.iml" />
     </modules>
   </component>
 </project>

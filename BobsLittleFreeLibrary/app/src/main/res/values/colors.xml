@@ -3,4 +3,10 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="darkPurple">#8D6B94</color>
+    <color name="purple">#B185A7</color>
+    <color name="tuscany">#C3A29E</color>
+    <color name="darkBeige">#E8DBC5</color>
+    <color name="beige">#FFF4E9</color>
+    <color name="black">#000000</color>
 </resources>

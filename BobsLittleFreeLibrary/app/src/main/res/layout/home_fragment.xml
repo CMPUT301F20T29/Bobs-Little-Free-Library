@@ -1,13 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@android:color/holo_red_light">
+    android:padding="11dp">
 
-    <TextView
+
+    <Button
+        android:id="@+id/home_search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home_Fragment"
+        android:text="Search"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <Button
+        android:id="@+id/home_user_profile_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginLeft="160dp"
+        android:layout_toEndOf="@+id/home_search_button"
+        android:layout_toRightOf="@+id/home_search_button"
+        android:drawableLeft="@drawable/ic_baseline_person_24"
+        android:padding="16dp"
+        android:text="Name"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/latest_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textSize="30sp"
-        android:layout_centerInParent="true" />
+        android:layout_below="@+id/home_search_button"
+        android:text="Latest Books"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+    <TableLayout
+        android:id="@+id/latest_books_view"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_below="@+id/latest_text"
+        android:layout_marginHorizontal="40dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/home_imageButton1"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars"/>
+            <ImageButton
+                android:id="@+id/home_imageButton2"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+            <ImageButton
+                android:id="@+id/home_imageButton3"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/home_imageButton4"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+            <ImageButton
+                android:id="@+id/home_imageButton5"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+            <ImageButton
+                android:id="@+id/home_imageButton6"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/requests_overview_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="30sp"
+        android:layout_below="@+id/latest_books_view"
+        android:text="Requests Overview"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TableLayout
+        android:id="@+id/requests_overview_display"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:gravity="center"
+        android:layout_below="@+id/requests_overview_text"
+        android:layout_marginHorizontal="80dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/requests_inbound_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:id="@+id/requests_outbound_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="0" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp">
+            <Button
+                android:id="@+id/requests_inbound_button"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Inbound" />
+            <Button
+                android:id="@+id/requests_outbound_button"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Outbound" />
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/home_exchange_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_below="@+id/requests_overview_display"
+        android:layout_centerInParent="true"
+        android:text="Exchange Book"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryDark"/>
+
 
 </RelativeLayout>

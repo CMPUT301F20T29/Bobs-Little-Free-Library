@@ -1,10 +1,14 @@
 package com.example.bobslittlefreelibrary;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,6 +28,12 @@ import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /*
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
@@ -45,6 +55,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private EditText authorInput;
     private EditText descInput;
     private ImageView picture;
+    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;;
     private Book book;
 
     private RequestQueue mQueue;
@@ -224,17 +235,18 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     }
 
     @Override
-    public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent) {
+    public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath) {
 
-        if (imageReturnedIntent != null) {
-            // if there is a imageReturnedIntent then grab the "data" extra, this
-            // is the thumbnail of the image just taken.
-            Bundle extras = imageReturnedIntent.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            picture.setImageBitmap(imageBitmap);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            this.currentPhotoPath = currentPhotoPath;
+            picture.setImageURI(Uri.parse(currentPhotoPath));
         }
 
-
+        if (requestCode == 2 && resultCode == RESULT_OK){
+            Uri selectedImage = imageReturnedIntent.getData();
+            this.currentPhotoPath = selectedImage.toString();
+            picture.setImageURI(selectedImage);
+        }
     }
 }
 

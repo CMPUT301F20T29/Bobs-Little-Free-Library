@@ -56,4 +56,12 @@ public class Requests {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    /**
+     * A getter for the book that's being requested
+     * @return the book being requested
+     */
+    public Book getBookRequested() {
+        return this.bookRequested;
+    }
 }

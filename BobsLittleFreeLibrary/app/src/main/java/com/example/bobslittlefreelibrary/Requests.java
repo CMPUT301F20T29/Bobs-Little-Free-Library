@@ -64,4 +64,20 @@ public class Requests {
     public Book getBookRequested() {
         return this.bookRequested;
     }
+
+    /**
+     * A getter for the person sending the request
+     * @return person sending the request
+     */
+    public User getReqSender() {
+        return this.reqSender;
+    }
+
+    /**
+     * A getter for the person receiving the request
+     * @return person receiving the request
+     */
+    public User getReqReceiver() {
+        return this.reqReceiver;
+    }
 }

@@ -22,12 +22,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+/*
+ * ScanFragment presents a full screen bottom sheet with a camera view.
+ *
+ * TODO: implement camera view and barcode scanning in firebase.
+ *
+ * If your activity has to scan any ISBN:
+ *      1. make your activity implement ScanFragment.OnFragmentInteractionListener
+ *      2. use the isbn in the onIsbnFound() method
+ *
+ */
 public class ScanFragment extends BottomSheetDialogFragment {
 
     private EditText isbnInput;
     private Button submitButton;
     private OnFragmentInteractionListener listener;
-
 
     public interface OnFragmentInteractionListener {
         void onIsbnFound(String isbn);
@@ -60,8 +69,9 @@ public class ScanFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (isbnInput.getText() != null) {
                     String isbnCandidate = isbnInput.getText().toString().trim();
-                    if (isbnCandidate.length() == 13) {
-                        listener.onIsbnFound(isbnCandidate);
+                    if (isbnCandidate.length() == 10 || isbnCandidate.length() == 13) {
+                        //9780345514400 9781305109391
+                        listener.onIsbnFound("9781305109391");
                         dismiss();
                     }
                 }
@@ -69,44 +79,18 @@ public class ScanFragment extends BottomSheetDialogFragment {
         });
 
         return view;
-
     }
 
-
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            listener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
+    /*
+     * Overrided onCreateDialog() makes the bottom sheet cover the entire screen.
+     *
+     * Code from answer by user "Gabriele Mariotti" on SO:
+     * https://stackoverflow.com/questions/58065771/bottomsheetdialogfragment-full-screen
+     *
+     */
+    @NonNull
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
-
-        isbnInput = view.findViewById(R.id.isbn_input);
-        submitButton = view.findViewById(R.id.submit_button);
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String isbnCandidate = isbnInput.getText().toString().trim();
-                if (isbnCandidate.length() == 13) {
-                    listener.onIsbnFound(isbnCandidate);
-                }
-            }
-        });
-
-    }
-
-    // Code from SO answer by Gabriele Mariotti - https://stackoverflow.com/questions/58065771/bottomsheetdialogfragment-full-screen
-    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {

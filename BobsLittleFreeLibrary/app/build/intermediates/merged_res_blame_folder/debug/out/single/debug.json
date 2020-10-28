@@ -184,6 +184,10 @@
         "source": "D:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\build\\generated\\res\\pngs\\debug\\drawable-xxxhdpi\\ic_baseline_send_24.png"
     },
     {
+        "merged": "D:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\build\\intermediates\\res\\merged\\debug\\layout_content.xml.flat",
+        "source": "D:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\src\\main\\res\\layout\\content.xml"
+    },
+    {
         "merged": "D:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_ic_launcher_background.png.flat",
         "source": "D:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\build\\generated\\res\\pngs\\debug\\drawable-hdpi\\ic_launcher_background.png"
     },

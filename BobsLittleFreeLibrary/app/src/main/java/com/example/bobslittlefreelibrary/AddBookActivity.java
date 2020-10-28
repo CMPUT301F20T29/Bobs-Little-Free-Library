@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +59,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private ImageView picture;
     private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;;
     private Book book;
+    Boolean validInput = false;
 
     private RequestQueue mQueue;
 
@@ -81,9 +84,6 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         titleInput.addTextChangedListener(inputFormTextWatcher);
         authorInput.addTextChangedListener(inputFormTextWatcher);
         descInput.addTextChangedListener(inputFormTextWatcher);
-
-        // disable add button
-        addButton.setEnabled(false);
 
         // button onClick Listeners
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,11 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ADD button clicked");
-                // TODO: create new book and add to firestore here
+                if (validInput) {
+                    // TODO: create new book and add to firestore here
+                } else {
+                    showSnackbar(v);
+                }
             }
         });
 
@@ -141,12 +145,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             String author = authorInput.getText().toString();
             String desc = descInput.getText().toString();
 
-            boolean underCharLimitCheck = (desc.length() < 1000) || (title.length() < 20) || (author.length() < 20);
+            boolean underCharLimitCheck = (desc.length() < 1000) || (title.length() < 50) || (author.length() < 50);
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
             boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
-            boolean buttonEnabled = underCharLimitCheck && !emptyCheck && validIsbn;
-
-            addButton.setEnabled(buttonEnabled); // enable add button if valid input
+            validInput = underCharLimitCheck && !emptyCheck && validIsbn;
         }
 
         @Override
@@ -246,6 +248,32 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             this.currentPhotoPath = selectedImage.toString();
             picture.setImageURI(selectedImage);
         }
+    }
+
+    // Gets a message to be displayed on a snackbar in the event the user's input is invalid.
+    private void showSnackbar(View v){
+
+        String msg = "Please fix the following issues before adding your book:\n";
+
+        String isbn = isbnInput.getText().toString();
+        String title = titleInput.getText().toString();
+        String author = authorInput.getText().toString();
+        String desc = descInput.getText().toString();
+
+        if (desc.length() > 1000) { msg += "\n - Description is too long"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (author.length() > 50) { msg += "\n - Author is too long"; }
+        if (isbn.length() != 10 && isbn.length() != 13 && !isbn.isEmpty()) { msg += "\n - ISBN is invalid"; }
+        if (isbn.isEmpty()) { msg += "\n - ISBN is empty"; }
+        if (title.isEmpty()) { msg += "\n - Title is empty"; }
+        if (author.isEmpty()) { msg += "\n - Author is empty"; }
+
+        Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
+        View sbView = sb.getView();
+        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
+        textView.setMaxLines(6);
+        sb.show();
     }
 }
 

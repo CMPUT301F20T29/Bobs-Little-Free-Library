@@ -21,12 +21,13 @@
             android:id="@+id/back_button"
             android:text="Back"
             style="@style/BackButton"/>
-
         <Button
             android:id="@+id/other_button"
-            android:text="Filter?"
+            android:text="Edit"
             android:layout_alignParentRight="true"
-            style="@style/RightCornerButton"/>
+            android:layout_centerVertical="true"
+            style="@style/SecondaryButton"/>
+
 
     </RelativeLayout>
     <!--        Top buttons end-->

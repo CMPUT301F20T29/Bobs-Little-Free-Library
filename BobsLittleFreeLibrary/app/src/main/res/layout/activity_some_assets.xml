@@ -22,11 +22,6 @@
             android:text="Back"
             style="@style/BackButton"/>
 
-        <Button
-            android:id="@+id/other_button"
-            android:text="Filter?"
-            android:layout_alignParentRight="true"
-            style="@style/RightCornerButton"/>
 
     </RelativeLayout>
     <!--        Top buttons end-->

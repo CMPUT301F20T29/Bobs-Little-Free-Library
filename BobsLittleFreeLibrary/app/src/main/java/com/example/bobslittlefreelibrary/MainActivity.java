@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        formTemplateButton = findViewById(R.id.form_template);
+        /*formTemplateButton = findViewById(R.id.form_template);
         blankTemplateButton = findViewById(R.id.blank_template);
         someAssetsButton = findViewById(R.id.some_assets);
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SomeAssetsActivity.class);
                 MainActivity.this.startActivity(intent);
             }
-        });
+        });*/
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 new HomeFragment()).commit();
     }
 
+    // We define this listener outside the onCreate method to customize it to our fragments and set it in the OnCreate method
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 Fragment selectedFragment = null;
@@ -84,7 +85,32 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment).commit();
                 return true; // true means we select the current item, fragments would still show if this is false.
             };
-
-
-
 }
+
+
+
+/* code for extra template buttons
+*     <Button
+        android:id="@+id/form_template"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Form Template"
+        style="@style/SubmitButton"
+        android:layout_marginTop="100dp"
+        android:layout_marginHorizontal="11dp"/>
+    <Button
+        android:id="@+id/blank_template"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Blank Template"
+        android:layout_below="@+id/form_template"
+        style="@style/SubmitButton"
+        android:layout_margin="11dp"/>
+    <Button
+        android:id="@+id/some_assets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Some Assets"
+        android:layout_below="@+id/blank_template"
+        style="@style/SubmitButton"
+        android:layout_margin="11dp"/>*/

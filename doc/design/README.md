@@ -23,7 +23,7 @@ For example:
 
 Makes this: 
 
-<img src="./screenshots/add_book.png"/>
+<img src="./screenshots/add_button.png"/>
 
 ### Secondary Button (style="@style/SecondaryButton")
 
@@ -83,7 +83,7 @@ Whenever a book is the focus point of a view, we should display its image consis
     style="@style/BookImage" 
     />
 ```
-<img src="./screenshots/add_book.png"/>
+<img src="./screenshots/add_button.png"/>
 
 # Other Design stuff 
 

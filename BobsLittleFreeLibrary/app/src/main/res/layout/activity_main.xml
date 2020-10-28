@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:layout_gravity="start"
-    android:padding="11dp"
-    >
+    android:layout_gravity="start">
 
-    <Button
-        android:id="@+id/form_template"
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Form Template"
-        style="@style/SubmitButton"/>
-    <Button
-        android:id="@+id/blank_template"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Blank Template"
-        android:layout_below="@+id/form_template"
-        style="@style/SubmitButton"/>
-    <Button
-        android:id="@+id/some_assets"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Some Assets"
-        android:layout_below="@+id/blank_template"
-        style="@style/SubmitButton"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorLight"
+        app:menu="@menu/bottom_navigation_menu"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </RelativeLayout>
+
+

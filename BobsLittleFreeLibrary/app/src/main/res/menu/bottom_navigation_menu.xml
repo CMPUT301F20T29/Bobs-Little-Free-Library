@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/books_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:title="Books"/>
+    <item
+        android:id="@+id/home_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Dashboard"/>
+    <item
+        android:id="@+id/requests_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_send_24"
+        android:title="Requests"/>
+</menu>

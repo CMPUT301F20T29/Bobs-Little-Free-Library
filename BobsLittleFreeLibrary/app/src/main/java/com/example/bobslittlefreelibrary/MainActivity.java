@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 new HomeFragment()).commit();
     }
 
+    // We define this listener outside the onCreate method to customize it to our fragments and set it in the OnCreate method
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 Fragment selectedFragment = null;
@@ -84,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment).commit();
                 return true; // true means we select the current item, fragments would still show if this is false.
             };
-
-
-
 }
 
 

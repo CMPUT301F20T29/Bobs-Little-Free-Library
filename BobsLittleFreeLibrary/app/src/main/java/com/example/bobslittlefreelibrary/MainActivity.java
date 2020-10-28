@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         formTemplateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FormTemplateActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });

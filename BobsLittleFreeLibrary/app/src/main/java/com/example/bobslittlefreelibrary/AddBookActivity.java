@@ -76,7 +76,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         descInput = findViewById(R.id.desc_input);
         picture = findViewById(R.id.image);
 
-        // Add text watcher EditTexts
+        // Add text watcher to EditTexts
         isbnInput.addTextChangedListener(inputFormTextWatcher);
         titleInput.addTextChangedListener(inputFormTextWatcher);
         authorInput.addTextChangedListener(inputFormTextWatcher);
@@ -85,7 +85,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         // disable add button
         addButton.setEnabled(false);
 
-        // button onClick Listners
+        // button onClick Listeners
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,10 +155,8 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         }
     };
 
-    //        GET https://www.googleapis.com/books/v1/volumes?q=isbn:9780345514400&key=AIzaSyA8uqm_F6NxRRpkXt0dDQ3RqkqATEmsuvM
-    //        AIzaSyAGY9Cawu3EW9yejDtRcFUSws-L1xi6Aro
-    //        9780345514400
-
+    // ScanFragment calls this method when it finds an isbn, here I look up that isbn in the
+    // Google Books API and autofill the EditTexts.
     @Override
     public void onIsbnFound(final String isbn) {
         Log.d(TAG, "onIsbnFound: " + isbn);
@@ -195,7 +193,6 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             descInput.setText(desc.trim());
 
                             addButton.setEnabled(true);
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -234,6 +231,8 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         return null;
     }
 
+    // SelectImageFragment calls this method when the user either takes and image or selects one
+    // from their device.
     @Override
     public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath) {
 

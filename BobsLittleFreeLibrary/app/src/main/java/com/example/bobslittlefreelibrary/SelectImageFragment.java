@@ -28,9 +28,6 @@ import java.util.Date;
  * SelectImageFragment presents a bottom sheet where user can chooses to select an image,
  * or take an image.
  *
- * TODO: Right now images returned from camera are only a thumbnail, we'll want them to be full size
- *  images for a better user experience.
- *
  * If your activity allows user to choose an image:
  *      1. make your activity implement SelectImageFragment.OnFragmentInteractionListener
  *      2. use the image by getting the data stored in the extras of imageReturnedIntent
@@ -71,7 +68,6 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
 
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_select_image, null);
 
-
         // get views
         selectImage = view.findViewById(R.id.select_image_option);
         takeImage = view.findViewById(R.id.take_image_option);
@@ -82,7 +78,7 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , REQUEST_SELECT_PHOTO);//one can be replaced with any action code
+                startActivityForResult(pickPhoto , REQUEST_SELECT_PHOTO);
             }
         });
 
@@ -101,9 +97,7 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
 
         listener.imageSelected(requestCode, resultCode, imageReturnedIntent, currentPhotoPath);
         dismiss();
-
     }
-
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -121,7 +115,7 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
         return image;
     }
 
-
+    // Creates and starts intent to take an image with camera
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create the File where the photo should go
@@ -141,7 +135,4 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
     }
-
-
-
 }

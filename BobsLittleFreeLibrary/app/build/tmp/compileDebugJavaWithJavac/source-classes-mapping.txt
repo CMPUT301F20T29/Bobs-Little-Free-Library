@@ -1,0 +1,32 @@
+com/example/bobslittlefreelibrary/Book.java
+ com.example.bobslittlefreelibrary.Book
+com/example/bobslittlefreelibrary/User.java
+ com.example.bobslittlefreelibrary.User
+com/example/bobslittlefreelibrary/HomeFragment.java
+ com.example.bobslittlefreelibrary.HomeFragment
+com/example/bobslittlefreelibrary/templates/SomeAssetsActivity.java
+ com.example.bobslittlefreelibrary.templates.SomeAssetsActivity
+ com.example.bobslittlefreelibrary.templates.SomeAssetsActivity$1
+ com.example.bobslittlefreelibrary.templates.SomeAssetsActivity$2
+ com.example.bobslittlefreelibrary.templates.SomeAssetsActivity$2$1
+com/example/bobslittlefreelibrary/BuildConfig.java
+ com.example.bobslittlefreelibrary.BuildConfig
+com/example/bobslittlefreelibrary/templates/BlankTemplateActivity.java
+ com.example.bobslittlefreelibrary.templates.BlankTemplateActivity
+ com.example.bobslittlefreelibrary.templates.BlankTemplateActivity$1
+com/example/bobslittlefreelibrary/templates/FormTemplateActivity.java
+ com.example.bobslittlefreelibrary.templates.FormTemplateActivity
+ com.example.bobslittlefreelibrary.templates.FormTemplateActivity$1
+com/example/bobslittlefreelibrary/CustomList.java
+ com.example.bobslittlefreelibrary.CustomList
+com/example/bobslittlefreelibrary/RequestsFragment.java
+ com.example.bobslittlefreelibrary.RequestsFragment
+com/example/bobslittlefreelibrary/BooksFragment.java
+ com.example.bobslittlefreelibrary.BooksFragment
+ com.example.bobslittlefreelibrary.BooksFragment$1
+ com.example.bobslittlefreelibrary.BooksFragment$2
+com/example/bobslittlefreelibrary/MainActivity.java
+ com.example.bobslittlefreelibrary.MainActivity
+ com.example.bobslittlefreelibrary.MainActivity$1
+ com.example.bobslittlefreelibrary.MainActivity$2
+ com.example.bobslittlefreelibrary.MainActivity$3

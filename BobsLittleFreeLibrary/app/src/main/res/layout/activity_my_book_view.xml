@@ -13,7 +13,7 @@
 
         <Button
             android:id="@+id/my_book_view_back_button"
-            android:text="Back"
+            android:text="@string/back"
             style="@style/BackButton"/>
 
     </RelativeLayout>
@@ -108,7 +108,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="Current Borrower" />
+            android:text="@string/current_borrower" />
 
         <Button
             android:id="@+id/my_book_view_borrower_profile_button"

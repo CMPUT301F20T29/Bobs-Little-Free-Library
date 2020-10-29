@@ -13,7 +13,7 @@
 
         <Button
             android:id="@+id/public_book_view_back_button"
-            android:text="Back"
+            android:text="@string/back"
             style="@style/BackButton"/>
 
     </RelativeLayout>
@@ -28,7 +28,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/my_book_view_image"
+            android:id="@+id/public_book_view_image"
             android:layout_width="125dp"
             android:layout_height="150dp"
             tools:srcCompat="@drawable/ic_baseline_image_not_supported_24" />
@@ -108,7 +108,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="Book Owner" />
+            android:text="@string/book_owner" />
 
         <Button
             android:id="@+id/public_book_view_owner_profile_button"

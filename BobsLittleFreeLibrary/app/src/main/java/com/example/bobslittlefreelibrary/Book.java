@@ -8,7 +8,7 @@ public class Book implements Serializable
     private String status;
     private String description;
     private String author;
-    private String picture;//temp type, till we decide on how we gonna handle images
+    private String picture;
     private User owner;
     private String ISBN;
 
@@ -18,7 +18,7 @@ public class Book implements Serializable
         this.status = status;
         this.description = description;
         this.author = author;
-        this.picture = picture;//temp type, till we decide on how we gonna handle images
+        this.picture = picture;
         this.owner = owner;
         this.ISBN = ISBN;
 
@@ -30,7 +30,7 @@ public class Book implements Serializable
         this.status = status;
         this.description = description;
         this.author = author;
-        this.picture = "Default"; //temp type, till we decide on how we gonna handle images
+        this.picture = "";
         this.owner = owner;
         this.ISBN = ISBN;
 

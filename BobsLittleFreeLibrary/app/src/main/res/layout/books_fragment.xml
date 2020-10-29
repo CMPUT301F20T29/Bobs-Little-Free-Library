@@ -9,7 +9,7 @@
         android:id="@+id/bookList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="60dp">
 
     </ListView>
@@ -18,17 +18,29 @@
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="FILTER" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="11dp"
+        android:padding="11dp"
+        android:text="FILTER"
+        android:layout_marginRight="11dp"
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/sectionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Books"
-        android:textSize="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="11dp"
         android:paddingLeft="10dp"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp"
+        android:text="My Books"
+        android:textSize="30dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_Item"
@@ -40,7 +52,7 @@
 
         android:layout_marginEnd="13dp"
         android:layout_marginRight="13dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="11dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="#A8FF0077"

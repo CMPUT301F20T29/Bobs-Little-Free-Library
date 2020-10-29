@@ -14,11 +14,12 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="RightCornerButton" parent="Widget.AppCompat.Button">
+    <style name="SecondaryButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">18dp</item>
+        <item name="android:background">@drawable/circle</item>
+        <item name="android:textColor">@color/colorLight</item>
     </style>
 
     <style name="ProfileButton" parent="Widget.AppCompat.Button">
@@ -38,6 +39,8 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorLight</item>
         <item name="android:textSize">22dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">75dp</item>
     </style>
 
     <style name="FormInput" parent="Widget.AppCompat.EditText">
@@ -92,6 +95,13 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="BookImage" parent="android:Widget">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/blue_book</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
 
 
 </resources>

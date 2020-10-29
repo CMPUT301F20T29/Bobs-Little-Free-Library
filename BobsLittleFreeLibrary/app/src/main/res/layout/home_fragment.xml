@@ -8,9 +8,10 @@
     <!-- Top buttons -->
     <Button
         android:id="@+id/home_search_button"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
         android:text="@string/search"
+        android:textSize="20sp"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:background="@color/colorPrimary"
@@ -32,11 +33,19 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/colorPrimaryDark"/>
 
+    <View android:id="@+id/home_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/home_user_profile_button"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/dividerVertical" />
+
+    <!-- Latest Books starts here -->
     <TextView
         android:id="@+id/latest_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:textSize="30sp"
         android:layout_below="@+id/home_search_button"
         android:text="@string/latest_books"
@@ -65,12 +74,18 @@
                 android:id="@+id/home_imageButton2"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="fitCenter"/>
             <ImageButton
                 android:id="@+id/home_imageButton3"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="fitCenter"/>
         </TableRow>
         <!-- 2nd row -->
         <TableRow
@@ -81,20 +96,38 @@
                 android:id="@+id/home_imageButton4"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="fitCenter"/>
             <ImageButton
                 android:id="@+id/home_imageButton5"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="fitCenter"/>
             <ImageButton
                 android:id="@+id/home_imageButton6"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                android:adjustViewBounds="true"
+                android:padding="20dp"
+                android:scaleType="fitCenter"/>
         </TableRow>
     </TableLayout>
 
+
+    <View android:id="@+id/home_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/latest_books_view"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/dividerVertical" />
+
+    <!-- Request Overview starts here -->
     <TextView
         android:id="@+id/requests_overview_text"
         android:layout_width="wrap_content"
@@ -147,6 +180,13 @@
         </TableRow>
     </TableLayout>
 
+    <View android:id="@+id/home_divider3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/home_quick_scan_button"
+        android:layout_marginBottom="15dp"
+        android:background="?android:attr/dividerVertical" />
+    <!-- Quick Scan Button -->
     <Button
         android:id="@+id/home_quick_scan_button"
         android:layout_width="300dp"

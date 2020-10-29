@@ -1,4 +1,0 @@
-#Wed Oct 28 02:15:33 MDT 2020
-base.0=D\:\\Personal Software\\Cmput301Project\\Bobs-Little-Free-Library\\BobsLittleFreeLibrary\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex

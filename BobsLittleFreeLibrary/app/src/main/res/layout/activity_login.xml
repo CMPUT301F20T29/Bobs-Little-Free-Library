@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/tuscany">
+    android:padding="11dp">
 
     <ImageView
         android:id="@+id/logo"
@@ -10,7 +10,7 @@
         android:layout_height="100sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="75sp"
+        android:layout_marginTop="50sp"
         app:srcCompat="@drawable/logo2" />
 
     <TextView
@@ -21,8 +21,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:text="@string/app_name"
+        android:fontFamily="@font/title_font"
         android:textSize="32sp"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
@@ -33,10 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_title"
+        android:layout_marginTop="10sp"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
-        android:padding="10sp"
-        android:layout_marginTop="50sp">
+        android:padding="10sp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,9 +67,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_section"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15sp"
-        android:padding="20sp"
         android:text="Login"
+        style="@style/SubmitButton"
+        android:padding="20sp"
         android:textSize="24sp"/>
 
     <TextView
@@ -90,6 +91,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:text="Sign Up"
+        style="@style/SubmitButton"
         android:padding="20sp"
         android:textSize="20sp"/>
 

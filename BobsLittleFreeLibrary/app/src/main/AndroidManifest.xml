@@ -13,6 +13,8 @@
         <activity android:name=".templates.BlankTemplateActivity" />
         <activity android:name=".templates.FormTemplateActivity" />
         <activity android:name=".templates.BlankActivityTemplate" />
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".SignupActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -57,7 +57,7 @@
         android:layout_height="260dp"
         android:layout_below="@+id/latest_text"
         android:layout_marginHorizontal="40dp">
-        <!-- 1st row -->
+        <!-- 1st row starts -->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -87,7 +87,7 @@
                 android:padding="20dp"
                 android:scaleType="fitCenter"/>
         </TableRow>
-        <!-- 2nd row -->
+        <!-- 2nd row starts -->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -141,14 +141,14 @@
     <TableLayout
         android:id="@+id/requests_overview_display"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="100dp"
         android:gravity="center"
-        android:layout_below="@+id/requests_overview_text"
-        android:layout_marginHorizontal="80dp">
+        android:layout_below="@+id/requests_overview_text">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center">
             <TextView
                 android:id="@+id/requests_inbound_text"
                 android:layout_width="wrap_content"
@@ -165,8 +165,7 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp">
+            android:gravity="center">
             <Button
                 android:id="@+id/requests_inbound_button"
                 android:layout_width="100dp"
@@ -183,14 +182,16 @@
     <View android:id="@+id/home_divider3"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@+id/home_quick_scan_button"
-        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/requests_overview_display"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/dividerVertical" />
+
     <!-- Quick Scan Button -->
     <Button
         android:id="@+id/home_quick_scan_button"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:textSize="30sp"
         android:layout_below="@+id/requests_overview_display"
         android:layout_centerInParent="true"

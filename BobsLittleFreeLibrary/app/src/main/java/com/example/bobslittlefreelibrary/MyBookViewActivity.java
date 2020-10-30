@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
  * */
 public class MyBookViewActivity extends AppCompatActivity {
 
-    private Book book;
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -37,13 +36,13 @@ public class MyBookViewActivity extends AppCompatActivity {
 
         // Get Book object passed from Intent
         Intent intent = getIntent();
-        //book = intent.getSerializableExtra("BOOK"); // need to make Book class serializable
+        Book book = (Book) intent.getSerializableExtra("BOOK");
         //Book book = new Book("Test Book", "available", "this is a test description", "Khang", );
 
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
-        //setUIValues(book);
+        setUIValues(book);
 
         // Set onClickListeners for the buttons
         borrowerProfileButton.setOnClickListener(new View.OnClickListener() {

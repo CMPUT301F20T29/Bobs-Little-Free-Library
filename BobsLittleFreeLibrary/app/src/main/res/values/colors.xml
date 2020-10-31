@@ -8,4 +8,10 @@
     <color name="colorNegative">#86092C</color>
     <color name="colorPositive">#6BB378</color>
     <color name="black_overlay">#66000000</color>
+
+    <!-- Colours for colour-coding the status of a book -->
+    <color name="borrowed_red">#C64343</color>
+    <color name="accepted_yellow">#D9C21F</color>
+    <color name="available_green">#1FD938</color>
+    <color name="requested_blue">#1FD9B7</color>
 </resources>

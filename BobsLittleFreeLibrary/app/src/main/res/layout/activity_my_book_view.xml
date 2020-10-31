@@ -16,8 +16,15 @@
             android:text="@string/back"
             style="@style/BackButton"/>
 
+        <View android:id="@+id/my_book_view_divider1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/my_book_view_back_button"
+            android:background="?android:attr/dividerVertical" />
+
     </RelativeLayout>
     <!-- Top button end-->
+
 
     <!-- Book Image and Text starts -->
     <LinearLayout
@@ -25,13 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/top_buttons"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/my_book_view_image"
             android:layout_width="125dp"
             android:layout_height="150dp"
-            tools:srcCompat="@drawable/ic_baseline_image_not_supported_24" />
+            tools:srcCompat="@drawable/no_cover_img" />
 
         <LinearLayout
             android:id="@+id/my_book_view_text_container"
@@ -68,6 +76,13 @@
 
     </LinearLayout>
 
+    <View android:id="@+id/my_book_view_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/my_book_view_book_info_container"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
         android:id="@+id/my_book_view_desc_container"
         android:layout_width="match_parent"
@@ -100,6 +115,12 @@
         android:layout_above="@id/my_book_view_button_container"
         android:layout_marginBottom="15dp">
 
+        <View android:id="@+id/my_book_view_divider3"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/dividerVertical" />
+
         <TextView
             android:id="@+id/my_book_view_borrower_text"
             android:layout_width="wrap_content"
@@ -107,6 +128,7 @@
             android:textSize="30sp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_below="@+id/my_book_view_divider3"
             android:gravity="center"
             android:text="@string/current_borrower" />
 
@@ -117,8 +139,9 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/my_book_view_borrower_text"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:drawableStart="@drawable/ic_baseline_person_24"
+            android:layout_below="@+id/my_book_view_divider3"
+            android:drawableLeft="@drawable/user_icon"
+            android:drawableStart="@drawable/user_icon"
             android:padding="16dp"
             android:text="Name"
             android:textSize="20sp"
@@ -133,6 +156,13 @@
             android:textSize="30sp"
             android:layout_below="@+id/my_book_view_borrower_text"
             android:text="Book Status" />
+
+        <View android:id="@+id/my_book_view_divider4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/my_book_view_status_text"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/dividerVertical" />
 
     </RelativeLayout>
 

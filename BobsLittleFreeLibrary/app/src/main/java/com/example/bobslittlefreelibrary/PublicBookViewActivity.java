@@ -13,11 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup button functionality, initialize imageView, populate profile button with username
+ * TODO: Setup button functionality, initialize imageView, populate profile button with username and link it to UserProfileView activity
  *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
+    // Class variables
     private Book book;
     private ImageView bookImage;
     private TextView titleText;
@@ -36,12 +37,27 @@ public class PublicBookViewActivity extends AppCompatActivity {
 
         // Get Book object passed from Intent
         Intent intent = getIntent();
-        //book = intent.getSerializableExtra("BOOK"); // need to make Book class serializable
-
+        book = (Book) intent.getSerializableExtra("BOOK");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
-        //setUIValues(book);
+        setUIValues(book);
+
+        // Change colour of status text based on book's status
+        switch (bookStatus.getText().toString()) {
+            case "Available":
+                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
+                break;
+            case "Requested":
+                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
+                break;
+            case "Accepted":
+                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
+                break;
+            case "Borrowed":
+                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
+                break;
+        }
 
         // Set onClickListeners for the buttons
         ownerProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +76,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Back button pressed");
+                finish();
             }
         });
     }
@@ -78,7 +95,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
     }
 
     private void setUIValues(Book book) {
-        // bookImage.setImageResource("@drawable/" + book.getPicture());
+        //bookImage.setImageResource("@drawable:");
         titleText.setText(book.getTitle());
         authorText.setText(book.getAuthor());
         ISBNText.setText(book.getISBN());

@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
- * TODO: Setup button functionality, initialize imageView, populate profile button with username
+ * TODO: Setup button functionality, initialize imageView, populate profile button with username and link it to UserProfileView activity
  *
  * */
 public class MyBookViewActivity extends AppCompatActivity {
 
+    // Class variables
+    private Book book;
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -36,13 +38,27 @@ public class MyBookViewActivity extends AppCompatActivity {
 
         // Get Book object passed from Intent
         Intent intent = getIntent();
-        Book book = (Book) intent.getSerializableExtra("BOOK");
-        //Book book = new Book("Test Book", "available", "this is a test description", "Khang", );
-
+        book = (Book) intent.getSerializableExtra("BOOK");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
         setUIValues(book);
+
+        // Change colour of status text based on book's status
+        switch (bookStatus.getText().toString()) {
+            case "Available":
+                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
+                break;
+            case "Requested":
+                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
+                break;
+            case "Accepted":
+                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
+                break;
+            case "Borrowed":
+                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
+                break;
+        }
 
         // Set onClickListeners for the buttons
         borrowerProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +83,7 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Back button pressed");
+                finish();
             }
         });
     }

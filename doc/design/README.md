@@ -95,6 +95,8 @@ Whenever a book is the focus point of a view, we should display its image consis
             android:background="?android:attr/dividerVertical" />
 ```
 
+<img src="./screenshots/horizontal_divider.png"/>
+
 # Other Design stuff 
 
 For other design elements that aren't necessarily styles we should be reusing code too. For example **if you ever want to display 2 choices to the user in a dialog**, use the code the SelectImageFragment. Or if **your activity is not one of the three screens on the bottom navbar of MainActivity**, always use the code in activity_blank_template.xml as a starting point, that way you have a consistent title, back button, and padding. 

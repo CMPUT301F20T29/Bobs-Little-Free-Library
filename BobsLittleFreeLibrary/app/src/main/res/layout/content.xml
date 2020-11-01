@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/textView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="100dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/book_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="49dp"
-        android:layout_marginLeft="49dp"
-        android:layout_marginTop="-1dp"
-        android:layout_marginEnd="191dp"
-        android:layout_marginRight="191dp"
-        android:layout_toEndOf="@+id/bookImage"
-        android:layout_toRightOf="@+id/bookImage"
-        android:padding="20dp"
-        android:text="book"
-        android:textSize="25sp"></TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="11dp">
 
-    <TextView
-        android:id="@+id/name_text"
-        android:layout_width="100dp"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@+id/book_text"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="67dp"
-        android:layout_marginLeft="67dp"
-        android:layout_marginEnd="169dp"
-        android:layout_marginRight="169dp"
-        android:layout_marginBottom="3dp"
-        android:layout_toEndOf="@+id/bookImage"
-        android:layout_toRightOf="@+id/bookImage"
-        android:text="Name"
-        android:textSize="15sp"></TextView>
+        <ImageView
+            android:id="@+id/bookImage"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="20dp"
+            android:padding="5dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/bookImage"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:padding = "5dp"
-        />
+            <TextView
+                android:id="@+id/book_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="-1dp"
+                android:layout_marginEnd="11dp"
+                android:layout_marginRight="11dp"
+                android:padding="11dp"
+                android:text="book"
+                android:textSize="25sp"></TextView>
 
-</RelativeLayout>
+            <TextView
+            android:id="@+id/name_text"
+            android:layout_width="100dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:text="Name"
+            android:paddingLeft="11dp"
+            android:textSize="15sp"></TextView>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

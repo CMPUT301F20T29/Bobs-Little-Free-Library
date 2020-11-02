@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import com.example.bobslittlefreelibrary.templates.BlankTemplateActivity;
 import com.example.bobslittlefreelibrary.templates.FormTemplateActivity;
 import com.example.bobslittlefreelibrary.templates.SomeAssetsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // brings up information about the user; in this case, log email
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("userEmail",user.getEmail().toString());
 
         /*formTemplateButton = findViewById(R.id.form_template);
         blankTemplateButton = findViewById(R.id.blank_template);

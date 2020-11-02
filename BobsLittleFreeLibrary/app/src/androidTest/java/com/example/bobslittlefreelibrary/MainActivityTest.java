@@ -5,6 +5,8 @@ import android.app.Activity;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -41,7 +43,9 @@ public class MainActivityTest {
     @Before
     public void setup() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-        // change it so that we start at LoginActivity, and then sign in, and then get to MainActivity where we begin the tests
+        // TODO: change it so that we start at LoginActivity, and then sign in, and then get to MainActivity where we begin the tests
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference bookCollectionRef = db.collection("Books");
     }
 
     /**
@@ -53,12 +57,24 @@ public class MainActivityTest {
     }
 
     /**
-     *
+     * This test checks if fragment_container is initialized properly.
      * */
     @Test
     public void checkStartHomeFragment() {
         solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
         assertTrue(solo.searchText("Latest Books"));
+    }
+
+    /**
+     * This test checks if the tab system works.
+     * */
+    @Test
+    public void checkSwitchBetweenFragments() {
+        solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
+        // Switch to BooksFragment
+        solo.clickOnView(solo.getView(R.id.books_page));
+        assertTrue(solo.searchText("My Books"));
+        // Switch to RequestsFragment
     }
 
     /**

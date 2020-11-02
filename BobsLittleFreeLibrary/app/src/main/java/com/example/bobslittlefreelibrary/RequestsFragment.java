@@ -1,5 +1,10 @@
 package com.example.bobslittlefreelibrary;
 
+/**
+ * This class is the fragment for the list of requests
+ * either sent or received.
+ */
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +35,7 @@ public class RequestsFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
         tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+
 
     }
 }

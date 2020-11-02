@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "841263952101",
+    "firebase_url": "https://bob-s-free-little-library.firebaseio.com",
+    "project_id": "bob-s-free-little-library",
+    "storage_bucket": "bob-s-free-little-library.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841263952101:android:03df446df04a5ed748e40c",
+        "android_client_info": {
+          "package_name": "com.example.bobslittlefreelibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "841263952101-kgaqa811kcda39bg8jc1qob5dqohe0k2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQoiZqowWQfWTKCRZi8SHS2B72fv2w_Rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "841263952101-kgaqa811kcda39bg8jc1qob5dqohe0k2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

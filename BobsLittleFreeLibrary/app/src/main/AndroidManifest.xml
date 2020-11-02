@@ -21,15 +21,15 @@
         <activity android:name=".templates.BlankTemplateActivity" />
         <activity android:name=".templates.FormTemplateActivity" />
         <activity android:name=".SignupActivity"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".templates.BlankActivityTemplate" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".templates.BlankActivityTemplate" />
+        <activity android:name=".MainActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

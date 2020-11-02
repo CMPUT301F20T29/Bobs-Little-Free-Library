@@ -17,11 +17,12 @@ public class User implements Serializable
         this.password = password;
         this.email = email;
         this.address = address;
-        this.bookArrayList = new ArrayList<Book>();
+        this.bookArrayList = new ArrayList<>();
     }
 
 
     //getters
+
     public String getUsername() { return username; }
 
     public String getPassword() { return password; }
@@ -44,13 +45,10 @@ public class User implements Serializable
 
 
 
-    public void addBook(Book someBook) {
-        bookArrayList.add(someBook);
+    // Adds books to users array list of books
+    public void addBook(Book someBook) { bookArrayList.add(someBook); }
 
-    }
-    public void removeBook(Book someBook) {
-        bookArrayList.remove(someBook);
-
-    }
+    // Removes books from users array list of books
+    public void removeBook(Book someBook) { bookArrayList.remove(someBook); }
 
 }

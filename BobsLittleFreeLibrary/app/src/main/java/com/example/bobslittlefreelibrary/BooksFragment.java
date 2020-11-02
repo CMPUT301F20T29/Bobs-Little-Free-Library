@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -18,10 +17,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class BooksFragment extends Fragment {
+public class BooksFragment extends Fragment{
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> dataList;
+
 
 
     @Override
@@ -43,11 +43,13 @@ public class BooksFragment extends Fragment {
         bookList.setAdapter(bookAdapter);
 
 
-        final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item); //might be wrong id
+        final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //TODO
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddBookActivity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -63,4 +65,5 @@ public class BooksFragment extends Fragment {
 
 
     }
+
 }

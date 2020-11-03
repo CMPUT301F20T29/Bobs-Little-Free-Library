@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -55,6 +57,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
 
     final String TAG = "AddBookActivity";
 
+    // views
     private Button backButton;
     private Button scanButton;
     private Button selectImageButton;
@@ -63,12 +66,16 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private EditText titleInput;
     private EditText authorInput;
     private EditText descInput;
-    private ImageView picture;
-    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;
-    private Book book;
-    private String imageUrlFromResponse;
-    private Boolean validInput = false;
+    private ImageView imageView;
 
+    // book data
+    private String usersImageFile;
+    private String imageUrlFromResponse;
+    private String bookId;
+    private Book book;
+
+    private Boolean validInput = false;
+    private FirebaseFirestore db;
     private RequestQueue mQueue;
 
     @Override
@@ -85,7 +92,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         titleInput = findViewById(R.id.title_input);
         authorInput = findViewById(R.id.author_input);
         descInput = findViewById(R.id.desc_input);
-        picture = findViewById(R.id.image);
+        imageView = findViewById(R.id.image);
 
         // Add text watcher to EditTexts
         isbnInput.addTextChangedListener(inputFormTextWatcher);
@@ -97,8 +104,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
-                AddBookActivity.this.startActivity(intent);
+                exitActivity();
             }
         });
 
@@ -119,32 +125,41 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: ADD button clicked");
+
                 if (validInput) {
+                    // Get instance of db
+                    db = FirebaseFirestore.getInstance();
 
-                    // TODO: create new book add all its attributes to firestore then use id to save image to cloud storage
+                    // Get strings
+                    String isbn = isbnInput.getText().toString();
+                    String title = titleInput.getText().toString();
+                    String author = authorInput.getText().toString();
+                    String desc = descInput.getText().toString();
 
+                    // Create new Books object and it to add to firestore
+                    book = new Book(title, "status", desc, author, "owner", isbn);
+
+                    db.collection("books")
+                            .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            bookId = documentReference.getId();
+                        }
+                    });
+
+                    // if the user took/selected an image, then upload it to storage, and save it's url to
+                    // the book's document
                     if (imageUrlFromResponse != null) {
-                        // TODO: add url to db
-                    } else if (!currentPhotoPath.startsWith("drawable")) {
+                        db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
 
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        StorageReference bookImagesRef = storageRef.child("book-images");
-                        StorageReference imageRef = bookImagesRef.child("bookId" + ".jpg");
-
-                        UploadTask uploadTask = imageRef.putFile(Uri.parse(currentPhotoPath));
-                        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        Log.d(TAG, "onSuccess: " + uri.toString());
-                                    }
-                                });
-                            }
-                        });
+                    } else if (usersImageFile != null) {
+                        uploadImageFile();
                     }
+
+                    // TODO: add book id to user's bookIds array
+
+                    // Return to main activity
+                    exitActivity();
 
                 } else {
                     showInvalidInputSnackbar(v);
@@ -189,7 +204,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     };
 
     // ScanFragment calls this method when it finds an isbn, here I look up that isbn in the
-    // Google Books API and autofill the EditTexts.
+    // Google Books API and auto-fill the EditTexts according to the response.
     @Override
     public void onIsbnFound(final String isbn) {
         Log.d(TAG, "onIsbnFound: " + isbn);
@@ -213,25 +228,22 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             if (imagesLinks != null) {
                                 // if there are image links in response then get the url for image
                                 imageUrlFromResponse = getImageUrl(imagesLinks);
+
                                 if (imageUrlFromResponse != null) {
                                     // dl and set image to picture ImageView
-                                    new DownloadImageTask(picture).execute(imageUrlFromResponse);
+                                    new DownloadImageTask(imageView).execute(imageUrlFromResponse);
                                 }
                             }
 
-                            // autofill EdditTexts
+                            // auto-fill EditTexts
                             isbnInput.setText(isbn);
                             titleInput.setText(title.trim());
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
 
-                            addButton.setEnabled(true);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -270,15 +282,17 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath) {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            this.currentPhotoPath = Uri.fromFile(new File(currentPhotoPath)).toString();
-            picture.setImageURI(Uri.parse(currentPhotoPath));
+            this.usersImageFile = Uri.fromFile(new File(currentPhotoPath)).toString();
+            imageView.setImageURI(Uri.parse(currentPhotoPath));
         }
 
         if (requestCode == 2 && resultCode == RESULT_OK){
             Uri selectedImage = imageReturnedIntent.getData();
-            this.currentPhotoPath = selectedImage.toString();
-            picture.setImageURI(selectedImage);
+            this.usersImageFile = selectedImage.toString();
+            imageView.setImageURI(selectedImage);
         }
+
+        imageUrlFromResponse = null;
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.
@@ -306,5 +320,36 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         textView.setMaxLines(6);
         sb.show();
     }
-}
 
+    // Exits AddBookActivity and returns to MainActivity showing BooksFragment
+    private void exitActivity(){
+        Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
+        intent.putExtra("WHICH_FRAGMENT", "BOOKS");
+        AddBookActivity.this.startActivity(intent);
+    }
+
+    // Uploads the image file at usersImageFile
+    private void uploadImageFile() {
+        // Get Storage reference to to /books-images
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference bookImagesRef = storageRef.child("book-images");
+
+        // Create and get Storage reference to to /books-images/{bookId}.jpg
+        StorageReference imageRef = bookImagesRef.child(bookId + ".jpg");
+
+        // Upload image
+        UploadTask uploadTask = imageRef.putFile(Uri.parse(usersImageFile));
+        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                // Get the url to the uploaded image and save it in the pictureURL field of the book
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        db.collection("books").document(bookId).update("pictureURL", uri.toString());
+                    }
+                });
+            }
+        });
+    }
+}

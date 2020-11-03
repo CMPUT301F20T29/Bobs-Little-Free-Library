@@ -51,6 +51,7 @@
 
         <EditText
             android:id="@+id/email_signup"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -63,7 +64,9 @@
         <EditText
             android:id="@+id/username_signup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="up to 12 characters"
+            android:inputType="text" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,7 +77,9 @@
         <EditText
             android:id="@+id/password_signup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="more than 6 characters"
+            android:inputType="textPassword" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,6 +88,7 @@
 
         <EditText
             android:id="@+id/confirm_password"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
@@ -93,6 +99,7 @@
 
         <EditText
             android:id="@+id/address_signup"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

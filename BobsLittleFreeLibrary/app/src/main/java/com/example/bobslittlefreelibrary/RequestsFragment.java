@@ -5,6 +5,7 @@ package com.example.bobslittlefreelibrary;
  * either sent or received.
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,11 @@ import java.util.ArrayList;
 
 public class RequestsFragment extends Fragment {
 
+    private ListView requestsList;
+    private Context context;
+    private CustomRequestsAdapter customRequestsAdapter;
+    private ArrayList<Requests> requestsDataList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,11 +37,56 @@ public class RequestsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Create the top tabs when the fragment is created
+
+        // setting variables needed
+        ListView requestsList = view.findViewById(R.id.requests_list);
         TabLayout tabLayout = view.findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+        context = this.getActivity();
+        requestsDataList = new ArrayList<>();
 
+        // Create the top tabs when the fragment is created
+        tabLayout.addTab(tabLayout.newTab().setText("Received"));
+        tabLayout.addTab(tabLayout.newTab().setText("Sent"));
 
+        // TODO initialize the received requests here and add them to the list to display
+
+        customRequestsAdapter = new CustomRequestsAdapter(context, requestsDataList, false);
+        requestsList.setAdapter(customRequestsAdapter);
+
+        // set a tab on click listener to know when the tabs have been switched & methods to handle
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int tabPosition = tabLayout.getSelectedTabPosition();
+
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    requestsDataList.clear();
+
+                    // TODO query & put the received requests into the list
+
+                    customRequestsAdapter.setSentTab(false);
+                    requestsList.setAdapter(customRequestsAdapter);
+                } else {
+                    // Sent requests tab
+                    requestsDataList.clear();
+
+                    // TODO query & put the sent requests into the list
+
+                    customRequestsAdapter.setSentTab(true);
+                    requestsList.setAdapter(customRequestsAdapter);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // pass
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // pass
+            }
+        });
     }
 }

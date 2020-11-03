@@ -70,8 +70,8 @@ public class ScanFragment extends BottomSheetDialogFragment {
                 if (isbnInput.getText() != null) {
                     String isbnCandidate = isbnInput.getText().toString().trim();
                     if (isbnCandidate.length() == 10 || isbnCandidate.length() == 13) {
-//                        listener.onIsbnFound("9781305109391"); // i use this for testing so i don't have to remember a isbn :D
-                        listener.onIsbnFound(isbnCandidate);
+                        listener.onIsbnFound("9781305109391"); // i use this for testing so i don't have to remember a isbn :D
+//                        listener.onIsbnFound(isbnCandidate);
                         dismiss();
                     }
                 }

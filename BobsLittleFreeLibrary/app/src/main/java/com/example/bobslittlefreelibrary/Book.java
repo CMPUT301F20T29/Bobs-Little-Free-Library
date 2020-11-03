@@ -9,21 +9,20 @@ public class Book implements Serializable
     private String status;
     private String description;
     private String author;
-    private String picture;
-    private String pictureDefault = "";
-    private User owner;
+    private String pictureURL;
+    private String owner;
     private String ISBN;
     private String dateAdded;
 
 
     //Constructor where picture is specified
-    public Book(String title, String status, String description, String author, String picture,
-                User owner, String ISBN){
+    public Book(String title, String status, String description, String author, String pictureURL,
+                String owner, String ISBN){
         this.title = title;
         this.status = status;
         this.description = description;
         this.author = author;
-        this.picture = picture;
+        this.pictureURL = pictureURL;
         this.owner = owner;
         this.ISBN = ISBN;
         this.dateAdded = getDateNow();
@@ -33,18 +32,21 @@ public class Book implements Serializable
     }
 
     //Constructor if picture is left out
-    public Book(String title, String status, String description, String author, User owner,
+    public Book(String title, String status, String description, String author, String owner,
                 String ISBN){
         this.title = title;
         this.status = status;
         this.description = description;
         this.author = author;
-        this.picture = pictureDefault;
         this.owner = owner;
         this.ISBN = ISBN;
         this.dateAdded = getDateNow();
 
     }
+
+    public Book() {
+    }
+
 
     //Getters
     public String getTitle() { return this.title; }
@@ -55,17 +57,16 @@ public class Book implements Serializable
 
     public String getAuthor() { return this.author; }
 
-    public String getPicture() { return this.picture; }
+    public String getPictureURL() { return this.pictureURL; }
 
-    public User getOwner() { return this.owner; }
+    public String getOwner() { return this.owner; }
 
     public String getISBN() { return this.ISBN; }
 
-    // might not be needed, leave it temporarily
-    public String getDateAdded() { return dateAdded; } //TODO: write test for, if kept
+    public String getDateAdded() { return dateAdded; }
 
     //Gets date at the time object is created
-    public String getDateNow() { return java.text.DateFormat.getDateInstance().format(new Date()); }
+    private String getDateNow() { return java.text.DateFormat.getDateInstance().format(new Date()); }
 
 
 
@@ -78,14 +79,10 @@ public class Book implements Serializable
 
     public void setAuthor(String author) { this.author = author; }
 
-    public void setPicture(String picture) { this.picture = picture; }
+    public void setPictureURL(String picture) { this.pictureURL = picture; }
 
-    public void setOwner(User owner) { this.owner = owner; }
+    public void setOwner(String owner) { this.owner = owner; }
 
     public void setISBN(String ISBN) { this.ISBN = ISBN; }
-
-    // might not be needed, leave it temporarily
-    public void setDateAdded(String dateAdded) { this.dateAdded = dateAdded; } //TODO: write test for, if kept
-
 
 }

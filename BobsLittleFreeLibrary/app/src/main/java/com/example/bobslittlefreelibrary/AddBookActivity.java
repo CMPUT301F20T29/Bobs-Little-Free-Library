@@ -1,5 +1,6 @@
 package com.example.bobslittlefreelibrary;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -25,7 +26,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,9 +66,11 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private EditText authorInput;
     private EditText descInput;
     private ImageView picture;
-    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;;
+    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;
     private Book book;
-    Boolean validInput = false;
+    private String imageUrlFromResponse;
+    private Boolean validInput = false;
+    private String bookId;
 
     private RequestQueue mQueue;
 
@@ -113,7 +124,49 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ADD button clicked");
                 if (validInput) {
-                    // TODO: create new book and add to firestore here
+
+                    // Add initialize book object and add it to db
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    String isbn = isbnInput.getText().toString();
+                    String title = titleInput.getText().toString();
+                    String author = authorInput.getText().toString();
+                    String desc = descInput.getText().toString();
+
+                    book = new Book(title, "status", desc, author, "owner", isbn);
+
+                    db.collection("books")
+                            .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            bookId = documentReference.getId();
+                        }
+                    });
+
+                    // if the user took/selected an image, then upload it to storage, and save it's url to
+                    // the book's document
+                    if (imageUrlFromResponse != null) {
+                        db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
+
+                    } else if (!currentPhotoPath.startsWith("drawable")) {
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                        StorageReference bookImagesRef = storageRef.child("book-images");
+                        StorageReference imageRef = bookImagesRef.child(bookId + ".jpg");
+
+                        UploadTask uploadTask = imageRef.putFile(Uri.parse(currentPhotoPath));
+                        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        db.collection("books").document(bookId).update("pictureURL", uri.toString());
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                 } else {
                     showInvalidInputSnackbar(v);
                 }
@@ -180,10 +233,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             JSONObject imagesLinks = volumeInfo.optJSONObject("imageLinks");
                             if (imagesLinks != null) {
                                 // if there are image links in response then get the url for image
-                                String url = getImageUrl(imagesLinks);
-                                if (url != null) {
+                                imageUrlFromResponse = getImageUrl(imagesLinks);
+                                if (imageUrlFromResponse != null) {
                                     // dl and set image to picture ImageView
-                                    new DownloadImageTask(picture).execute(url);
+                                    new DownloadImageTask(picture).execute(imageUrlFromResponse);
                                 }
                             }
 
@@ -238,7 +291,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath) {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            this.currentPhotoPath = currentPhotoPath;
+            this.currentPhotoPath = Uri.fromFile(new File(currentPhotoPath)).toString();
             picture.setImageURI(Uri.parse(currentPhotoPath));
         }
 
@@ -247,6 +300,8 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             this.currentPhotoPath = selectedImage.toString();
             picture.setImageURI(selectedImage);
         }
+
+        imageUrlFromResponse = null;
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.

@@ -2,10 +2,13 @@ package com.example.bobslittlefreelibrary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button signinButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,34 +34,43 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_login);
 
-        EditText emailEditText = findViewById(R.id.email);
-        EditText passwordEditText = findViewById(R.id.password);
+        // get views
+        emailEditText = findViewById(R.id.email);
+        passwordEditText = findViewById(R.id.password);
+        signinButton = findViewById(R.id.login_button);
 
-        Button signinButton = findViewById(R.id.login_button);
         signinButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 final String email = emailEditText.getText().toString();
                 final String password = passwordEditText.getText().toString();
 
-                Log.d("account",email+" and "+password);
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(LoginActivity.this, "Authentication success.",
-                                            Toast.LENGTH_SHORT).show();
-                                    updateUI(user);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
+                Boolean validInput = !(email.isEmpty() || password.isEmpty()
+                        || email.length() > 100 || password.length() > 100);
+
+                if (validInput) {
+                    Log.d("account",email+" and "+password);
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        Toast.makeText(LoginActivity.this, "Authentication success.",
+                                                Toast.LENGTH_SHORT).show();
+                                        updateUI(user);
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        updateUI(null);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    showInvalidInputSnackbar(v);
+                }
+
             }
         });
 
@@ -74,4 +90,24 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    private void showInvalidInputSnackbar(View v){
+
+        String msg = "Login failed, please fix the following issues to log in:\n";
+
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (email.length() > 100) { msg += "\n - Email is too long"; }
+        if (password.length() > 100) { msg += "\n - Password is too long"; }
+        if (email.isEmpty()) { msg += "\n - Email is empty"; }
+        if (password.isEmpty()) { msg += "\n - Password is empty"; }
+
+        Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
+        View sbView = sb.getView();
+        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
+        textView.setMaxLines(6);
+        sb.show();
+    }
+
 }

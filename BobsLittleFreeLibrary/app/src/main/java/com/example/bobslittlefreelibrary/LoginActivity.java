@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private Button signinButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         // get views
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
-        signinButton = findViewById(R.id.login_button);
+        Button signinButton = findViewById(R.id.login_button);
 
         signinButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 final String email = emailEditText.getText().toString();
                 final String password = passwordEditText.getText().toString();
 
-                Boolean validInput = !(email.isEmpty() || password.isEmpty()
+                boolean validInput = !(email.isEmpty() || password.isEmpty()
                         || email.length() > 100 || password.length() > 100);
 
                 if (validInput) {
@@ -56,12 +55,10 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(LoginActivity.this, "Authentication success.",
-                                                Toast.LENGTH_SHORT).show();
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.makeText(LoginActivity.this, "Incorrect email or password",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
@@ -100,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
         // for now, commented out cuz I need to write more code
         //updateUI(currentUser);
     }
+
     private void showInvalidInputSnackbar(View v){
 
         String msg = "Login failed, please fix the following issues to log in:\n";

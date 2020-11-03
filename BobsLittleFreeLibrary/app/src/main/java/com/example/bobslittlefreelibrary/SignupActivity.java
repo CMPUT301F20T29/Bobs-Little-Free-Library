@@ -137,6 +137,7 @@ public class SignupActivity extends AppCompatActivity {
         textView.setMaxLines(6);
         sb.show();
     }
+     */
 
 
 }

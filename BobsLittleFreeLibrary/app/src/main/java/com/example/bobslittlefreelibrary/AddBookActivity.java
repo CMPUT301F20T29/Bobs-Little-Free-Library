@@ -115,7 +115,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                 if (validInput) {
                     // TODO: create new book and add to firestore here
                 } else {
-                    showSnackbar(v);
+                    showInvalidInputSnackbar(v);
                 }
             }
         });
@@ -135,6 +135,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
             isbnInput = findViewById(R.id.isbn_input);
             titleInput = findViewById(R.id.title_input);
             authorInput = findViewById(R.id.author_input);
@@ -149,11 +153,6 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
             boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
         }
     };
 
@@ -251,7 +250,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.
-    private void showSnackbar(View v){
+    private void showInvalidInputSnackbar(View v){
 
         String msg = "Please fix the following issues before adding your book:\n";
 
@@ -264,7 +263,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         if (title.length() > 50) { msg += "\n - Title is too long"; }
         if (title.length() > 50) { msg += "\n - Title is too long"; }
         if (author.length() > 50) { msg += "\n - Author is too long"; }
-        if (isbn.length() != 10 && isbn.length() != 13 && !isbn.isEmpty()) { msg += "\n - ISBN is invalid"; }
+        if (!isbn.isEmpty() && isbn.length() != 10 && isbn.length() != 13) { msg += "\n - ISBN is invalid"; }
         if (isbn.isEmpty()) { msg += "\n - ISBN is empty"; }
         if (title.isEmpty()) { msg += "\n - Title is empty"; }
         if (author.isEmpty()) { msg += "\n - Author is empty"; }

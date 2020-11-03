@@ -28,8 +28,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPassEditText;
     private EditText addressEditText;
-    private Button backButton;
-    private Button signupButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,7 @@ public class SignupActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password_signup);
         confirmPassEditText = findViewById(R.id.confirm_password);
         addressEditText = findViewById(R.id.address_signup);
-        backButton = findViewById(R.id.back_button2);
+        Button backButton = findViewById(R.id.back_button2);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +49,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        signupButton = findViewById(R.id.signup);
+        Button signupButton = findViewById(R.id.signup);
         signupButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
@@ -99,7 +97,7 @@ public class SignupActivity extends AppCompatActivity {
                 (password.length() > 100) || address.length() > 100);
         boolean emptyCheck = !(username.isEmpty() || email.isEmpty() || password.isEmpty() ||
                 address.isEmpty());
-        boolean passwordConfirmation = (confirmPass == password);
+        boolean passwordConfirmation = (confirmPass.equals(password));
 
         return  underCharLimitCheck && emptyCheck && passwordConfirmation;
 
@@ -124,37 +122,7 @@ public class SignupActivity extends AppCompatActivity {
         if (username.length() > 30) { msg += "\n - Username is too long"; }
         if (email.length() > 100) { msg += "\n - Email is too long"; }
         if (password.length() > 100) { msg += "\n - Password is too long"; }
-        if (!password.isEmpty() && confirmPass != password) { msg += "\n - Password confirmation is not the same as password"; }
-        if (address.length() > 100) { msg += "\n - Address is too long"; }
-
-        if (username.isEmpty()) { msg += "\n - Username is empty"; }
-        if (email.isEmpty()) { msg += "\n - Email is empty"; }
-        if (password.isEmpty()) { msg += "\n - Password is empty"; }
-        if (address.isEmpty()) { msg += "\n - Address is empty"; }
-
-
-        Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
-        View sbView = sb.getView();
-        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
-        textView.setMaxLines(6);
-        sb.show();
-    }
-
-    /*
-    private void showInvalidInputSnackbar(View v){
-
-        String msg = "Sign up failed, please fix the following issues to sign up:\n";
-
-        String username = usernameEditText.getText().toString();
-        String email = emailEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
-        String confirmPass = confirmPassEditText.getText().toString();
-        String address = addressEditText.getText().toString();
-
-        if (username.length() > 30) { msg += "\n - Username is too long"; }
-        if (email.length() > 100) { msg += "\n - Email is too long"; }
-        if (password.length() > 100) { msg += "\n - Password is too long"; }
-        if (!password.isEmpty() && confirmPass != password) { msg += "\n - Password confirmation is not the same as password"; }
+        if (!password.isEmpty() && !confirmPass.equals(password)) { msg += "\n - Password confirmation is not the same as password"; }
         if (address.length() > 100) { msg += "\n - Address is too long"; }
 
         if (username.isEmpty()) { msg += "\n - Username is empty"; }

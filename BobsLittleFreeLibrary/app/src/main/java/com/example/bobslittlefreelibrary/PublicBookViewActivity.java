@@ -11,15 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup button functionality, initialize imageView, populate profile button with username and link it to UserProfileView activity, put everything in a nested view
+ * TODO: Setup button functionality, populate profile button with username and link it to UserProfileView activity
  *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
-    // Class variables
-    private Book book;
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -37,7 +37,8 @@ public class PublicBookViewActivity extends AppCompatActivity {
 
         // Get Book object passed from Intent
         Intent intent = getIntent();
-        book = (Book) intent.getSerializableExtra("BOOK");
+        // Class variables
+        Book book = (Book) intent.getSerializableExtra("BOOK");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
@@ -75,7 +76,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Back button pressed");
                 finish();
             }
         });
@@ -91,11 +91,15 @@ public class PublicBookViewActivity extends AppCompatActivity {
         bookStatus = findViewById(R.id.public_book_view_status_text);
         requestButton = findViewById(R.id.public_book_view_request_button);
         backButton = findViewById(R.id.public_book_view_back_button);
-
     }
 
     private void setUIValues(Book book) {
-        //bookImage.setImageResource("@drawable:");
+        String pictureURL = book.getPictureURL();
+        if (pictureURL != null) {
+            new DownloadImageTask(bookImage).execute(pictureURL);
+        } else {
+            bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+        }
         titleText.setText(book.getTitle());
         authorText.setText(book.getAuthor());
         ISBNText.setText(book.getISBN());

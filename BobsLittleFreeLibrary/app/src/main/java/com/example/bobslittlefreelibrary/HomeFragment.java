@@ -121,38 +121,28 @@ public class HomeFragment extends Fragment {
         int currentRow = 0;
         for (int i = 0; i < listOfBooks.size(); i++) {
             Book currentBook = listOfBooks.get(i);
+            TableRow rowOne = (TableRow) latestBooks.getChildAt(currentRow);
+            ImageButton button;
+            if (i < 3) { // Select button based on index. (0-2 are top row, 3-5 are bottom row)
+                button = (ImageButton) rowOne.getChildAt(i);
+            } else {
+                button = (ImageButton) rowOne.getChildAt(i - 3);
+            }
+            String pictureURL = currentBook.getPictureURL();  // Get image url
+            if (pictureURL != null) {
+                new DownloadImageTask(button).execute(pictureURL);
+            } else {
+                button.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+            }
+            // Select which activity to go to based on owner of book.
             if (user.getUid().equals(currentBook.getOwnerID())) {
-                TableRow rowOne = (TableRow) latestBooks.getChildAt(currentRow);
-                ImageButton button;
-                if (i < 3) {
-                    button = (ImageButton) rowOne.getChildAt(i);
-                } else {
-                    button = (ImageButton) rowOne.getChildAt(i - 3);
-                }
-                if (currentBook.getPictureURL() != null) {
-                    new DownloadImageTask(button).execute(currentBook.getPictureURL());
-                } else {
-                    button.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-                }
                 int finalI = i;
                 button.setOnClickListener(v -> {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK", listOfBooks.get(finalI));
+                    intent.putExtra("BOOK", listOfBooks.get(finalI));  // Send book to be displayed in book view activity
                     startActivity(intent);
                 });
             } else {
-                TableRow rowOne = (TableRow) latestBooks.getChildAt(currentRow);
-                ImageButton button;
-                if (i < 3) {
-                    button = (ImageButton) rowOne.getChildAt(i);
-                } else {
-                    button = (ImageButton) rowOne.getChildAt(i - 3);
-                }
-                if (currentBook.getPictureURL() != null) {
-                    new DownloadImageTask(button).execute(currentBook.getPictureURL());
-                } else {
-                    button.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-                }
                 int finalI1 = i;
                 button.setOnClickListener(v -> {
                     Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);

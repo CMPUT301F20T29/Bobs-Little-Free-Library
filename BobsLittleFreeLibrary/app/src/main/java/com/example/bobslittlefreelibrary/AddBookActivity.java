@@ -133,7 +133,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                     String author = authorInput.getText().toString();
                     String desc = descInput.getText().toString();
 
-                    book = new Book(title, "status", desc, author, "owner", isbn);
+                    book = new Book(title, author, isbn, desc,"owner", "status");
 
                     db.collection("books")
                             .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

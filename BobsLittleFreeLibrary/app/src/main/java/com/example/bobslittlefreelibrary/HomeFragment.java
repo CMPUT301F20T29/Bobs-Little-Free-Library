@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -22,9 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -124,7 +121,7 @@ public class HomeFragment extends Fragment {
         int currentRow = 0;
         for (int i = 0; i < listOfBooks.size(); i++) {
             Book currentBook = listOfBooks.get(i);
-            if (user.getUid().equals(currentBook.getOwner())) {
+            if (user.getUid().equals(currentBook.getOwnerID())) {
                 TableRow rowOne = (TableRow) latestBooks.getChildAt(currentRow);
                 ImageButton button;
                 if (i < 3) {

@@ -60,4 +60,8 @@ public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
 
         return view;
     }
+
+    public void setSentTab(Boolean sentTab) {
+        isSentTab = sentTab;
+    }
 }

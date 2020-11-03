@@ -91,6 +91,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // onStart() checks if user is already logged in; if yes, move to main activity
+        // for now, commented out cuz I need to write more code
+        //updateUI(currentUser);
+    }
     private void showInvalidInputSnackbar(View v){
 
         String msg = "Login failed, please fix the following issues to log in:\n";

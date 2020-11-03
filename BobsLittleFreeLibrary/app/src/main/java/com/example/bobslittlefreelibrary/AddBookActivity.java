@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -122,12 +124,31 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                 Log.d(TAG, "onClick: ADD button clicked");
                 if (validInput) {
 
-                    // TODO: create new book add all its attributes to firestore then use id to save image to cloud storage
+                    // Add initialize book object and add it to db
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+                    String isbn = isbnInput.getText().toString();
+                    String title = titleInput.getText().toString();
+                    String author = authorInput.getText().toString();
+                    String desc = descInput.getText().toString();
+
+                    book = new Book(title, "status", desc, author, "owner", isbn);
+                    final String[] bookId = new String[1];
+
+                    db.collection("books")
+                            .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            bookId[0] = documentReference.getId();
+                        }
+                    });
+
+                    // if the user took/selected an image, then upload it to storage, and save it's url to
+                    // the book's document
                     if (imageUrlFromResponse != null) {
-                        // TODO: add url to db
-                    } else if (!currentPhotoPath.startsWith("drawable")) {
+                        db.collection("books").document(bookId[0]).update("picture", imageUrlFromResponse);
 
+                    } else if (!currentPhotoPath.startsWith("drawable")) {
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                         StorageReference bookImagesRef = storageRef.child("book-images");
                         StorageReference imageRef = bookImagesRef.child("bookId" + ".jpg");
@@ -139,7 +160,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Log.d(TAG, "onSuccess: " + uri.toString());
+                                        db.collection("books").document(bookId[0]).update("picture", uri.toString());
                                     }
                                 });
                             }
@@ -279,6 +300,8 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             this.currentPhotoPath = selectedImage.toString();
             picture.setImageURI(selectedImage);
         }
+
+        imageUrlFromResponse = null;
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.

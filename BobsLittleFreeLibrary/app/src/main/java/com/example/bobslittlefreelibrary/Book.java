@@ -38,7 +38,6 @@ public class Book implements Serializable
         this.status = status;
         this.description = description;
         this.author = author;
-        this.pictureURL = pictureURL;
         this.owner = owner;
         this.ISBN = ISBN;
         this.dateAdded = getDateNow();

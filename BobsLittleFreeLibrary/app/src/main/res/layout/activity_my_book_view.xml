@@ -1,190 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="11dp">
 
-    <!-- Top button begin-->
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/top_buttons">
-
-        <Button
-            android:id="@+id/my_book_view_back_button"
-            android:text="@string/back"
-            style="@style/BackButton"/>
-
-        <View android:id="@+id/my_book_view_divider1"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/my_book_view_back_button"
-            android:background="?android:attr/dividerVertical" />
-
-    </RelativeLayout>
-    <!-- Top button end-->
-
-
-    <!-- Book Image and Text starts -->
     <LinearLayout
-        android:id="@+id/my_book_view_book_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_buttons"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:layout_gravity="start"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/my_book_view_image"
-            android:layout_width="125dp"
-            android:layout_height="150dp"
-            tools:srcCompat="@drawable/no_cover_img" />
+        <!-- Top button begin-->
+        <RelativeLayout
+            android:id="@+id/top_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
+            <Button
+                android:id="@+id/my_book_view_back_button"
+                style="@style/BackButton"
+                android:text="@string/back" />
+
+            <View
+                android:id="@+id/my_book_view_divider1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/my_book_view_back_button"
+                android:background="?android:attr/dividerVertical" />
+
+        </RelativeLayout>
+        <!-- Top button end-->
+
+
+        <!-- Book Image and Text starts -->
         <LinearLayout
-            android:id="@+id/my_book_view_text_container"
+            android:id="@+id/my_book_view_book_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/my_book_view_title"
+            <ImageView
+                android:id="@+id/my_book_view_image"
+                android:layout_width="125dp"
+                android:layout_height="150dp"
+                tools:srcCompat="@drawable/no_cover_img" />
+
+            <LinearLayout
+                android:id="@+id/my_book_view_text_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="40sp"
-                android:text="Title" />
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/my_book_view_author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="Author" />
+                <TextView
+                    android:id="@+id/my_book_view_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Title"
+                    android:textSize="40sp" />
 
-            <TextView
-                android:id="@+id/my_book_view_ISBN"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="ISBN" />
+                <TextView
+                    android:id="@+id/my_book_view_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Author"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/my_book_view_ISBN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="ISBN"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <View android:id="@+id/my_book_view_divider2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/my_book_view_book_info_container"
-        android:layout_marginTop="10dp"
-        android:background="?android:attr/dividerVertical" />
-
-    <LinearLayout
-        android:id="@+id/my_book_view_desc_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/my_book_view_book_info_container"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/my_book_view_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textSize="18sp"
-            android:text="This is a test description. I am trying to make it
-            really long so I can see how it looks. Now I'm gonna copy paste this\n
-            bruhThis is a test description. I am trying to make it
-            really long so I can see how it looks. Now I'm gonna copy paste this\n
-            bruhThis is a test description. I am trying to make it
-            really long so I can see how it looks. Now I'm gonna copy paste this\n
-            bruhThis is a test description. I am trying to make it
-            really long so I can see how it looks. Now I'm gonna copy paste this\n
-            bruh" />
-    </LinearLayout>
-
-    <!-- Other info starts -->
-    <RelativeLayout
-        android:id="@+id/my_book_view_other_info_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/my_book_view_button_container"
-        android:layout_marginBottom="15dp">
-
-        <View android:id="@+id/my_book_view_divider3"
+        <View
+            android:id="@+id/my_book_view_divider2"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="10dp"
-            android:background="?android:attr/dividerVertical" />
-
-        <TextView
-            android:id="@+id/my_book_view_borrower_text"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:textSize="30sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@+id/my_book_view_divider3"
-            android:gravity="center"
-            android:text="@string/current_borrower" />
-
-        <Button
-            android:id="@+id/my_book_view_borrower_profile_button"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/my_book_view_borrower_text"
-            android:layout_below="@+id/my_book_view_divider3"
-            android:drawableLeft="@drawable/user_icon"
-            android:drawableStart="@drawable/user_icon"
-            android:padding="16dp"
-            android:text="Name"
-            android:textSize="20sp"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:id="@+id/my_book_view_status_text"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:layout_below="@+id/my_book_view_borrower_text"
-            android:text="Book Status" />
-
-        <View android:id="@+id/my_book_view_divider4"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/my_book_view_status_text"
             android:layout_marginTop="10dp"
             android:background="?android:attr/dividerVertical" />
 
-    </RelativeLayout>
-
-    <!-- Buttons -->
-    <LinearLayout
-        android:id="@+id/my_book_view_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/my_book_view_remove_button"
-            android:layout_width="125dp"
+        <LinearLayout
+            android:id="@+id/my_book_view_desc_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remove Book" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/my_book_view_edit_button"
-            android:layout_width="125dp"
+            <TextView
+                android:id="@+id/my_book_view_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="This is a test description. I am trying to make it
+            really long so I can see how it looks. Now I'm gonna copy paste this\n
+            bruhThis is a test description. I am trying to make it
+            really long so I can see how it looks. Now I'm gonna copy paste this\n
+            bruhThis is a test description. I am trying to make it
+            really long so I can see how it looks. Now I'm gonna copy paste this\n
+            bruhThis is a test description. I am trying to make it
+            really long so I can see how it looks. Now I'm gonna copy paste this\n
+            bruh"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- Other info starts -->
+        <RelativeLayout
+            android:id="@+id/my_book_view_other_info_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Info" />
+            android:layout_marginBottom="15dp">
+
+            <View
+                android:id="@+id/my_book_view_divider3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/dividerVertical" />
+
+            <TextView
+                android:id="@+id/my_book_view_borrower_text"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_below="@+id/my_book_view_divider3"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="@string/current_borrower"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/my_book_view_borrower_profile_button"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/my_book_view_divider3"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/my_book_view_borrower_text"
+                android:background="@color/colorPrimary"
+                android:drawableStart="@drawable/user_icon"
+                android:drawableLeft="@drawable/user_icon"
+                android:padding="16dp"
+                android:text="Name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/my_book_view_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/my_book_view_borrower_text"
+                android:gravity="center"
+                android:text="Book Status"
+                android:textSize="30sp" />
+
+            <View
+                android:id="@+id/my_book_view_divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/my_book_view_status_text"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/dividerVertical" />
+
+        </RelativeLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:id="@+id/my_book_view_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/my_book_view_remove_button"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="Remove Book" />
+
+            <Button
+                android:id="@+id/my_book_view_edit_button"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:text="Edit Info" />
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>

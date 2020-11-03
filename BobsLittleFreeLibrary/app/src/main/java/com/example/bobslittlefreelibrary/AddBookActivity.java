@@ -1,5 +1,6 @@
 package com.example.bobslittlefreelibrary;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -25,7 +26,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,9 +64,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private EditText authorInput;
     private EditText descInput;
     private ImageView picture;
-    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;;
+    private String currentPhotoPath =  "drawable://" + R.drawable.blue_book;
     private Book book;
-    Boolean validInput = false;
+    private String imageUrlFromResponse;
+    private Boolean validInput = false;
 
     private RequestQueue mQueue;
 
@@ -113,9 +121,33 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ADD button clicked");
                 if (validInput) {
-                    // TODO: create new book and add to firestore here
+
+                    // TODO: create new book add all its attributes to firestore then use id to save image to cloud storage
+
+                    if (imageUrlFromResponse != null) {
+                        // TODO: add url to db
+                    } else if (!currentPhotoPath.startsWith("drawable")) {
+
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                        StorageReference bookImagesRef = storageRef.child("book-images");
+                        StorageReference imageRef = bookImagesRef.child("bookId" + ".jpg");
+
+                        UploadTask uploadTask = imageRef.putFile(Uri.parse(currentPhotoPath));
+                        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Log.d(TAG, "onSuccess: " + uri.toString());
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                 } else {
-                    showSnackbar(v);
+                    showInvalidInputSnackbar(v);
                 }
             }
         });
@@ -135,6 +167,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
             isbnInput = findViewById(R.id.isbn_input);
             titleInput = findViewById(R.id.title_input);
             authorInput = findViewById(R.id.author_input);
@@ -149,11 +185,6 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
             boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
         }
     };
 
@@ -181,10 +212,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             JSONObject imagesLinks = volumeInfo.optJSONObject("imageLinks");
                             if (imagesLinks != null) {
                                 // if there are image links in response then get the url for image
-                                String url = getImageUrl(imagesLinks);
-                                if (url != null) {
+                                imageUrlFromResponse = getImageUrl(imagesLinks);
+                                if (imageUrlFromResponse != null) {
                                     // dl and set image to picture ImageView
-                                    new DownloadImageTask(picture).execute(url);
+                                    new DownloadImageTask(picture).execute(imageUrlFromResponse);
                                 }
                             }
 
@@ -239,7 +270,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     public void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath) {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            this.currentPhotoPath = currentPhotoPath;
+            this.currentPhotoPath = Uri.fromFile(new File(currentPhotoPath)).toString();
             picture.setImageURI(Uri.parse(currentPhotoPath));
         }
 
@@ -251,7 +282,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.
-    private void showSnackbar(View v){
+    private void showInvalidInputSnackbar(View v){
 
         String msg = "Please fix the following issues before adding your book:\n";
 
@@ -264,7 +295,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         if (title.length() > 50) { msg += "\n - Title is too long"; }
         if (title.length() > 50) { msg += "\n - Title is too long"; }
         if (author.length() > 50) { msg += "\n - Author is too long"; }
-        if (isbn.length() != 10 && isbn.length() != 13 && !isbn.isEmpty()) { msg += "\n - ISBN is invalid"; }
+        if (!isbn.isEmpty() && isbn.length() != 10 && isbn.length() != 13) { msg += "\n - ISBN is invalid"; }
         if (isbn.isEmpty()) { msg += "\n - ISBN is empty"; }
         if (title.isEmpty()) { msg += "\n - Title is empty"; }
         if (author.isEmpty()) { msg += "\n - Author is empty"; }

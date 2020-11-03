@@ -140,6 +140,7 @@ public class SignupActivity extends AppCompatActivity {
         sb.show();
     }
 
+    /*
     private void showInvalidInputSnackbar(View v){
 
         String msg = "Sign up failed, please fix the following issues to sign up:\n";
@@ -168,6 +169,7 @@ public class SignupActivity extends AppCompatActivity {
         textView.setMaxLines(6);
         sb.show();
     }
+     */
 
 
 }

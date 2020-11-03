@@ -21,9 +21,11 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
     }
 
+
     private void setupData() {
 
     }
+
 
     private void setupList() {
 

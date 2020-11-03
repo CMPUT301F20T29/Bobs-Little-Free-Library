@@ -88,6 +88,9 @@ public class MyBookViewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up all of the references to UI elements in the activity layout.
+     * */
     private void setupUIReferences() {
         bookImage = findViewById(R.id.my_book_view_image);
         titleText = findViewById(R.id.my_book_view_title);
@@ -102,6 +105,9 @@ public class MyBookViewActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method assigns values to UI elements in the activity layout.
+     * */
     private void setUIValues(Book book) {
         String pictureURL = book.getPictureURL();
         if (pictureURL != null) {

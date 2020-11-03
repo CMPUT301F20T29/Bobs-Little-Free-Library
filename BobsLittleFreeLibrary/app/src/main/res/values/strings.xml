@@ -4,4 +4,7 @@
     <string name="latest_books">Latest Books</string>
     <string name="requests_overview">Requests Overview</string>
     <string name="quick_scan">Quick Scan</string>
+    <string name="back">Back</string>
+    <string name="book_owner">Book Owner</string>
+    <string name="current_borrower">Current Borrower</string>
 </resources>

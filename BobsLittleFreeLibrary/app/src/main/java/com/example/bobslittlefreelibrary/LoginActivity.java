@@ -44,12 +44,10 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(LoginActivity.this, "Authentication success.",
-                                            Toast.LENGTH_SHORT).show();
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.makeText(LoginActivity.this, "Incorrect email or password.",
                                             Toast.LENGTH_SHORT).show();
                                     updateUI(null);
                                 }
@@ -73,5 +71,14 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // onStart() checks if user is already logged in; if yes, move to main activity
+        // for now, commented out cuz I need to write more code
+        //updateUI(currentUser);
     }
 }

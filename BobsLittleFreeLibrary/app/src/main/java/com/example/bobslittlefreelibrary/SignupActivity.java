@@ -64,7 +64,7 @@ public class SignupActivity extends AppCompatActivity {
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(SignupActivity.this, "Authentication failed.",
+                                        Toast.makeText(SignupActivity.this, "Failed to signup",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
@@ -76,11 +76,19 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private boolean checkSignupInfo(String username, String email, String password, String confirmPass, String address){
+        // checks when signing up:
+        // email format = alphanumeric@alphanumeric
+        // username format = alphanumeric within 12 characters
+        // password format = more than 6 characters
+        // confirm pass format = same as password
+        // address format = no format at the moment
         return true;
     }
 
     public void updateUI(FirebaseUser user){
-        return;
+        if (user != null){
+            finish();
+        }
     }
 
 

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup button functionality, initialize imageView, populate profile button with username and link it to UserProfileView activity
+ * TODO: Setup button functionality, initialize imageView, populate profile button with username and link it to UserProfileView activity, put everything in a nested view
  *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {

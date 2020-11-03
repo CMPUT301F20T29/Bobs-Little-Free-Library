@@ -58,8 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(LoginActivity.this, "Incorrect email or password",
-                                                Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(v, "Incorrect email or password", Snackbar.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
                                 }

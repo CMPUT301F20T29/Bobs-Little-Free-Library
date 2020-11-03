@@ -140,5 +140,34 @@ public class SignupActivity extends AppCompatActivity {
         sb.show();
     }
 
+    private void showInvalidInputSnackbar(View v){
+
+        String msg = "Sign up failed, please fix the following issues to sign up:\n";
+
+        String username = usernameEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String confirmPass = confirmPassEditText.getText().toString();
+        String address = addressEditText.getText().toString();
+
+        if (username.length() > 30) { msg += "\n - Username is too long"; }
+        if (email.length() > 100) { msg += "\n - Email is too long"; }
+        if (password.length() > 100) { msg += "\n - Password is too long"; }
+        if (!password.isEmpty() && confirmPass != password) { msg += "\n - Password confirmation is not the same as password"; }
+        if (address.length() > 100) { msg += "\n - Address is too long"; }
+
+        if (username.isEmpty()) { msg += "\n - Username is empty"; }
+        if (email.isEmpty()) { msg += "\n - Email is empty"; }
+        if (password.isEmpty()) { msg += "\n - Password is empty"; }
+        if (address.isEmpty()) { msg += "\n - Address is empty"; }
+
+
+        Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
+        View sbView = sb.getView();
+        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
+        textView.setMaxLines(6);
+        sb.show();
+    }
+
 
 }

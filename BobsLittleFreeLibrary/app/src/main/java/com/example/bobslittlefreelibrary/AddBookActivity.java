@@ -70,6 +70,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private Book book;
     private String imageUrlFromResponse;
     private Boolean validInput = false;
+    private String bookId;
 
     private RequestQueue mQueue;
 
@@ -133,25 +134,24 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                     String desc = descInput.getText().toString();
 
                     book = new Book(title, "status", desc, author, "owner", isbn);
-                    final String[] bookId = new String[1];
 
                     db.collection("books")
                             .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            bookId[0] = documentReference.getId();
+                            bookId = documentReference.getId();
                         }
                     });
 
                     // if the user took/selected an image, then upload it to storage, and save it's url to
                     // the book's document
                     if (imageUrlFromResponse != null) {
-                        db.collection("books").document(bookId[0]).update("picture", imageUrlFromResponse);
+                        db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
 
                     } else if (!currentPhotoPath.startsWith("drawable")) {
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                         StorageReference bookImagesRef = storageRef.child("book-images");
-                        StorageReference imageRef = bookImagesRef.child("bookId" + ".jpg");
+                        StorageReference imageRef = bookImagesRef.child(bookId + ".jpg");
 
                         UploadTask uploadTask = imageRef.putFile(Uri.parse(currentPhotoPath));
                         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -160,7 +160,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        db.collection("books").document(bookId[0]).update("picture", uri.toString());
+                                        db.collection("books").document(bookId).update("pictureURL", uri.toString());
                                     }
                                 });
                             }

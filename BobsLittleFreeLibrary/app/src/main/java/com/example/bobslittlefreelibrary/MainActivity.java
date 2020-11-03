@@ -66,9 +66,32 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home_page);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-        // Set default screen as home screen
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+
+        // Get which fragment to show in main activity
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            if (extras.getString("WHICH_FRAGMENT").equals("DASH")){
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HomeFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.home_page);
+
+            } else if (extras.getString("WHICH_FRAGMENT").equals("BOOKS")) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new BooksFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.books_page);
+
+            } else if (extras.getString("WHICH_FRAGMENT").equals("REQS")) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new RequestsFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.requests_page);
+            }
+
+        } else {
+            // Set default screen as home screen
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+        }
     }
 
     // We define this listener outside the onCreate method to customize it to our fragments and set it in the OnCreate method

@@ -9,8 +9,7 @@ public class UserTest {
      *  Creates an instance of User class/classes to pass to book class
      * */
     private User mockUser() {
-        return new User("Albert0", "ThickyChicky69", "Albert0@gmail.com",
-                "12345 67st NE");
+        return new User("Albert0",  "Albert0@gmail.com", "12345 67st NE");
     }
 
     /**
@@ -19,7 +18,7 @@ public class UserTest {
     private Book mockBook() {
         User user = mockUser();
         return new Book("Guide", "Available", "A step by step instructions manual",
-                "Jimmy Blake", "Picture1234", user, "1234567890");
+                "Jimmy Blake", "Picture1234", "Albert0", "1234567890");
     }
 
     /**
@@ -31,8 +30,8 @@ public class UserTest {
     * */
     @Test
     public void testArrayAddDelete(){
-        Book book1 = mockBook();
-        Book book2 = mockBook();
+        String book1 = mockBook().getOwner();
+        String book2 = mockBook().getOwner();
 
 
         User userTest = mockUser();
@@ -58,12 +57,10 @@ public class UserTest {
         User userTest = mockUser();
 
         String username = userTest.getUsername();
-        String password = userTest.getPassword();
         String email = userTest.getEmail();
         String address = userTest.getAddress();
 
         assertEquals("Albert0",username);
-        assertEquals("ThickyChicky69", password);
         assertEquals("Albert0@gmail.com", email);
         assertEquals("12345 67st NE", address);
 
@@ -79,25 +76,20 @@ public class UserTest {
         User userTest = mockUser();
 
         String username = userTest.getUsername();
-        String password = userTest.getPassword();
         String email = userTest.getEmail();
         String address = userTest.getAddress();
         assertEquals("Albert0",username);
-        assertEquals("ThickyChicky69", password);
         assertEquals("Albert0@gmail.com", email);
         assertEquals("12345 67st NE", address);
 
         userTest.setUsername("Roberts80085");
-        userTest.setPassword("JuicyFruity28");
         userTest.setEmail("Roberts80085@gmail.com");
         userTest.setAddress("54321 76st NW");
 
         String username2 = userTest.getUsername();
-        String password2 = userTest.getPassword();
         String email2 = userTest.getEmail();
         String address2 = userTest.getAddress();
         assertEquals("Roberts80085",username2);
-        assertEquals("JuicyFruity28", password2);
         assertEquals("Roberts80085@gmail.com", email2);
         assertEquals("54321 76st NW", address2);
 

@@ -94,11 +94,12 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+
+                            int i = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                // Log.d("TEMP", document.getId() + " => " + document.getData());
-                                listOfBooks.add(document.toObject(Book.class));
+                                setupImageButton(document, i);
+                                i++;
                             }
-                            setupImageButtons();
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());
                         }
@@ -116,43 +117,41 @@ public class HomeFragment extends Fragment {
         Log.d("TEMP", "Home Fragment is paused and the view will be deleted");
     }
 
-    private void setupImageButtons() {
-        // Setup onClickListeners for all of the ImageButtons and set which book they go to
-        int currentRow = 0;
-        for (int i = 0; i < listOfBooks.size(); i++) {
-            Book currentBook = listOfBooks.get(i);
-            TableRow rowOne = (TableRow) latestBooks.getChildAt(currentRow);
-            ImageButton button;
-            if (i < 3) { // Select button based on index. (0-2 are top row, 3-5 are bottom row)
-                button = (ImageButton) rowOne.getChildAt(i);
-            } else {
-                button = (ImageButton) rowOne.getChildAt(i - 3);
-            }
-            String pictureURL = currentBook.getPictureURL();  // Get image url
-            if (pictureURL != null) {
-                new DownloadImageTask(button).execute(pictureURL);
-            } else {
-                button.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
-            }
-            // Select which activity to go to based on owner of book.
-            if (user.getUid().equals(currentBook.getOwnerID())) {
-                int finalI = i;
-                button.setOnClickListener(v -> {
-                    Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK", listOfBooks.get(finalI));  // Send book to be displayed in book view activity
-                    startActivity(intent);
-                });
-            } else {
-                int finalI1 = i;
-                button.setOnClickListener(v -> {
-                    Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK", listOfBooks.get(finalI1));
-                    startActivity(intent);
-                });
-            }
-            if (i == 2) {
-                currentRow = 1;
-            }
+    private void setupImageButton(QueryDocumentSnapshot document, int i) {
+
+        Book currentBook = document.toObject(Book.class);
+        ImageButton button;
+        TableRow row;
+
+        // Get correct button at (row, i%3)
+        if (i < 3) {
+            row = (TableRow) latestBooks.getChildAt(0);
+        } else {
+            row = (TableRow) latestBooks.getChildAt(1);
+        }
+        button = (ImageButton) row.getChildAt(i%3);
+
+        String pictureURL = currentBook.getPictureURL();  // Get image url
+        if (pictureURL != null) {
+            new DownloadImageTask(button).execute(pictureURL);
+        } else {
+            button.setImageResource(R.drawable.blue_book);
+        }
+
+//        if (user.getUid().equals(currentBook.getOwnerID())) {
+        if (true) { // to test edit book 
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
+                intent.putExtra("BOOK_ID", document.getId());
+                intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
+                startActivity(intent);
+            });
+        } else {
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
+                intent.putExtra("BOOK", currentBook);
+                startActivity(intent);
+            });
         }
     }
 }

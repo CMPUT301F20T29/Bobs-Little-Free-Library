@@ -11,11 +11,11 @@ public class RequestTest {
     }
 
     private String mockRequester() {
-        return "bob123";
+        return "9EC0qH6AHAXaZjg0roAmLv1i7ap1";
     }
 
     private String mockProvider() {
-        return "jessie123";
+        return "lTu4tdKwMVZr7abqakjZ5QU1PIF3";
     }
 
     private String mockBookID() {

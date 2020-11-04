@@ -28,8 +28,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPassEditText;
     private EditText addressEditText;
-    private Button backButton;
-    private Button signupButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,7 @@ public class SignupActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password_signup);
         confirmPassEditText = findViewById(R.id.confirm_password);
         addressEditText = findViewById(R.id.address_signup);
-        backButton = findViewById(R.id.back_button2);
+        Button backButton = findViewById(R.id.back_button2);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +49,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        signupButton = findViewById(R.id.signup);
+        Button signupButton = findViewById(R.id.signup);
         signupButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
@@ -75,7 +73,7 @@ public class SignupActivity extends AppCompatActivity {
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(SignupActivity.this, "Authentication failed.",
+                                        Toast.makeText(SignupActivity.this, "Failed to signup",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
@@ -99,14 +97,16 @@ public class SignupActivity extends AppCompatActivity {
                 (password.length() > 100) || address.length() > 100);
         boolean emptyCheck = !(username.isEmpty() || email.isEmpty() || password.isEmpty() ||
                 address.isEmpty());
-        boolean passwordConfirmation = (confirmPass == password);
+        boolean passwordConfirmation = (confirmPass.equals(password));
 
         return  underCharLimitCheck && emptyCheck && passwordConfirmation;
 
     }
 
     public void updateUI(FirebaseUser user){
-        return;
+        if (user != null){
+            finish();
+        }
     }
 
     private void showInvalidInputSnackbar(View v){
@@ -122,7 +122,7 @@ public class SignupActivity extends AppCompatActivity {
         if (username.length() > 30) { msg += "\n - Username is too long"; }
         if (email.length() > 100) { msg += "\n - Email is too long"; }
         if (password.length() > 100) { msg += "\n - Password is too long"; }
-        if (!password.isEmpty() && confirmPass != password) { msg += "\n - Password confirmation is not the same as password"; }
+        if (!password.isEmpty() && !confirmPass.equals(password)) { msg += "\n - Password confirmation is not the same as password"; }
         if (address.length() > 100) { msg += "\n - Address is too long"; }
 
         if (username.isEmpty()) { msg += "\n - Username is empty"; }
@@ -137,6 +137,7 @@ public class SignupActivity extends AppCompatActivity {
         textView.setMaxLines(6);
         sb.show();
     }
+     */
 
 
 }

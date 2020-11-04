@@ -12,8 +12,7 @@ public class BookTest {
     *  Creates an instance of User class/classes to pass to book class
     * */
     private User mockUser() {
-        return new User("Albert0", "ThickyChicky69", "Albert0@gmail.com",
-                "12345 67st NE");
+        return new User("Albert0", "Albert0@gmail.com", "12345 67st NE");
     }
 
     /**

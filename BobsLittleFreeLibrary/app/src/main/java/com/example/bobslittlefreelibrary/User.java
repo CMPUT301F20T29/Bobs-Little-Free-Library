@@ -40,9 +40,9 @@ public class User implements Serializable
 
 
     // Adds books to users array list of books
-    public void addBook(String someBookid) { bookArrayList.add(someBookid); }
+    public void addBook(String someBookID) { bookArrayList.add(someBookID); }
 
     // Removes books from users array list of books
-    public void removeBook(Book someBook) { bookArrayList.remove(someBook); }
+    public void removeBook(String someBookID) { bookArrayList.remove(someBookID); }
 
 }

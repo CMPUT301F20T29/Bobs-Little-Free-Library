@@ -5,28 +5,37 @@ package com.example.bobslittlefreelibrary;
  */
 
 public class Requests {
-    private User reqSender;
-    private User reqReceiver;
-    private Book bookRequested;
+    private String reqSenderID;
+    private String reqReceiverID;
+    private String bookRequestedID;
     private String reqStatus;
     private String location;
 
     /**
-     * This is the (only) constructor for a request.
-     * @param reqSender the user sending the request
-     * @param recReceiver the user receiving the request
+     * This is an empty constructor for a Request object.
+     */
+    public Requests() {
+
+    }
+
+    /**
+     * This is the constructor for a Request object.
+     *
+     * @param reqSender     the user sending the request
+     * @param recReceiver   the user receiving the request
      * @param bookRequested the book being requested
      */
-    public Requests(User reqSender, User recReceiver, Book bookRequested) {
-        this.reqSender = reqSender;
-        this.reqReceiver = recReceiver;
-        this.bookRequested = bookRequested;
+    public Requests(String reqSender, String recReceiver, String bookRequested) {
+        this.reqSenderID = reqSender;
+        this.reqReceiverID = recReceiver;
+        this.bookRequestedID = bookRequested;
         this.reqStatus = "sent";
         this.location = null;
     }
 
     /**
      * A getter for reqStatus
+     *
      * @return the request status
      */
     public String getReqStatus() {
@@ -35,6 +44,7 @@ public class Requests {
 
     /**
      * A setter for the request status
+     *
      * @param reqStatus request status we want to set
      */
     public void setReqStatus(String reqStatus) {
@@ -43,6 +53,7 @@ public class Requests {
 
     /**
      * Getter for location, returns null if location has not been set yet.
+     *
      * @return the location, null if it has not been set yet
      */
     public String getLocation() {
@@ -51,33 +62,22 @@ public class Requests {
 
     /**
      * A setter for location
+     *
      * @param location the location to be set
      */
     public void setLocation(String location) {
         this.location = location;
     }
 
-    /**
-     * A getter for the book that's being requested
-     * @return the book being requested
-     */
-    public Book getBookRequested() {
-        return this.bookRequested;
+    public String getReqSenderID() {
+        return reqSenderID;
     }
 
-    /**
-     * A getter for the person sending the request
-     * @return person sending the request
-     */
-    public User getReqSender() {
-        return this.reqSender;
+    public String getReqReceiverID() {
+        return reqReceiverID;
     }
 
-    /**
-     * A getter for the person receiving the request
-     * @return person receiving the request
-     */
-    public User getReqReceiver() {
-        return this.reqReceiver;
+    public String getBookRequestedID() {
+        return bookRequestedID;
     }
 }

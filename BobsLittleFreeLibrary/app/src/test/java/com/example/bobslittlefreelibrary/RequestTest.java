@@ -6,6 +6,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class RequestTest {
 
+
     private Requests mockRequest() {
         return new Requests(mockRequester(), mockProvider(), mockBook());
     }

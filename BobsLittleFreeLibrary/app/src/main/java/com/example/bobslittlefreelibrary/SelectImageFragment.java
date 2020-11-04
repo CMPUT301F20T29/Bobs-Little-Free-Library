@@ -52,7 +52,7 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof ScanFragment.OnFragmentInteractionListener) {
+        if (context instanceof SelectImageFragment.OnFragmentInteractionListener) {
             listener = (SelectImageFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".templates.FormTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="start"
+
+        >
+
+        <!--        Top buttons begin-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/top_buttons">
+
+            <Button
+                android:id="@+id/back_button"
+                android:text="Back"
+                style="@style/BackButton"/>
+
+
+        </RelativeLayout>
+        <!--        Top buttons end-->
+
+        <!--        Title begin-->
+        <RelativeLayout
+            android:id="@+id/form_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/form_title_text"
+                android:text="Edit Book"
+                style="@style/ViewTitle"
+                />
+
+
+        </RelativeLayout>
+        <!--        Title end-->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_container"
+            >
+
+            <!-- Description Field Start-->
+            <TextView
+                android:id="@+id/desc_label"
+                android:text="Description"
+                android:layout_below="@+id/author_input"
+                style="@style/FormLabel"
+                />
+
+            <EditText
+                android:id="@+id/desc_input"
+                android:layout_below="@+id/desc_label"
+                android:inputType="textMultiLine"
+                style="@style/FormInput"
+                />
+            <!--Description Field End-->
+
+            <!--        Image Label begin-->
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/image_label"
+                android:layout_below="@+id/desc_input">
+
+                <TextView
+                    android:id="@+id/image_label_text"
+                    android:text="Image"
+                    style="@style/FormLabel"
+                    />
+
+                <Button
+                    android:id="@+id/image_label_button"
+                    android:text="Select"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="25dp"
+                    style="@style/SecondaryButton"/>
+
+            </RelativeLayout>
+            <!--        Image Label end-->
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_below="@+id/image_label"
+                style="@style/BookImage" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_below="@+id/form_container"
+            android:text="Edit Book"
+            style="@style/SubmitButton"
+            />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -78,12 +78,17 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Edit Info button pressed");
+                Intent intent = new Intent(MyBookViewActivity.this, EditBookActivity.class);
+                intent.putExtra("BOOK_ID", getIntent().getExtras().getString("BOOK_ID"));
+                intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
+                startActivity(intent);
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

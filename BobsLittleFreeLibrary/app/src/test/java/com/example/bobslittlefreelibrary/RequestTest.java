@@ -26,15 +26,6 @@ public class RequestTest {
         return "Behavior Modification: Principles and Procedures";
     }
 
-    @Test
-    public void testGetSetReqStatus() {
-        Request testRequest = mockRequest();
-        assertEquals("sent", testRequest.getReqStatus());
-
-        testRequest.setReqStatus("pendingExchange");
-        assertEquals("pendingExchange", testRequest.getReqStatus());
-    }
-
     //TODO: Test for location
 
 }

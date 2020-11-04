@@ -8,7 +8,6 @@ public class Request {
     private String reqSenderID;
     private String reqReceiverID;
     private String bookRequestedID;
-    private String reqStatus;
     private String location;
     private String bookImageURL;
     private String bookTitle;
@@ -31,28 +30,9 @@ public class Request {
         this.reqSenderID = reqSenderUserID;
         this.reqReceiverID = recReceiverUserID;
         this.bookRequestedID = bookRequestedID;
-        this.reqStatus = "sent";
         this.location = null;
         this.bookImageURL = bookImageURL;
         this.bookTitle = bookTitle;
-    }
-
-    /**
-     * A getter for reqStatus
-     *
-     * @return the request status
-     */
-    public String getReqStatus() {
-        return this.reqStatus;
-    }
-
-    /**
-     * A setter for the request status
-     *
-     * @param reqStatus request status we want to set
-     */
-    public void setReqStatus(String reqStatus) {
-        this.reqStatus = reqStatus;
     }
 
     /**

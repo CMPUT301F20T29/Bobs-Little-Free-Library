@@ -5,8 +5,8 @@ package com.example.bobslittlefreelibrary;
  */
 
 public class Requests {
-    private String reqSenderUsername;
-    private String reqReceiverUsername;
+    private String reqSenderID;
+    private String reqReceiverID;
     private String bookRequestedID;
     private String reqStatus;
     private String location;
@@ -22,16 +22,16 @@ public class Requests {
 
     /**
      * This is the constructor for a Request object.
-     * @param reqSenderUser The username of the request sender
-     * @param recReceiverUser The username of the request receiver
+     * @param reqSenderUser The user ID of the request sender
+     * @param recReceiverUser The user ID of the request receiver
      * @param bookRequestedID The ID of the book requested
      * @param bookImageURL The URL of the book's image
      * @param bookTitle The title of the book
      */
     public Requests(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
                     String bookTitle) {
-        this.reqSenderUsername = reqSenderUser;
-        this.reqReceiverUsername = recReceiverUser;
+        this.reqSenderID = reqSenderUser;
+        this.reqReceiverID = recReceiverUser;
         this.bookRequestedID = bookRequestedID;
         this.reqStatus = "sent";
         this.location = null;
@@ -76,21 +76,21 @@ public class Requests {
     }
 
     /**
-     * A getter for the request sender's username
-     * @return username of request sender
+     * A getter for the request sender's ID
+     * @return request sender ID
      */
 
-    public String getReqSenderUsername() {
-        return reqSenderUsername;
+    public String getReqSenderID() {
+        return reqSenderID;
     }
 
     /**
-     * A getter for the request receiver's username
-     * @return username of request receiver
+     * A getter for the request receiver's ID
+     * @return request receiver ID
      */
 
-    public String getReqReceiverUsername() {
-        return reqReceiverUsername;
+    public String getReqReceiverID() {
+        return reqReceiverID;
     }
 
     /**

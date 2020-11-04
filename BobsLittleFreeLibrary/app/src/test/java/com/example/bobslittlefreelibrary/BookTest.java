@@ -12,8 +12,7 @@ public class BookTest {
     *  Creates an instance of User class/classes to pass to book class
     * */
     private User mockUser() {
-        return new User("Albert0", "ThickyChicky69", "Albert0@gmail.com",
-                "12345 67st NE");
+        return new User("Albert0", "Albert0@gmail.com", "12345 67st NE");
     }
 
     /**
@@ -21,18 +20,9 @@ public class BookTest {
      * */
     private Book mockBook() {
         User user = mockUser();
-        return new Book("Guide", "Available", "A step by step instructions manual",
-                "Jimmy Blake", "Picture1234", user, "1234567890");
-    }
-
-
-    /**
-     * Test weather date stored by getDateNow() is indeed the current date
-     * */
-    @Test
-    public void getDateCurrent(){
-        assertEquals(java.text.DateFormat.getDateInstance().format(new Date()),
-        mockBook().getDateNow());
+        return new Book("Guide", "Jimmy Blake", "1234567890",
+                "A step by step instructions manual", "324536456",
+                "Available", "Picture1234");
     }
 
 
@@ -44,14 +34,14 @@ public class BookTest {
     @Test
     public void testGetters(){
         Book book = mockBook();
-        User userAlbert0 = book.getOwner();
+        String userAlbert0 = book.getOwnerID();
 
         String title = book.getTitle();
         String status = book.getStatus();
         String description = book.getDescription();
         String author = book.getAuthor();
-        String picture = book.getPicture();
-        User user = book.getOwner();
+        String picture = book.getPictureURL();
+        String user = book.getOwnerID();
         String ISBN = book.getISBN();
 
         assertEquals("Guide" ,title);
@@ -74,16 +64,16 @@ public class BookTest {
     @Test
     public void testSetters(){
         Book book = mockBook();
-        User userAlbert0 = book.getOwner();
-        User user2 = mockUser();
+        String userAlbert0 = book.getOwnerID();
+        String user2 = "Sandra";
 
 
         String title = book.getTitle();
         String status = book.getStatus();
         String description = book.getDescription();
         String author = book.getAuthor();
-        String picture = book.getPicture();
-        User user = book.getOwner();
+        String picture = book.getPictureURL();
+        String user = book.getOwnerID();
         String ISBN = book.getISBN();
         assertEquals("Guide" ,title);
         assertEquals("Available", status);
@@ -97,23 +87,23 @@ public class BookTest {
         book.setStatus("Unavailable");
         book.setDescription("Definitely Not A step by step instructions manual");
         book.setAuthor("Sandra Bullcrotch");
-        book.setPicture("Picture4321");
-        book.setOwner(user2);
+        book.setPictureURL("Picture4321");
+        book.setOwnerID(user2);
         book.setISBN("0987654321");
 
         String title2 = book.getTitle();
         String status2 = book.getStatus();
         String description2 = book.getDescription();
         String author2 = book.getAuthor();
-        String picture2 = book.getPicture();
-        User userNew = book.getOwner();
+        String picture2 = book.getPictureURL();
+        String userNew = book.getOwnerID();
         String ISBN2 = book.getISBN();
         assertEquals("Not A Guide" ,title2);
         assertEquals("Unavailable", status2);
         assertEquals("Definitely Not A step by step instructions manual" , description2);
         assertEquals("Sandra Bullcrotch" , author2);
         assertEquals("Picture4321" , picture2);
-        assertEquals(user2 , userNew);
+        assertEquals("Sandra" , userNew);
         assertEquals("0987654321" , ISBN2);
     }
 

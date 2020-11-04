@@ -18,7 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".ReceivedRequestActivity"></activity>
+        <activity android:name=".SentRequestActivity" />
+        <activity android:name=".SearchActivity" />
         <activity android:name=".AddBookActivity" />
         <activity android:name=".templates.SomeAssetsActivity" />
         <activity android:name=".templates.BlankTemplateActivity" />

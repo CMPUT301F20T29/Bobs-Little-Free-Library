@@ -14,6 +14,79 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search Bob's Little Free Library"></SearchView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="All"
+            android:id="@+id/allBooksFilter"
+            android:background="@color/colorSecondary"
+            android:textColor="@color/colorLight"
+            android:onClick="allFilterPressed"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Available"
+            android:id="@+id/availableBooksFilter"
+            android:background="@color/colorSecondary"
+            android:textColor="@color/colorLight"
+            android:onClick="availableFilterPressed"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Requested"
+            android:id="@+id/requestedBooksFilter"
+            android:background="@color/colorSecondary"
+            android:textColor="@color/colorLight"
+            android:onClick="requestedFilterPressed"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Accepted"
+            android:id="@+id/acceptedBooksFilter"
+            android:background="@color/colorSecondary"
+            android:textColor="@color/colorLight"
+            android:onClick="acceptedFilterPressed"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Borrowed"
+            android:id="@+id/borrowedBooksFilter"
+            android:background="@color/colorSecondary"
+            android:textColor="@color/colorLight"
+            android:onClick="borrowedFilterPressed"/>
+
+
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

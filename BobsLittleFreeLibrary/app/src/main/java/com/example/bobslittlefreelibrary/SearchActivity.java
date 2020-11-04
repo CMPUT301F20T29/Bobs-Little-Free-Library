@@ -3,6 +3,7 @@ package com.example.bobslittlefreelibrary;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -16,6 +17,12 @@ public class SearchActivity extends AppCompatActivity {
     // making a reference to the listView
     private ListView listView;
 
+    private String currentFilter = "all";
+
+    private String currentSearchQuery = "";
+
+    private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +34,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchOptions() {
-        SearchView searchView = (SearchView) findViewById(R.id.bookSearchBar);
+        searchView = (SearchView) findViewById(R.id.bookSearchBar);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -41,13 +48,23 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
 
+                currentSearchQuery = s;
+
                 ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
                 // going through all the books available in the populated list and finding the ones that match the search query
 
                 for (Book book: searchBookList) {
                     if(book.getTitle().toLowerCase().contains(s.toLowerCase())) {
-                        filteredBooks.add(book);
+
+                        if (currentFilter.equals("all")) {
+
+                            filteredBooks.add(book);
+                        } else {
+                            if(book.getStatus().toLowerCase().contains(currentFilter)) {
+                                filteredBooks.add(book);
+                            }
+                        }
                     }
                 }
 
@@ -70,22 +87,22 @@ public class SearchActivity extends AppCompatActivity {
         Book book2 = new Book("Test Title 2", "Test Author 2", "1-56619-909-4", "Cool", "234", "available");
         searchBookList.add(book2);
 
-        Book book3 = new Book("Test Title 3", "Test Author 3", "1-56619-909-5", "Wow", "345", "available");
+        Book book3 = new Book("Test Title 3", "Test Author 3", "1-56619-909-5", "Wow", "345", "requested");
         searchBookList.add(book3);
 
-        Book book4 = new Book("Different Title 1", "Test Author 4", "1-56619-909-6", "Wow", "456", "not available");
+        Book book4 = new Book("Different Title 1", "Test Author 4", "1-56619-909-6", "Wow", "456", "requested");
         searchBookList.add(book4);
 
-        Book book5 = new Book("Different Title 2", "Test Author 5", "1-56619-909-7", "Wow", "567", "not available");
+        Book book5 = new Book("Different Title 2", "Test Author 5", "1-56619-909-7", "Wow", "567", "accepted");
         searchBookList.add(book5);
 
-        Book book6 = new Book("Different Title 3", "Test Author 6", "1-56619-909-9", "Wow", "567", "not available");
+        Book book6 = new Book("Different Title 3", "Test Author 6", "1-56619-909-9", "Wow", "567", "accepted");
         searchBookList.add(book6);
 
-        Book book7 = new Book("Chess Rules 1", "Test Author 7", "1-56619-909-0", "Wow", "567", "not available");
+        Book book7 = new Book("Chess Rules 1", "Test Author 7", "1-56619-909-0", "Wow", "567", "borrowed");
         searchBookList.add(book7);
 
-        Book book8 = new Book("Chess Rules 2", "Test Author 7", "1-56619-909-1", "Wow", "567", "available");
+        Book book8 = new Book("Chess Rules 2", "Test Author 7", "1-56619-909-1", "Wow", "567", "borrowed");
         searchBookList.add(book8);
 
         Book book9 = new Book("Chess Rules 3", "Test Author 7", "1-56619-909-1", "I dont like this book", "567", "available");
@@ -106,4 +123,65 @@ public class SearchActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
     }
+
+    private void filterBookList(String bookStatus) {
+
+        currentFilter = bookStatus;
+
+        ArrayList<Book> filteredBooks = new ArrayList<Book>();
+
+        for (Book book: searchBookList) {
+            if(book.getStatus().toLowerCase().contains(bookStatus)) {
+
+                // to implement search while filtering is working as well
+                if (currentSearchQuery == "") {
+                    filteredBooks.add(book);
+                } else {
+                    if(book.getTitle().toLowerCase().contains(currentSearchQuery)){
+                        filteredBooks.add(book);
+                    }
+                }
+            }
+
+        }
+
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, filteredBooks);
+        listView.setAdapter(adapter);
+    }
+
+    // all books are displayed
+    public void allFilterPressed(View view) {
+        currentFilter = "all";
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, searchBookList);
+        listView.setAdapter(adapter);
+
+    }
+
+    // looking for books with available status
+    public void availableFilterPressed(View view) {
+        filterBookList("available");
+    }
+
+    // looking for books with requested status
+    public void requestedFilterPressed(View view) {
+        filterBookList("requested");
+
+    }
+
+    // looking for books with accepted status
+    public void acceptedFilterPressed(View view) {
+        filterBookList("accepted");
+
+    }
+
+    // looking for books with borrowed status
+    public void borrowedFilterPressed(View view) {
+        filterBookList("borrowed");
+
+    }
+
+
 }

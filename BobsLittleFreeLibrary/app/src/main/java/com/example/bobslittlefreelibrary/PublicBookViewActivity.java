@@ -78,7 +78,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                 final CollectionReference requestCollectionRef = db.collection("Requests");
 
                 // Create Request Object
-                Requests request = new Requests();
+                Request request = new Request();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

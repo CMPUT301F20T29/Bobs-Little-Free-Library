@@ -4,7 +4,7 @@ package com.example.bobslittlefreelibrary;
  * This class bundles the information for requests.
  */
 
-public class Requests {
+public class Request {
     private String reqSenderID;
     private String reqReceiverID;
     private String bookRequestedID;
@@ -16,7 +16,7 @@ public class Requests {
     /**
      * This is an empty constructor for a Request object.
      */
-    public Requests() {
+    public Request() {
 
     }
 
@@ -28,8 +28,8 @@ public class Requests {
      * @param bookImageURL The URL of the book's image
      * @param bookTitle The title of the book
      */
-    public Requests(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
-                    String bookTitle) {
+    public Request(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
+                   String bookTitle) {
         this.reqSenderID = reqSenderUser;
         this.reqReceiverID = recReceiverUser;
         this.bookRequestedID = bookRequestedID;

@@ -51,11 +51,11 @@ public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
         // TODO: Need to set images for the books
 
         if (isSentTab) {
-            bookName.setText(request.getBookRequested().getTitle());
-            userTextView.setText("To: " + request.getReqReceiver().getUsername());
+            bookName.setText(request.getBookTitle());
+            userTextView.setText("To: " + request.getReqReceiverUsername());
         } else {
-            bookName.setText(request.getBookRequested().getTitle());
-            userTextView.setText("From: " + request.getReqSender().getUsername());
+            bookName.setText(request.getBookTitle());
+            userTextView.setText("From: " + request.getReqSenderUsername());
         }
 
         return view;

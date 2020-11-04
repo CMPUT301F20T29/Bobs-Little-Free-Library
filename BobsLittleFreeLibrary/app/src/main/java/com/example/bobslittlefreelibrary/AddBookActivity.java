@@ -296,7 +296,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     }
 
     // Gets a message to be displayed on a snackbar in the event the user's input is invalid.
-    private void showInvalidInputSnackbar(View v){
+    public void showInvalidInputSnackbar(View v){
 
         String msg = "Please fix the following issues before adding your book:\n";
 

@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
         }
 
 //        if (user.getUid().equals(currentBook.getOwnerID())) {
-        if (true) { // to test edit book 
+        if (true) { // to test edit book
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
                 intent.putExtra("BOOK_ID", document.getId());

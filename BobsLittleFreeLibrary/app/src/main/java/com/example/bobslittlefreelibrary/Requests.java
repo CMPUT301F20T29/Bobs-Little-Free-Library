@@ -5,11 +5,13 @@ package com.example.bobslittlefreelibrary;
  */
 
 public class Requests {
-    private String reqSenderID;
-    private String reqReceiverID;
+    private String reqSenderUsername;
+    private String reqReceiverUsername;
     private String bookRequestedID;
     private String reqStatus;
     private String location;
+    private String bookImageURL;
+    private String bookTitle;
 
     /**
      * This is an empty constructor for a Request object.
@@ -20,17 +22,21 @@ public class Requests {
 
     /**
      * This is the constructor for a Request object.
-     *
-     * @param reqSender     the user sending the request
-     * @param recReceiver   the user receiving the request
-     * @param bookRequested the book being requested
+     * @param reqSenderUser The username of the request sender
+     * @param recReceiverUser The username of the request receiver
+     * @param bookRequestedID The ID of the book requested
+     * @param bookImageURL The URL of the book's image
+     * @param bookTitle The title of the book
      */
-    public Requests(String reqSender, String recReceiver, String bookRequested) {
-        this.reqSenderID = reqSender;
-        this.reqReceiverID = recReceiver;
-        this.bookRequestedID = bookRequested;
+    public Requests(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
+                    String bookTitle) {
+        this.reqSenderUsername = reqSenderUser;
+        this.reqReceiverUsername = recReceiverUser;
+        this.bookRequestedID = bookRequestedID;
         this.reqStatus = "sent";
         this.location = null;
+        this.bookImageURL = bookImageURL;
+        this.bookTitle = bookTitle;
     }
 
     /**
@@ -69,15 +75,48 @@ public class Requests {
         this.location = location;
     }
 
-    public String getReqSenderID() {
-        return reqSenderID;
+    /**
+     * A getter for the request sender's username
+     * @return username of request sender
+     */
+
+    public String getReqSenderUsername() {
+        return reqSenderUsername;
     }
 
-    public String getReqReceiverID() {
-        return reqReceiverID;
+    /**
+     * A getter for the request receiver's username
+     * @return username of request receiver
+     */
+
+    public String getReqReceiverUsername() {
+        return reqReceiverUsername;
     }
+
+    /**
+     * A getter for the requested book's ID
+     * @return requested book ID
+     */
 
     public String getBookRequestedID() {
         return bookRequestedID;
+    }
+
+    /**
+     * A getter for the requested book's image url
+     * @return requested book image URL
+     */
+
+    public String getBookImageURL() {
+        return bookImageURL;
+    }
+
+    /**
+     * A getter for the book's title
+     * @return requested book's title
+     */
+
+    public String getBookTitle() {
+        return bookTitle;
     }
 }

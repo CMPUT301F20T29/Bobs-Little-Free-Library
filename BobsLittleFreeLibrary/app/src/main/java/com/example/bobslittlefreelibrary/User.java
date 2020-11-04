@@ -12,6 +12,8 @@ public class User implements Serializable  {
     private String email;
     private String address;
     private ArrayList<String> bookIDs;
+    private ArrayList<String> sentRequestsIDs;
+    private ArrayList<String> receivedRequestsIDs;
 
     /**
      * This is an empty constructor for a User object
@@ -32,6 +34,8 @@ public class User implements Serializable  {
         this.email = email;
         this.address = address;
         this.bookIDs = new ArrayList<>();
+        this.sentRequestsIDs = new ArrayList<>();
+        this.receivedRequestsIDs = new ArrayList<>();
     }
 
     // Methods
@@ -83,4 +87,28 @@ public class User implements Serializable  {
     public void setEmail(String email) { this.email = email; }
 
     public void setAddress(String address) { this.address = address; }
+
+    public void addSentRequest(String requestID) {
+        this.sentRequestsIDs.add(requestID);
+    }
+
+    public void removeSentRequest(String requestID) {
+        this.sentRequestsIDs.remove(requestID);
+    }
+
+    public void addReceivedRequest(String requestID) {
+        this.receivedRequestsIDs.add(requestID);
+    }
+
+    public void removeReceivedRequest(String requestID) {
+        this.receivedRequestsIDs.remove(requestID);
+    }
+
+    public ArrayList<String> getSentRequestsIDs() {
+        return sentRequestsIDs;
+    }
+
+    public ArrayList<String> getReceivedRequestsIDs() {
+        return receivedRequestsIDs;
+    }
 }

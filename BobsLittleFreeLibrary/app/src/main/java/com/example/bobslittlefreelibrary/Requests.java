@@ -5,28 +5,43 @@ package com.example.bobslittlefreelibrary;
  */
 
 public class Requests {
-    private User reqSender;
-    private User reqReceiver;
-    private Book bookRequested;
+    private String reqSenderUsername;
+    private String reqReceiverUsername;
+    private String bookRequestedID;
     private String reqStatus;
     private String location;
+    private String bookImageURL;
+    private String bookTitle;
 
     /**
-     * This is the (only) constructor for a request.
-     * @param reqSender the user sending the request
-     * @param recReceiver the user receiving the request
-     * @param bookRequested the book being requested
+     * This is an empty constructor for a Request object.
      */
-    public Requests(User reqSender, User recReceiver, Book bookRequested) {
-        this.reqSender = reqSender;
-        this.reqReceiver = recReceiver;
-        this.bookRequested = bookRequested;
+    public Requests() {
+
+    }
+
+    /**
+     * This is the constructor for a Request object.
+     * @param reqSenderUser The username of the request sender
+     * @param recReceiverUser The username of the request receiver
+     * @param bookRequestedID The ID of the book requested
+     * @param bookImageURL The URL of the book's image
+     * @param bookTitle The title of the book
+     */
+    public Requests(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
+                    String bookTitle) {
+        this.reqSenderUsername = reqSenderUser;
+        this.reqReceiverUsername = recReceiverUser;
+        this.bookRequestedID = bookRequestedID;
         this.reqStatus = "sent";
         this.location = null;
+        this.bookImageURL = bookImageURL;
+        this.bookTitle = bookTitle;
     }
 
     /**
      * A getter for reqStatus
+     *
      * @return the request status
      */
     public String getReqStatus() {
@@ -35,6 +50,7 @@ public class Requests {
 
     /**
      * A setter for the request status
+     *
      * @param reqStatus request status we want to set
      */
     public void setReqStatus(String reqStatus) {
@@ -43,6 +59,7 @@ public class Requests {
 
     /**
      * Getter for location, returns null if location has not been set yet.
+     *
      * @return the location, null if it has not been set yet
      */
     public String getLocation() {
@@ -51,6 +68,7 @@ public class Requests {
 
     /**
      * A setter for location
+     *
      * @param location the location to be set
      */
     public void setLocation(String location) {
@@ -58,26 +76,47 @@ public class Requests {
     }
 
     /**
-     * A getter for the book that's being requested
-     * @return the book being requested
+     * A getter for the request sender's username
+     * @return username of request sender
      */
-    public Book getBookRequested() {
-        return this.bookRequested;
+
+    public String getReqSenderUsername() {
+        return reqSenderUsername;
     }
 
     /**
-     * A getter for the person sending the request
-     * @return person sending the request
+     * A getter for the request receiver's username
+     * @return username of request receiver
      */
-    public User getReqSender() {
-        return this.reqSender;
+
+    public String getReqReceiverUsername() {
+        return reqReceiverUsername;
     }
 
     /**
-     * A getter for the person receiving the request
-     * @return person receiving the request
+     * A getter for the requested book's ID
+     * @return requested book ID
      */
-    public User getReqReceiver() {
-        return this.reqReceiver;
+
+    public String getBookRequestedID() {
+        return bookRequestedID;
+    }
+
+    /**
+     * A getter for the requested book's image url
+     * @return requested book image URL
+     */
+
+    public String getBookImageURL() {
+        return bookImageURL;
+    }
+
+    /**
+     * A getter for the book's title
+     * @return requested book's title
+     */
+
+    public String getBookTitle() {
+        return bookTitle;
     }
 }

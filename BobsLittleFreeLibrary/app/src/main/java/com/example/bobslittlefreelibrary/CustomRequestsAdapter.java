@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+
 import java.util.ArrayList;
 
 public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
@@ -48,13 +50,17 @@ public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
         // If it's the sent tab, show who you are sending the request to
         // if it's received tab, show who is sending it to the you
 
-        // TODO: Need to set images for the books
+        bookName.setText(request.getBookTitle());
+        String pictureURL = request.getBookImageURL();
+        if (pictureURL != null) {
+            new DownloadImageTask(bookImage).execute(pictureURL);
+        } else {
+            bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
+        }
 
         if (isSentTab) {
-            bookName.setText(request.getBookTitle());
             userTextView.setText("To: " + request.getReqReceiverUsername());
         } else {
-            bookName.setText(request.getBookTitle());
             userTextView.setText("From: " + request.getReqSenderUsername());
         }
 

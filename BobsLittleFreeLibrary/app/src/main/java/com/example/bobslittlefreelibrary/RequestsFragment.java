@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,7 @@ public class RequestsFragment extends Fragment {
     private ListView requestsList;
     private Context context;
     private CustomRequestsAdapter customRequestsAdapter;
-    private ArrayList<Requests> requestsDataList;
+    private ArrayList<Request> requestDataList;
 
     @Nullable
     @Override
@@ -42,7 +41,7 @@ public class RequestsFragment extends Fragment {
         ListView requestsList = view.findViewById(R.id.requests_list);
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         context = this.getActivity();
-        requestsDataList = new ArrayList<>();
+        requestDataList = new ArrayList<>();
 
         // Create the top tabs when the fragment is created
         tabLayout.addTab(tabLayout.newTab().setText("Received"));
@@ -50,7 +49,7 @@ public class RequestsFragment extends Fragment {
 
         // TODO initialize the received requests here and add them to the list to display
 
-        customRequestsAdapter = new CustomRequestsAdapter(context, requestsDataList, false);
+        customRequestsAdapter = new CustomRequestsAdapter(context, requestDataList, false);
         requestsList.setAdapter(customRequestsAdapter);
 
         // set a tab on click listener to know when the tabs have been switched & methods to handle
@@ -61,7 +60,7 @@ public class RequestsFragment extends Fragment {
 
                 if (tabPosition == 0) {
                     // Received requests tab
-                    requestsDataList.clear();
+                    requestDataList.clear();
 
                     // TODO query & put the received requests into the list
 
@@ -69,7 +68,7 @@ public class RequestsFragment extends Fragment {
                     requestsList.setAdapter(customRequestsAdapter);
                 } else {
                     // Sent requests tab
-                    requestsDataList.clear();
+                    requestDataList.clear();
 
                     // TODO query & put the sent requests into the list
 

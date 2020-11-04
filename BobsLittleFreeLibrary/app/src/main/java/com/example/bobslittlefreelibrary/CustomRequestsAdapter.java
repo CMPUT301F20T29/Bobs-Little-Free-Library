@@ -27,13 +27,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
+public class CustomRequestsAdapter extends ArrayAdapter<Request> {
 
-    private ArrayList<Requests> requests;
+    private ArrayList<Request> requests;
     private Context context;
     private Boolean isSentTab;          // used to know which tab we're on
 
-    public CustomRequestsAdapter(Context context, ArrayList<Requests> requests, Boolean isSentTab) {
+    public CustomRequestsAdapter(Context context, ArrayList<Request> requests, Boolean isSentTab) {
         super(context, 0, requests);
         this.requests = requests;
         this.context = context;
@@ -49,7 +49,7 @@ public class CustomRequestsAdapter extends ArrayAdapter<Requests> {
             view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
         }
 
-        Requests request = requests.get(position);
+        Request request = requests.get(position);
         ImageView bookImage = view.findViewById(R.id.bookImage);
         TextView bookName = view.findViewById(R.id.book_text);
         TextView userTextView = view.findViewById(R.id.name_text);

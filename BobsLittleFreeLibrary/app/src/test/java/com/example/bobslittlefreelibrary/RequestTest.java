@@ -6,8 +6,8 @@ import static junit.framework.TestCase.assertEquals;
 
 public class RequestTest {
 
-    private Requests mockRequest() {
-        return new Requests(mockRequester(), mockProvider(), mockBookID(), null, mockBookTitle());
+    private Request mockRequest() {
+        return new Request(mockRequester(), mockProvider(), mockBookID(), null, mockBookTitle());
     }
 
     private String mockRequester() {
@@ -28,7 +28,7 @@ public class RequestTest {
 
     @Test
     public void testGetSetReqStatus() {
-        Requests testRequest = mockRequest();
+        Request testRequest = mockRequest();
         assertEquals("sent", testRequest.getReqStatus());
 
         testRequest.setReqStatus("pendingExchange");

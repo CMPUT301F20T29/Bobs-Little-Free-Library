@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
@@ -71,6 +73,12 @@ public class PublicBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Request Book button pressed");
+                // Get access to requests collection
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final CollectionReference requestCollectionRef = db.collection("Requests");
+
+                // Create Request Object
+                Request request = new Request();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

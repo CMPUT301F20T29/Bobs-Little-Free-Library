@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +18,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -28,6 +31,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPassEditText;
     private EditText addressEditText;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,6 @@ public class SignupActivity extends AppCompatActivity {
                 final String username = usernameEditText.getText().toString();
                 final String email = emailEditText.getText().toString();
                 final String password = passwordEditText.getText().toString();
-                final String confirmPass = confirmPassEditText.getText().toString();
                 final String address = addressEditText.getText().toString();
 
                 if (isInputValid()) {
@@ -66,14 +69,21 @@ public class SignupActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
+                                        // Sign up success, save user info and update UI
+                                        db = FirebaseFirestore.getInstance();
+                                        Map<String, Object> userData = new HashMap<>();
+                                        userData.put("email", email);
+                                        userData.put("username", username);
+                                        userData.put("address", address);
+                                        db.collection("users").document(mAuth.getUid()).set(userData);
+
                                         Toast.makeText(SignupActivity.this, "Signup success.",
                                                 Toast.LENGTH_SHORT).show();
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(SignupActivity.this, "Failed to signup",
+                                        Toast.makeText(SignupActivity.this, "Failed to signup, account already exists.",
                                                 Toast.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
@@ -93,13 +103,15 @@ public class SignupActivity extends AppCompatActivity {
         String confirmPass = confirmPassEditText.getText().toString();
         String address = addressEditText.getText().toString();
 
-        boolean underCharLimitCheck = !(username.length() > 30 || (email.length() > 100) ||
-                (password.length() > 100) || address.length() > 100);
+        boolean underCharLimitCheck = !(username.length() > 12 || (email.length() > 100) ||
+                (password.length() < 6) || (password.length() > 100) || address.length() > 100);
         boolean emptyCheck = !(username.isEmpty() || email.isEmpty() || password.isEmpty() ||
                 address.isEmpty());
         boolean passwordConfirmation = (confirmPass.equals(password));
+        boolean emailFormat = (email.contains("@")) && !(email.contains(" "));
+        boolean usernameFormat = (!username.contains(" "));
 
-        return  underCharLimitCheck && emptyCheck && passwordConfirmation;
+        return  underCharLimitCheck && emptyCheck && passwordConfirmation && emailFormat && usernameFormat;
 
     }
 
@@ -119,22 +131,36 @@ public class SignupActivity extends AppCompatActivity {
         String confirmPass = confirmPassEditText.getText().toString();
         String address = addressEditText.getText().toString();
 
-        if (username.length() > 30) { msg += "\n - Username is too long"; }
+        if (!email.contains("@") || email.contains(" ")) {
+            if (email.isEmpty()) {
+                msg += "\n - Email is empty";
+            } else {
+                msg += "\n - Email is not in correct format";
+            }
+        }
         if (email.length() > 100) { msg += "\n - Email is too long"; }
+        if (username.length() > 12) { msg += "\n - Username is too long"; }
         if (password.length() > 100) { msg += "\n - Password is too long"; }
+        if (password.length() < 6) {
+            if (password.isEmpty()) {
+                msg += "\n - Password is empty";
+            } else {
+                msg += "\n - Password is too short";
+            }
+        }
         if (!password.isEmpty() && !confirmPass.equals(password)) { msg += "\n - Password confirmation is not the same as password"; }
         if (address.length() > 100) { msg += "\n - Address is too long"; }
-
+        if (username.contains(" ")) {
+            msg += "\n - Username contains empty space";
+        }
         if (username.isEmpty()) { msg += "\n - Username is empty"; }
-        if (email.isEmpty()) { msg += "\n - Email is empty"; }
-        if (password.isEmpty()) { msg += "\n - Password is empty"; }
         if (address.isEmpty()) { msg += "\n - Address is empty"; }
 
 
         Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
         View sbView = sb.getView();
         TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
-        textView.setMaxLines(6);
+        textView.setMaxLines(8);
         sb.show();
     }
 }

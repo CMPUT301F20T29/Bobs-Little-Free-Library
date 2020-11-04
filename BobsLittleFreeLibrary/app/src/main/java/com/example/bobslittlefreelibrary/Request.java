@@ -16,22 +16,20 @@ public class Request {
     /**
      * This is an empty constructor for a Request object.
      */
-    public Request() {
-
-    }
+    public Request() { }
 
     /**
      * This is the constructor for a Request object.
-     * @param reqSenderUser The user ID of the request sender
-     * @param recReceiverUser The user ID of the request receiver
+     * @param reqSenderUserID The user ID of the request sender
+     * @param recReceiverUserID The user ID of the request receiver
      * @param bookRequestedID The ID of the book requested
      * @param bookImageURL The URL of the book's image
      * @param bookTitle The title of the book
      */
-    public Request(String reqSenderUser, String recReceiverUser, String bookRequestedID, String bookImageURL,
+    public Request(String reqSenderUserID, String recReceiverUserID, String bookRequestedID, String bookImageURL,
                    String bookTitle) {
-        this.reqSenderID = reqSenderUser;
-        this.reqReceiverID = recReceiverUser;
+        this.reqSenderID = reqSenderUserID;
+        this.reqReceiverID = recReceiverUserID;
         this.bookRequestedID = bookRequestedID;
         this.reqStatus = "sent";
         this.location = null;

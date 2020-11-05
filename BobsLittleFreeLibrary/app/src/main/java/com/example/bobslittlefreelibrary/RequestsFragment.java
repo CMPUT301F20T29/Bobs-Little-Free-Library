@@ -6,6 +6,7 @@ package com.example.bobslittlefreelibrary;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -139,7 +140,16 @@ public class RequestsFragment extends Fragment {
         requestsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                //TODO HANDLING OF CLICKING AN ITEM, BRING TO NEW ACTIVITY
+                // Based on which tab the user is on, it will decide which activity to go to
+                if (tabPosition == 0) {
+                    Intent intent = new Intent(getActivity(), ReceivedRequestActivity.class);
+                    intent.putExtra("REQUEST", receivedRequestList.get(position));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), SentRequestActivity.class);
+                    intent.putExtra("REQUEST", sentRequestList.get(position));
+                    startActivity(intent);
+                }
             }
         });
 

@@ -37,7 +37,6 @@ import java.util.ArrayList;
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
     private String bookID;
@@ -93,6 +92,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Request Book button pressed");
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 // Get access to requests collection
                 CollectionReference requestCollectionRef = db.collection("requests");
                 // Get bookID from intent

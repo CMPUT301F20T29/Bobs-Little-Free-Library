@@ -71,10 +71,11 @@ public class SignupActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign up success, save user info and update UI
                                         db = FirebaseFirestore.getInstance();
-                                        Map<String, Object> userData = new HashMap<>();
-                                        userData.put("email", email);
-                                        userData.put("username", username);
-                                        userData.put("address", address);
+//                                        Map<String, Object> userData = new HashMap<>();
+//                                        userData.put("email", email);
+//                                        userData.put("username", username);
+//                                        userData.put("address", address);
+                                        User userData = new User(username, email, address);
                                         db.collection("users").document(mAuth.getUid()).set(userData);
 
                                         Toast.makeText(SignupActivity.this, "Signup success.",

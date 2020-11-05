@@ -143,40 +143,43 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                     String desc = descInput.getText().toString();
 
                     // Create new Books object and it to add to firestore
-                    book = new Book(title, "status", desc, author, "owner", isbn);
+                    book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
 
                     db.collection("books")
                             .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             bookId = documentReference.getId();
-                        }
-                    });
 
-                    // if the user took/selected an image, then upload it to storage, and save it's url to
-                    // the book's document
-                    if (imageUrlFromResponse != null) {
-                        db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
+                            // if the user took/selected an image, then upload it to storage, and save it's url to
+                            // the book's document
+                            if (imageUrlFromResponse != null) {
+                                db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
 
-                    } else if (usersImageFile != null) {
-                        uploadImageFile();
-                    }
+                            } else if (usersImageFile != null) {
+                                uploadImageFile();
+                            }
 
-                    // Update the bookIDs array in the user collection
-                    db.collection("users").document(currentUser.getUid()).
-                            get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            User user = documentSnapshot.toObject(User.class);
+                            // Update the bookIDs array in the user collection
+                            db.collection("users").document(currentUser.getUid()).
+                                    get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
 
-                            ArrayList<String> usersBooks = user.getBookIDs();
-                            usersBooks.add(bookId);
+                                    ArrayList<String> usersBooks = user.getBookIDs();
+                                    Log.d(TAG, "onSuccess: " + bookId);
+                                    usersBooks.add(bookId.toString());
 
-                            HashMap newBooksMap = new HashMap<String, ArrayList>();
-                            newBooksMap.put("bookIDs", usersBooks);
+                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                    newBooksMap.put("bookIDs", usersBooks);
 
-                            db.collection("users").
-                                    document(currentUser.getUid()).update(newBooksMap);
+                                    Log.d(TAG, "onSuccess: " + usersBooks);
+
+                                    db.collection("users").
+                                            document(currentUser.getUid()).update(newBooksMap);
+                                }
+                            });
                         }
                     });
 

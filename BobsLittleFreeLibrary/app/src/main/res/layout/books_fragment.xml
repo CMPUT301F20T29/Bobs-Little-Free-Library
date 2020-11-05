@@ -67,11 +67,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="6dp"
         android:layout_marginLeft="6dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="6dp"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:text="Books"
-        android:textSize="30dp" />
+        android:textSize="35dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_Item"
@@ -86,8 +86,8 @@
         android:layout_marginBottom="11dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#A8FF0077"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:backgroundTint="#A85644C1"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
     <View
         android:id="@+id/divider"

@@ -70,7 +70,7 @@ public class BooksFragment extends Fragment{
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("books").whereEqualTo("ownerID", user.getUid()).get()
+        db.collection("books")./*whereEqualTo("ownerID", user.getUid()).*/get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -89,6 +89,8 @@ public class BooksFragment extends Fragment{
                         }
                     }
                 });
+
+
 
 
 

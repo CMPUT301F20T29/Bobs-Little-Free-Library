@@ -8,19 +8,39 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup button functionality, populate profile button with username and link it to UserProfileView activity
+ * TODO: Setup profile button functionality, populate profile button with username and link it to UserProfileView activity, make it so that when a Book is requested, the user cannot send another request
+ *
+ * Currently, if a user leaves the activity and views it again, they will be able to press the request button and add another request to the db
  *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Book book;
+    private String bookID;
 
     private ImageView bookImage;
     private TextView titleText;
@@ -40,7 +60,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
         // Get Book object passed from Intent
         Intent intent = getIntent();
         // Class variables
-        Book book = (Book) intent.getSerializableExtra("BOOK");
+        book = (Book) intent.getSerializableExtra("BOOK");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
@@ -74,11 +94,22 @@ public class PublicBookViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TEMP", "Request Book button pressed");
                 // Get access to requests collection
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                final CollectionReference requestCollectionRef = db.collection("Requests");
-
+                CollectionReference requestCollectionRef = db.collection("requests");
+                // Get bookID from intent
+                bookID = intent.getStringExtra("BOOK_ID");
                 // Create Request Object
-                Request request = new Request();
+                Request request = new Request(user.getUid(), book.getOwnerID(), bookID, book.getPictureURL(), book.getTitle());
+                // Add request to db
+                requestCollectionRef.add(request)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Snackbar sb = Snackbar.make(v, "Request Sent", Snackbar.LENGTH_SHORT);
+                                sb.show();
+                                requestButton.setClickable(false);
+                                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                            }
+                        });
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

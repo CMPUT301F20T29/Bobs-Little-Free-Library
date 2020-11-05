@@ -14,4 +14,7 @@
     <color name="accepted_yellow">#D9C21F</color>
     <color name="available_green">#1FD938</color>
     <color name="requested_blue">#1FD9B7</color>
+
+    <!-- Colours for extra things -->
+    <color name="disabled_grey">#B2B2B2</color>
 </resources>

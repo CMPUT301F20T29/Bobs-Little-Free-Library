@@ -8,18 +8,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
- * TODO: Setup button functionality, profile button with username and link it to UserProfileView activity
+ * TODO: Setup profile button functionality, profile button with username and link it to UserProfileView activity
  *
  * */
 public class MyBookViewActivity extends AppCompatActivity {
 
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private String bookID;
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -44,6 +56,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         setupUIReferences();
         // Set UI values
         setUIValues(book);
+        bookID = intent.getStringExtra("BOOK_ID");
 
         // Change colour of status text based on book's status
         switch (bookStatus.getText().toString()) {
@@ -72,6 +85,22 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Remove Book button pressed");
+                CollectionReference bookCollectionRef = db.collection("requests");
+                bookCollectionRef.document(bookID)
+                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TEMP", "Book document deleted");
+                        Snackbar sb = Snackbar.make(v, "Book Deleted", Snackbar.LENGTH_SHORT);
+                        sb.show();
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TEMP", "Error deleting Book document", e);
+                    }
+                });
             }
         });
         editInfoButton.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +108,7 @@ public class MyBookViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TEMP", "Edit Info button pressed");
                 Intent intent = new Intent(MyBookViewActivity.this, EditBookActivity.class);
-                intent.putExtra("BOOK_ID", getIntent().getExtras().getString("BOOK_ID"));
+                intent.putExtra("BOOK_ID", bookID);
                 intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
                 startActivity(intent);
             }
@@ -87,8 +116,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

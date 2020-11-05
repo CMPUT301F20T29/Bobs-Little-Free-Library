@@ -30,7 +30,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -44,7 +47,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /*
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
@@ -77,6 +82,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private Boolean validInput = false;
     private FirebaseFirestore db;
     private RequestQueue mQueue;
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +162,23 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                         uploadImageFile();
                     }
 
-                    // TODO: add book id to user's bookIds array
+                    // Update the bookIDs array in the user collection
+                    db.collection("users").document(currentUser.getUid()).
+                            get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User user = documentSnapshot.toObject(User.class);
+
+                            ArrayList<String> usersBooks = user.getBookIDs();
+                            usersBooks.add(bookId);
+
+                            HashMap newBooksMap = new HashMap<String, ArrayList>();
+                            newBooksMap.put("bookIDs", usersBooks);
+
+                            db.collection("users").
+                                    document(currentUser.getUid()).update(newBooksMap);
+                        }
+                    });
 
                     // Return to main activity
                     exitActivity();

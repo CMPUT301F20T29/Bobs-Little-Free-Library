@@ -183,5 +183,9 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    public void backButtonPressed(View view) {
+        finish();
+    }
+
 
 }

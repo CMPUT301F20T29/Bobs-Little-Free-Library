@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:id="@+id/public_book_view_back_button"
+        style="@style/BackButton"
+        android:text="@string/back"
+        android:onClick="backButtonPressed"/>
+
+
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

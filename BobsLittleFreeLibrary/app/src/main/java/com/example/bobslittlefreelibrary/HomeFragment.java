@@ -31,7 +31,7 @@ import java.util.ArrayList;
 /**
  * This fragment is manages all the references and interactions on the home screen.
  *
- * TODO: Figure out final direction for the Requests Overview, setup real functionality for other buttons
+ * TODO: Figure out final direction for the Requests Overview, setup functionality for profile button, figure out if there's a way to make loading latest books faster
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
  * since values are only initialized once on this fragment. At no other time would they be called,
@@ -44,19 +44,14 @@ import java.util.ArrayList;
  * */
 public class HomeFragment extends Fragment {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    final CollectionReference bookCollectionRef = db.collection("books");
-
     // Variables
     ArrayList<Book> listOfBooks;
     TableLayout latestBooks;
     TableLayout requestsOverview;
-    FirebaseUser user;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Nullable
@@ -86,6 +81,8 @@ public class HomeFragment extends Fragment {
 
         // Initialize Latest Books and setup listeners for ImageButtons
         listOfBooks = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference bookCollectionRef = db.collection("books");
 
         bookCollectionRef
                 .orderBy("dateAdded", Query.Direction.DESCENDING).limit(6)
@@ -117,8 +114,14 @@ public class HomeFragment extends Fragment {
         Log.d("TEMP", "Home Fragment is paused and the view will be deleted");
     }
 
+    /**
+     * This method sets up the ImageButtons that show the latest books added to the database.
+     * @param document The current document to pull data from (i.e. the book document that will be displayed)
+     * @param i the index of the current ImageButton we are setting up.
+     * */
     private void setupImageButton(QueryDocumentSnapshot document, int i) {
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Book currentBook = document.toObject(Book.class);
         ImageButton button;
         TableRow row;
@@ -137,7 +140,7 @@ public class HomeFragment extends Fragment {
         } else {
             button.setImageResource(R.drawable.blue_book);
         }
-
+        // Select which book view activity pressing on the button leads to
         if (user.getUid().equals(currentBook.getOwnerID())) {
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), MyBookViewActivity.class);

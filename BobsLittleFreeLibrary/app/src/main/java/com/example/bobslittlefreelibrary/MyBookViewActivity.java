@@ -19,7 +19,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
@@ -85,9 +90,29 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Remove Book button pressed");
-                CollectionReference bookCollectionRef = db.collection("requests");
-                bookCollectionRef.document(bookID)
-                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                // First remove the book from the user's bookID array
+                DocumentReference userDoc = db.collection("users").document(user.getUid());
+                userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User userObject = documentSnapshot.toObject(User.class);
+
+                        ArrayList<String> usersBooks = userObject.getBookIDs();
+                        Log.d("TEMP", "onSuccess: " + bookID);
+                        usersBooks.remove(bookID);
+
+                        HashMap newBooksMap = new HashMap<String, ArrayList>();
+                        newBooksMap.put("bookIDs", usersBooks);
+
+                        Log.d("TEMP", "onSuccess: " + usersBooks);
+
+                        userDoc.update(newBooksMap);
+                    }
+                });
+
+                // Now remove the book from the books collection
+                DocumentReference bookRef = db.collection("books").document(bookID);
+                bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("TEMP", "Book document deleted");
@@ -135,7 +160,6 @@ public class MyBookViewActivity extends AppCompatActivity {
         removeBookButton = findViewById(R.id.my_book_view_remove_button);
         editInfoButton = findViewById(R.id.my_book_view_edit_button);
         backButton = findViewById(R.id.my_book_view_back_button);
-
     }
 
     /**

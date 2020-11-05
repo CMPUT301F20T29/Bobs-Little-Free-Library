@@ -38,13 +38,13 @@ public class  CustomList extends ArrayAdapter<Book> {
         //ImageView bookImage = view.findViewById(R.id.bookImage);
         TextView bookName = view.findViewById(R.id.book_text);
         TextView authorName = view.findViewById(R.id.name_text);
-        TextView status = view.findViewById(R.id.statusText);
+
 
 
         //TODO: Set Image View
         bookName.setText(book.getTitle());
         authorName.setText(book.getAuthor());
-        //status.setText(//Todo); set by filter
+
 
         return view;
     }

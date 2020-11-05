@@ -16,6 +16,7 @@ import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,7 +30,9 @@ import java.util.ArrayList;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup button functionality, populate profile button with username and link it to UserProfileView activity
+ * TODO: Setup profile button functionality, populate profile button with username and link it to UserProfileView activity, make it so that when a Book is requested, the user cannot send another request
+ *
+ * Currently, if a user leaves the activity and views it again, they will be able to press the request button and add another request to the db
  *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
@@ -38,7 +41,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
     private String bookID;
-    private User requester;
 
     private ImageView bookImage;
     private TextView titleText;
@@ -92,49 +94,22 @@ public class PublicBookViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TEMP", "Request Book button pressed");
                 // Get access to requests collection
-                CollectionReference requestCollectionRef = db.collection("Requests");
-                // Get BookID for later
-                db.collection("books")
-                        .whereEqualTo("ownerID", book.getOwnerID())
-                        .whereEqualTo("title", book.getTitle())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                bookID = document.getId();
-                            }
-                        }
-                    }
-                });
+                CollectionReference requestCollectionRef = db.collection("requests");
+                // Get bookID from intent
+                bookID = intent.getStringExtra("BOOK_ID");
                 // Create Request Object
                 Request request = new Request(user.getUid(), book.getOwnerID(), bookID, book.getPictureURL(), book.getTitle());
-                // Get reference to user
-                DocumentReference userRef = db.collection("users").document(user.getUid());
-                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                   requester = document.toObject(User.class);
-                            } else {
-                                Log.d("TEMP", "Document does not exist");
+                // Add request to db
+                requestCollectionRef.add(request)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Snackbar sb = Snackbar.make(v, "Request Sent", Snackbar.LENGTH_SHORT);
+                                sb.show();
+                                requestButton.setClickable(false);
+                                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
                             }
-                        } else {
-                            Log.d("TEMP", "get failed with ", task.getException());
-                        }
-                    }
-                });
-                // Add request to db and add new document ID to requester
-                requestCollectionRef.add(request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        requester.addSentRequest(documentReference.getId());
-                        DocumentReference userRef = db.collection("users").document(user.getUid());
-                        userRef.update("SentRequestIDs", requester.getSentRequestsIDs());
-                    }
-                });
+                        });
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

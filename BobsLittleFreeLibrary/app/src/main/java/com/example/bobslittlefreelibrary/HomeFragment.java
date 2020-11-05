@@ -138,8 +138,7 @@ public class HomeFragment extends Fragment {
             button.setImageResource(R.drawable.blue_book);
         }
 
-//        if (user.getUid().equals(currentBook.getOwnerID())) {
-        if (true) { // to test edit book
+        if (user.getUid().equals(currentBook.getOwnerID())) {
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
                 intent.putExtra("BOOK_ID", document.getId());
@@ -149,6 +148,7 @@ public class HomeFragment extends Fragment {
         } else {
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
+                intent.putExtra("BOOK_ID", document.getId());
                 intent.putExtra("BOOK", currentBook);
                 startActivity(intent);
             });

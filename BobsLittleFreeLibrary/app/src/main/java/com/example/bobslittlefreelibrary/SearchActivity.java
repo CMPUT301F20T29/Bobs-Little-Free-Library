@@ -184,6 +184,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void backButtonPressed(View view) {
+        // fixes the reopening bug for now
+        searchBookList.clear();
+
         finish();
     }
 

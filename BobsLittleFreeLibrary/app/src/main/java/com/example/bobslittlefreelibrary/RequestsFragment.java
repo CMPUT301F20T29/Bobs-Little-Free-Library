@@ -7,16 +7,25 @@ package com.example.bobslittlefreelibrary;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -24,8 +33,11 @@ public class RequestsFragment extends Fragment {
 
     private ListView requestsList;
     private Context context;
-    private CustomRequestsAdapter customRequestsAdapter;
-    private ArrayList<Request> requestDataList;
+    private CustomRequestsAdapter sentRequestsAdapter;
+    private ArrayList<Request> sentRequestList;
+    private CustomRequestsAdapter receivedRequestsAdapter;
+    private ArrayList<Request> receivedRequestList;
+    private int tabPosition = 0;
 
     @Nullable
     @Override
@@ -41,39 +53,73 @@ public class RequestsFragment extends Fragment {
         ListView requestsList = view.findViewById(R.id.requests_list);
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         context = this.getActivity();
-        requestDataList = new ArrayList<>();
+        sentRequestList = new ArrayList<>();
+        receivedRequestList = new ArrayList<>();
+        receivedRequestsAdapter = new CustomRequestsAdapter(context, receivedRequestList, false);
+        sentRequestsAdapter = new CustomRequestsAdapter(context, sentRequestList, true);
 
         // Create the top tabs when the fragment is created
         tabLayout.addTab(tabLayout.newTab().setText("Received"));
         tabLayout.addTab(tabLayout.newTab().setText("Sent"));
 
-        // TODO initialize the received requests here and add them to the list to display
+        // initialize the user and get the user's id and get the database
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        customRequestsAdapter = new CustomRequestsAdapter(context, requestDataList, false);
-        requestsList.setAdapter(customRequestsAdapter);
+        // query all the received requests, add them to the list and then make an adapter
+        db.collection("requests")
+                .whereEqualTo("reqReceiverID", userID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d("TEMP", document.getId() + " => " + document.getData());
+                                receivedRequestList.add(document.toObject(Request.class));
+                                receivedRequestsAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d("TEMP", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        // query all the sent requests, add them to the list and then make an adapter
+        db.collection("requests")
+                .whereEqualTo("reqSenderID", userID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d("TEMP", document.getId() + " => " + document.getData());
+                                sentRequestList.add(document.toObject(Request.class));
+                                sentRequestsAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d("TEMP", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        // display the received tab
+        requestsList.setAdapter(receivedRequestsAdapter);
 
         // set a tab on click listener to know when the tabs have been switched & methods to handle
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int tabPosition = tabLayout.getSelectedTabPosition();
+                tabPosition = tabLayout.getSelectedTabPosition();
 
                 if (tabPosition == 0) {
                     // Received requests tab
-                    requestDataList.clear();
-
-                    // TODO query & put the received requests into the list
-
-                    customRequestsAdapter.setSentTab(false);
-                    requestsList.setAdapter(customRequestsAdapter);
+                    requestsList.setAdapter(receivedRequestsAdapter);
                 } else {
                     // Sent requests tab
-                    requestDataList.clear();
-
-                    // TODO query & put the sent requests into the list
-
-                    customRequestsAdapter.setSentTab(true);
-                    requestsList.setAdapter(customRequestsAdapter);
+                    requestsList.setAdapter(sentRequestsAdapter);
                 }
             }
 
@@ -87,5 +133,15 @@ public class RequestsFragment extends Fragment {
                 // pass
             }
         });
+
+        // handling the user selecting a request
+        requestsList.setClickable(true);
+        requestsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                //TODO HANDLING OF CLICKING AN ITEM, BRING TO NEW ACTIVITY
+            }
+        });
+
     }
 }

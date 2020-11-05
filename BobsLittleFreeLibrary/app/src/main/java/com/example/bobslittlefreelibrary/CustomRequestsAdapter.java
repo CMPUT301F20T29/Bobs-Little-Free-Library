@@ -19,8 +19,10 @@ import androidx.annotation.Nullable;
 
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -56,7 +58,6 @@ public class CustomRequestsAdapter extends ArrayAdapter<Request> {
 
         // this is setting up data base to query for users
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference usersCollectionRef = db.collection("users");
 
         // If it's the sent tab, show who you are sending the request to
         // if it's received tab, show who is sending it to the you
@@ -70,37 +71,23 @@ public class CustomRequestsAdapter extends ArrayAdapter<Request> {
         }
 
         if (isSentTab) {
-            usersCollectionRef
-                    .whereEqualTo("userID", request.getReqReceiverID())
+            db.collection("users")
+                    .document(request.getReqReceiverID())
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    // Log.d("TEMP", document.getId() + " => " + document.getData());
-                                    userTextView.setText("To: " + document.toObject(User.class).getUsername());
-                                }
-                            } else {
-                                Log.d("TEMP", "Error getting documents: ", task.getException());
-                            }
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            userTextView.setText("To: " + documentSnapshot.get("username"));
                         }
                     });
         } else {
-            usersCollectionRef
-                    .whereEqualTo("userID", request.getReqSenderID())
+            db.collection("users")
+                    .document(request.getReqSenderID())
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    // Log.d("TEMP", document.getId() + " => " + document.getData());
-                                    userTextView.setText("From: " + document.toObject(User.class).getUsername());
-                                }
-                            } else {
-                                Log.d("TEMP", "Error getting documents: ", task.getException());
-                            }
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            userTextView.setText("From: " + documentSnapshot.get("username"));
                         }
                     });
         }

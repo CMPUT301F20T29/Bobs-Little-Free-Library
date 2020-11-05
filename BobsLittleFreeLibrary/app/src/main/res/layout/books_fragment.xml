@@ -15,17 +15,48 @@
     </ListView>
 
     <Button
-        android:id="@+id/filterButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/filterAllButton"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="11dp"
         android:layout_marginEnd="11dp"
-        android:padding="11dp"
-        android:text="FILTER"
         android:layout_marginRight="11dp"
-        android:layout_alignParentRight="true" />
+        android:padding="11dp"
+        android:text="ALL" />
+
+
+    <Button
+        android:id="@+id/filterAvailableButton"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_toStartOf="@+id/filterAllButton"
+        android:layout_toLeftOf="@+id/filterAllButton"
+        android:padding="11dp"
+        android:text="Available"
+        android:textSize="10dp" />
+
+    <Button
+        android:id="@+id/filterBorrowedButton"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_toStartOf="@+id/filterAvailableButton"
+        android:layout_toLeftOf="@+id/filterAvailableButton"
+        android:padding="11dp"
+        android:text="Borrowed"
+        android:textSize="10dp" />
+
+
 
     <TextView
         android:id="@+id/sectionText"
@@ -34,27 +65,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginTop="11dp"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
-        android:text="MyBooks"
+        android:text="Books"
         android:textSize="30dp" />
-
-
-    <TextView
-        android:id="@+id/statusText"
-        android:textSize="20dp"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="18dp"
-        android:layout_toStartOf="@+id/filterButton"
-        android:layout_toLeftOf="@+id/filterButton"
-        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_Item"

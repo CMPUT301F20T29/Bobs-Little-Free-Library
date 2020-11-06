@@ -27,7 +27,10 @@ import java.util.HashMap;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
- * TODO: Setup profile button functionality, profile button with username and link it to UserProfileView activity
+ * TODO:
+ *  - Setup profile button functionality, profile button with username and link it to UserProfileView activity
+ *  - Check if book is in the poss4sion of another user before allowing owner to delete it
+ *
  *
  * */
 public class MyBookViewActivity extends AppCompatActivity {
@@ -114,10 +117,13 @@ public class MyBookViewActivity extends AppCompatActivity {
                 bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "onSuccess: " + bookID);
                         Log.d("TEMP", "Book document deleted");
                         Snackbar sb = Snackbar.make(v, "Book Deleted", Snackbar.LENGTH_SHORT);
                         sb.show();
-                        finish();
+                        Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
+                        intent.putExtra("WHICH_FRAGMENT", "BOOKS");
+                        MyBookViewActivity.this.startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -140,7 +146,9 @@ public class MyBookViewActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
+                intent.putExtra("WHICH_FRAGMENT", "BOOKS");
+                startActivity(intent);
             }
         });
     }

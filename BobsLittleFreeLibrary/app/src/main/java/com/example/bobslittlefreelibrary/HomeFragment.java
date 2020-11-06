@@ -17,10 +17,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 /**
  * This fragment is manages all the references and interactions on the home screen.
  *
- * TODO: Figure out final direction for the Requests Overview, setup functionality for profile button, figure out if there's a way to make loading latest books faster
+ * TODO: Figure out final direction for the Requests Overview, setup functionality for profile button, fix the profile button changing size when switching between fragments
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
  * since values are only initialized once on this fragment. At no other time would they be called,
@@ -45,6 +47,8 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
 
     // Variables
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<Book> listOfBooks;
     TableLayout latestBooks;
     TableLayout requestsOverview;
@@ -71,6 +75,17 @@ public class HomeFragment extends Fragment {
         latestBooks = getView().findViewById(R.id.latest_books_view);
         requestsOverview = getView().findViewById(R.id.requests_overview_display);
 
+        // Initialize UI
+        db.collection("users").document(user.getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                profileButton.setText(user.getUsername());
+            }
+        });
+
+        // Setup listeners
         searchButton.setOnClickListener(v -> {
             Log.d("TEMP", "Search Button Pressed");
             Intent intent = new Intent(getActivity(), SearchActivity.class);
@@ -81,8 +96,7 @@ public class HomeFragment extends Fragment {
 
         // Initialize Latest Books and setup listeners for ImageButtons
         listOfBooks = new ArrayList<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference bookCollectionRef = db.collection("books");
+        CollectionReference bookCollectionRef = db.collection("books");
 
         bookCollectionRef
                 .orderBy("dateAdded", Query.Direction.DESCENDING).limit(6)
@@ -121,7 +135,6 @@ public class HomeFragment extends Fragment {
      * */
     private void setupImageButton(QueryDocumentSnapshot document, int i) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Book currentBook = document.toObject(Book.class);
         ImageButton button;
         TableRow row;

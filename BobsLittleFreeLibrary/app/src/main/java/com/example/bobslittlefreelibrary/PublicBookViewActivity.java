@@ -137,6 +137,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
 
     /**
      * This method assigns values to UI elements in the activity layout.
+     * @param book The book object to draw values from
      * */
     private void setUIValues(Book book) {
         String pictureURL = book.getPictureURL();
@@ -146,10 +147,17 @@ public class PublicBookViewActivity extends AppCompatActivity {
             bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
         titleText.setText(book.getTitle());
-        authorText.setText(book.getAuthor());
-        ISBNText.setText(book.getISBN());
+        authorText.setText(String.format("Author: %s", book.getAuthor()));
+        ISBNText.setText(String.format("ISBN: %s", book.getISBN()));
         descText.setText(book.getDescription());
-        // ownerProfileButton // probably get book.getOwner() and then either populate button with that User object or do smthn with db
+        db.collection("users").document(book.getOwnerID())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                ownerProfileButton.setText(user.getUsername());
+            }
+        });
         bookStatus.setText(book.getStatus());
     }
 }

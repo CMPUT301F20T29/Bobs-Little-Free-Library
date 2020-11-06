@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,7 +41,7 @@ public class MyBookViewActivity extends AppCompatActivity {
     private TextView authorText;
     private TextView ISBNText;
     private TextView descText;
-    private Button borrowerProfileButton;
+    private Button ownerProfileButton;
     private TextView bookStatus;
     private Button removeBookButton;
     private Button editInfoButton;
@@ -80,10 +79,10 @@ public class MyBookViewActivity extends AppCompatActivity {
         }
 
         // Set onClickListeners for the buttons
-        borrowerProfileButton.setOnClickListener(new View.OnClickListener() {
+        ownerProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Borrower Profile button pressed");
+                Log.d("TEMP", "Owner Profile button pressed");
             }
         });
         removeBookButton.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +154,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         authorText = findViewById(R.id.my_book_view_author);
         ISBNText = findViewById(R.id.my_book_view_ISBN);
         descText =findViewById(R.id.my_book_view_desc);
-        borrowerProfileButton = findViewById(R.id.my_book_view_borrower_profile_button);
+        ownerProfileButton = findViewById(R.id.my_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.my_book_view_status_text);
         removeBookButton = findViewById(R.id.my_book_view_remove_button);
         editInfoButton = findViewById(R.id.my_book_view_edit_button);
@@ -164,6 +163,7 @@ public class MyBookViewActivity extends AppCompatActivity {
 
     /**
      * This method assigns values to UI elements in the activity layout.
+     * @param book The book object to draw values from
      * */
     private void setUIValues(Book book) {
         String pictureURL = book.getPictureURL();
@@ -173,10 +173,17 @@ public class MyBookViewActivity extends AppCompatActivity {
             bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
         titleText.setText(book.getTitle());
-        authorText.setText(book.getAuthor());
-        ISBNText.setText(book.getISBN());
+        authorText.setText(String.format("Author: %s", book.getAuthor()));
+        ISBNText.setText(String.format("ISBN: %s", book.getISBN()));
         descText.setText(book.getDescription());
-        // borrowerProfileButton
+        db.collection("users").document(book.getOwnerID())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                ownerProfileButton.setText(user.getUsername());
+            }
+        });
         bookStatus.setText(book.getStatus());
     }
 }

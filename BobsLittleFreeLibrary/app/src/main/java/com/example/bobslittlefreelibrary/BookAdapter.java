@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+// Adapter for books in the Search Activity
 public class BookAdapter extends ArrayAdapter<Book> {
 
     public BookAdapter(Context context, int resource, List<Book> bookSearchList) {

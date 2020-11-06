@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
-
+    <!-- Top Buttons -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -30,6 +30,8 @@
 
     </RelativeLayout>
 
+
+    <!-- Search View/ Search Bar -->
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,6 +39,8 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search Bob's Little Free Library"></SearchView>
 
+
+    <!-- The next three linear layouts are the filter option buttons -->
     <LinearLayout
         android:id="@+id/firstLinearLayout"
         android:layout_width="match_parent"
@@ -113,6 +117,7 @@
 
     </LinearLayout>
 
+    <!-- List view for dummy books right now -->
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

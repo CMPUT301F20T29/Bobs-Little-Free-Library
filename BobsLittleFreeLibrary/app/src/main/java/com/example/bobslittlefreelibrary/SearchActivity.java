@@ -77,7 +77,8 @@ public class SearchActivity extends AppCompatActivity {
         filterButton.setText("FILTER");
     }
 
-
+    // This method shows the filters and changes the text of the button to hide
+    // This is when the user clicks to display the new changes
     private void showFilters() {
         filterLayout1.setVisibility(View.VISIBLE);
         filterLayout2.setVisibility(View.VISIBLE);
@@ -85,6 +86,8 @@ public class SearchActivity extends AppCompatActivity {
         filterButton.setText("HIDE");
     }
 
+
+    // This method searches for the items of ListView based on what is being typed in the Search Bar of SearchView
     private void searchOptions() {
         searchView = (SearchView) findViewById(R.id.bookSearchBar);
 
@@ -109,10 +112,13 @@ public class SearchActivity extends AppCompatActivity {
                 for (Book book: searchBookList) {
                     if(book.getTitle().toLowerCase().contains(s.toLowerCase())) {
 
+                        // if the user toggles to all, then just care about what\s being searched
                         if (currentFilter.equals("all")) {
 
                             filteredBooks.add(book);
+
                         } else {
+                            // else if some other filter is selected, keep in mind the filter as well as the search query
                             if(book.getStatus().toLowerCase().contains(currentFilter)) {
                                 filteredBooks.add(book);
                             }
@@ -168,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-
+    // Method for setting up the populated list view
     private void setupList() {
 
         listView = (ListView) findViewById(R.id.bookSearchListView);
@@ -183,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
-
+    // This method filters the list of the book based on the filter status - Available, Borrowed, Requested etc.
     private void filterBookList(String bookStatus) {
 
         currentFilter = bookStatus;
@@ -243,6 +249,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    // stop this activity and return the previous activity on stack when the back button is pressed
     public void backButtonPressed(View view) {
         // fixes the reopening bug for now
         searchBookList.clear();
@@ -250,6 +257,9 @@ public class SearchActivity extends AppCompatActivity {
         finish();
     }
 
+
+    // display filters if filter button is pressed
+    // hide filters if it is pressed again
     public void filterButtonPressed(View view) {
 
         if (filterHidden == true) {

@@ -95,10 +95,4 @@ public class UserTest {
         assertEquals("54321 76st NW", address2);
 
     }
-
-
-
-
-
-
 }

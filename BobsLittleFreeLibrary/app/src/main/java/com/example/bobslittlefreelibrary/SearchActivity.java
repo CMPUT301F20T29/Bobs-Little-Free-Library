@@ -26,19 +26,26 @@ public class SearchActivity extends AppCompatActivity {
     // setting up what the current filter choice of the user is, all books by default
     private String currentFilter = "all";
 
+    // holds what currently is being searched right now
     private String currentSearchQuery = "";
 
+    // searchView holds the SearchView from our Search Activity
     private SearchView searchView;
 
+    // filter button
     private Button filterButton;
 
+
+    // layouts for the different filter options
     private LinearLayout filterLayout1;
     private LinearLayout filterLayout2;
     private LinearLayout filterLayout3;
 
+    // keeps track of whether the filter options are shown or hidden at the specific moment
     boolean filterHidden = true;
 
 
+    // Methods that run on creation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,8 @@ public class SearchActivity extends AppCompatActivity {
         hideFilters();
     }
 
+
+    // This method sets the filter button and the layouts to its corresponding ID in the XML file
     private void setLayoutsAndButtons() {
         filterButton = (Button) findViewById(R.id.filterButton);
         filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
@@ -58,12 +67,16 @@ public class SearchActivity extends AppCompatActivity {
         filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
     }
 
+
+    // This method hides the filters and changes the text of button to filter
+    // This is when the user clicks hide to drop off the filters from show
     private void hideFilters() {
         filterLayout1.setVisibility(View.GONE);
         filterLayout2.setVisibility(View.GONE);
         filterLayout3.setVisibility(View.GONE);
         filterButton.setText("FILTER");
     }
+
 
     private void showFilters() {
         filterLayout1.setVisibility(View.VISIBLE);

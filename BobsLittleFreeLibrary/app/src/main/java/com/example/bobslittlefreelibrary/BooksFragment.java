@@ -35,7 +35,9 @@ public class BooksFragment extends Fragment{
 
     ListView bookList;
     ArrayList<Book> dataList;
+    ArrayList<String> bookIDList;
     ArrayAdapter<Book> bookAdapter;
+    FirebaseUser user;
 
     FirebaseFirestore db;
 
@@ -54,10 +56,16 @@ public class BooksFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bookList = getActivity().findViewById(R.id.bookList);
         dataList = new ArrayList<>();
+        bookIDList = new ArrayList<>();
 
         bookAdapter = new CustomList(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
@@ -65,23 +73,23 @@ public class BooksFragment extends Fragment{
         TextView titleCard = getActivity().findViewById(R.id.sectionText);
         titleCard.setText("Books");
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
+        db = FirebaseFirestore.getInstance();
 
         db.collection("books").whereEqualTo("ownerID", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            dataList.clear();
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 Log.d(TAG, document.getId() + " => " +document.getData());
 
                                 Book book = document.toObject(Book.class);
                                 dataList.add(book);
+                                bookIDList.add(document.getId());
                                 bookAdapter.notifyDataSetChanged();
 
                             }
@@ -91,6 +99,7 @@ public class BooksFragment extends Fragment{
                         }
                     }
                 });
+
 
 
 
@@ -115,12 +124,14 @@ public class BooksFragment extends Fragment{
         });
 
 
+
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Select which activity to go to based on owner of book.
                 if (user.getUid().equals(dataList.get(position).getOwnerID())) {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", bookIDList.get(position));
                     intent.putExtra("BOOK", dataList.get(position));  // Send book to be displayed in book view activity
                     startActivity(intent);
                 } else {

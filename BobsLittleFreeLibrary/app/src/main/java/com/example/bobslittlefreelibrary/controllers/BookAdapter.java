@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.controllers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Book;
 
 import java.util.List;
 

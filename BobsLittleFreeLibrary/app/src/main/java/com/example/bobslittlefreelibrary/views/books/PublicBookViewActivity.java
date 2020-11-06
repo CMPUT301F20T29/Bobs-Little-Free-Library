@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views.books;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,14 +8,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Request;
+import com.example.bobslittlefreelibrary.models.User;
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,10 +24,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User

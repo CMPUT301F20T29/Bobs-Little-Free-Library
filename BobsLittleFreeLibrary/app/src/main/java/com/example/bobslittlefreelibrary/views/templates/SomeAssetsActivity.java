@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary.templates;
+package com.example.bobslittlefreelibrary.views.templates;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.bobslittlefreelibrary.MainActivity;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.example.bobslittlefreelibrary.R;
 
 public class SomeAssetsActivity extends AppCompatActivity {

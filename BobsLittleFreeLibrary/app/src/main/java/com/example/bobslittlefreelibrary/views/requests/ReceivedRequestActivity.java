@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views.requests;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Request;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

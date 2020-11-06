@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views.books;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.User;
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;

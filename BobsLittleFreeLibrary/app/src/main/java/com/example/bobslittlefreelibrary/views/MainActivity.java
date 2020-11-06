@@ -1,20 +1,15 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.bobslittlefreelibrary.templates.BlankTemplateActivity;
-import com.example.bobslittlefreelibrary.templates.FormTemplateActivity;
-import com.example.bobslittlefreelibrary.templates.SomeAssetsActivity;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.views.requests.RequestsFragment;
+import com.example.bobslittlefreelibrary.views.books.BooksFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

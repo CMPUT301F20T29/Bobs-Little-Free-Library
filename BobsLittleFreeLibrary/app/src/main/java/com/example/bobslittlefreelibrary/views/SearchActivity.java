@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.controllers.BookAdapter;
+import com.example.bobslittlefreelibrary.models.Book;
 
 import java.util.ArrayList;
 

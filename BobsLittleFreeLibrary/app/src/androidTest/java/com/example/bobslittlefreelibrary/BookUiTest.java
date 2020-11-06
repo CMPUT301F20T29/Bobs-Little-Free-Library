@@ -1,11 +1,12 @@
 package com.example.bobslittlefreelibrary;
 
-import android.app.Activity;
-import android.widget.ScrollView;
-
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.books.AddBookActivity;
+import com.example.bobslittlefreelibrary.views.users.LoginActivity;
+import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;

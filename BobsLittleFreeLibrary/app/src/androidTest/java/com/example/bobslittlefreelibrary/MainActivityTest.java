@@ -20,9 +20,6 @@ import static org.junit.Assert.assertTrue;
  * This is a test class that tests the functionality and UI of the 3 main tab (fragments) shown in MainActivity.
  * The tests use Robotium and ActivityTestRule (which is depreciated). Maybe consider using ActivityScenarioRule and see if robotium works with it?
  *
- * TODO: Make tests for:
- *
- *
  * */
 
 public class MainActivityTest {
@@ -33,7 +30,7 @@ public class MainActivityTest {
      *
      * */
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, true);
+    public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
      * Runs before all tests and creates the solo instance
@@ -42,7 +39,9 @@ public class MainActivityTest {
     @Before
     public void setup() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-        // TODO: change it so that we start at LoginActivity, and then sign in, and then get to MainActivity where we begin the tests
+        solo.enterText(0, "kvnguyen@ualberta.ca");
+        solo.enterText(1, "chickennuggets");
+        solo.clickOnButton("Login");
     }
 
     /**
@@ -71,10 +70,10 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
         // Switch to BooksFragment
         solo.clickOnView(solo.getView(R.id.books_page));
-        assertTrue(solo.searchText("My Books"));
+        assertTrue(solo.searchText("Books"));
         // Switch to RequestsFragment
         solo.clickOnView(solo.getView(R.id.requests_page));
-        assertTrue(solo.searchText("Tab 1"));
+        assertTrue(solo.searchText("Sent"));
         // Switch back to HomeFragment
         solo.clickOnView(solo.getView(R.id.home_page));
         assertTrue(solo.searchText("Requests Overview"));

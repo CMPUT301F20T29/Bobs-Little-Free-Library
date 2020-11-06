@@ -1,10 +1,12 @@
 package com.example.bobslittlefreelibrary;
 
+import java.io.Serializable;
+
 /**
  * This class bundles the information for requests.
  */
 
-public class Request {
+public class Request implements Serializable {
     private String reqSenderID;
     private String reqReceiverID;
     private String bookRequestedID;

@@ -26,19 +26,26 @@ public class SearchActivity extends AppCompatActivity {
     // setting up what the current filter choice of the user is, all books by default
     private String currentFilter = "all";
 
+    // holds what currently is being searched right now
     private String currentSearchQuery = "";
 
+    // searchView holds the SearchView from our Search Activity
     private SearchView searchView;
 
+    // filter button
     private Button filterButton;
 
+
+    // layouts for the different filter options
     private LinearLayout filterLayout1;
     private LinearLayout filterLayout2;
     private LinearLayout filterLayout3;
 
+    // keeps track of whether the filter options are shown or hidden at the specific moment
     boolean filterHidden = true;
 
 
+    // Methods that run on creation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,8 @@ public class SearchActivity extends AppCompatActivity {
         hideFilters();
     }
 
+
+    // This method sets the filter button and the layouts to its corresponding ID in the XML file
     private void setLayoutsAndButtons() {
         filterButton = (Button) findViewById(R.id.filterButton);
         filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
@@ -58,6 +67,9 @@ public class SearchActivity extends AppCompatActivity {
         filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
     }
 
+
+    // This method hides the filters and changes the text of button to filter
+    // This is when the user clicks hide to drop off the filters from show
     private void hideFilters() {
         filterLayout1.setVisibility(View.GONE);
         filterLayout2.setVisibility(View.GONE);
@@ -65,6 +77,8 @@ public class SearchActivity extends AppCompatActivity {
         filterButton.setText("FILTER");
     }
 
+    // This method shows the filters and changes the text of the button to hide
+    // This is when the user clicks to display the new changes
     private void showFilters() {
         filterLayout1.setVisibility(View.VISIBLE);
         filterLayout2.setVisibility(View.VISIBLE);
@@ -72,6 +86,8 @@ public class SearchActivity extends AppCompatActivity {
         filterButton.setText("HIDE");
     }
 
+
+    // This method searches for the items of ListView based on what is being typed in the Search Bar of SearchView
     private void searchOptions() {
         searchView = (SearchView) findViewById(R.id.bookSearchBar);
 
@@ -96,10 +112,13 @@ public class SearchActivity extends AppCompatActivity {
                 for (Book book: searchBookList) {
                     if(book.getTitle().toLowerCase().contains(s.toLowerCase())) {
 
+                        // if the user toggles to all, then just care about what\s being searched
                         if (currentFilter.equals("all")) {
 
                             filteredBooks.add(book);
+
                         } else {
+                            // else if some other filter is selected, keep in mind the filter as well as the search query
                             if(book.getStatus().toLowerCase().contains(currentFilter)) {
                                 filteredBooks.add(book);
                             }
@@ -155,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-
+    // Method for setting up the populated list view
     private void setupList() {
 
         listView = (ListView) findViewById(R.id.bookSearchListView);
@@ -170,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
-
+    // This method filters the list of the book based on the filter status - Available, Borrowed, Requested etc.
     private void filterBookList(String bookStatus) {
 
         currentFilter = bookStatus;
@@ -230,6 +249,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    // stop this activity and return the previous activity on stack when the back button is pressed
     public void backButtonPressed(View view) {
         // fixes the reopening bug for now
         searchBookList.clear();
@@ -237,6 +257,9 @@ public class SearchActivity extends AppCompatActivity {
         finish();
     }
 
+
+    // display filters if filter button is pressed
+    // hide filters if it is pressed again
     public void filterButtonPressed(View view) {
 
         if (filterHidden == true) {

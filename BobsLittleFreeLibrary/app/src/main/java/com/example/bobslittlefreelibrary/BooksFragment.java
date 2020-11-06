@@ -31,14 +31,30 @@ import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
+
+/**
+ *  This fragment manages all interactions and data displayed within
+ *  the Books screen.
+ *
+ *  Accesses Firebase and displays all books that belong to the current User
+ *  list view.
+ *
+ *  Clicking on any Book displayed by the Books screen will call upon
+ *  PublicBookView or MyBookView appropriately
+ *
+ *  TODO: Add filter functionality
+ *
+ *  Add FAB starts AddBookActivity
+ */
 public class BooksFragment extends Fragment{
 
+
+    //Instantiate List of books and firebase variables
     ListView bookList;
     ArrayList<Book> dataList;
     ArrayList<String> bookIDList;
     ArrayAdapter<Book> bookAdapter;
     FirebaseUser user;
-
     FirebaseFirestore db;
 
 
@@ -55,10 +71,18 @@ public class BooksFragment extends Fragment{
         return inflater.inflate(R.layout.books_fragment, container, false);
     }
 
+
+    /**
+     * onResume is the point at which the code begins when another post-occuring
+     * activity ends and returns to BooksFragment
+     */
     @Override
     public void onResume() {
         super.onResume();
     }
+
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -78,6 +102,14 @@ public class BooksFragment extends Fragment{
 
         db = FirebaseFirestore.getInstance();
 
+
+
+        /**
+         *  Accesses database and Uses Querying to select books where ownerID is the Users Id
+         *  Then adds them too the listview of books
+         *
+         * Exception handling in case the database is inaccessible
+         */
         db.collection("books").whereEqualTo("ownerID", user.getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -104,7 +136,7 @@ public class BooksFragment extends Fragment{
 
 
 
-
+        //Click listener linking to AddBookActivity
         final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +146,8 @@ public class BooksFragment extends Fragment{
             }
         });
 
+
+        //Click listener linking to filter activity
         Button filterButton = getActivity().findViewById(R.id.filterAllButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -124,7 +158,8 @@ public class BooksFragment extends Fragment{
         });
 
 
-
+        // In event of an element of the list of books being clicked either
+        // PublicBookView or MyBookView are called
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

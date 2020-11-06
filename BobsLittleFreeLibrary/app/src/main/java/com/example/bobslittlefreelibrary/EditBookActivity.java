@@ -137,15 +137,15 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
                                 bookUpdateMap.put("description", desc);
                                 book.setDescription(desc);
 
-                            } else if (!usersImageFile.equals(bookFromDb.getPictureURL())) {
+                            } else if (usersImageFile != null && !usersImageFile.equals(bookFromDb.getPictureURL())) {
                                 uploadImageFile();
                             }
 
                             bookRef.update(bookUpdateMap);
+                            exitActivity();
                         }
                     });
 
-                    exitActivity();
 
                 } else {
                     showInvalidInputSnackbar(v);
@@ -200,7 +200,8 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
     private void exitActivity(){
         Intent intent = new Intent(EditBookActivity.this, MyBookViewActivity.class);
         intent.putExtra("BOOK_ID", getIntent().getExtras().getString("BOOK_ID"));
-        intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
+        intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity\
+        Log.d(TAG, "exitActivity: " + book.getDescription());
         startActivity(intent);
     }
 

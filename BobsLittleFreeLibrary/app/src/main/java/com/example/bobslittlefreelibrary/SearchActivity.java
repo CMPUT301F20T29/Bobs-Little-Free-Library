@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
+
+
+// Ideas for this Activity have been taken from Youtube Tutorials by the channel "Code with Cal"
+// Youtube Channel Link: https://www.youtube.com/channel/UCDTKfxFIFmMnR-u_HodZGjA
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -17,11 +23,21 @@ public class SearchActivity extends AppCompatActivity {
     // making a reference to the listView
     private ListView listView;
 
+    // setting up what the current filter choice of the user is, all books by default
     private String currentFilter = "all";
 
     private String currentSearchQuery = "";
 
     private SearchView searchView;
+
+    private Button filterButton;
+
+    private LinearLayout filterLayout1;
+    private LinearLayout filterLayout2;
+    private LinearLayout filterLayout3;
+
+    boolean filterHidden = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +45,31 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         searchOptions();
+        setLayoutsAndButtons();
         setupData();
         setupList();
+        hideFilters();
+    }
+
+    private void setLayoutsAndButtons() {
+        filterButton = (Button) findViewById(R.id.filterButton);
+        filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
+        filterLayout2 = (LinearLayout) findViewById(R.id.secondLinearLayout);
+        filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
+    }
+
+    private void hideFilters() {
+        filterLayout1.setVisibility(View.GONE);
+        filterLayout2.setVisibility(View.GONE);
+        filterLayout3.setVisibility(View.GONE);
+        filterButton.setText("FILTER");
+    }
+
+    private void showFilters() {
+        filterLayout1.setVisibility(View.VISIBLE);
+        filterLayout2.setVisibility(View.VISIBLE);
+        filterLayout3.setVisibility(View.VISIBLE);
+        filterButton.setText("HIDE");
     }
 
     private void searchOptions() {
@@ -81,7 +120,7 @@ public class SearchActivity extends AppCompatActivity {
      */
     private void setupData() {
 
-        Book book1 = new Book("Test Book 1", "Test Author 1", "1-56619-909-3", "Nice", "123", "available");
+        Book book1 = new Book("Test Title 1", "Test Author 1", "1-56619-909-3", "Nice", "123", "available");
         searchBookList.add(book1);
 
         Book book2 = new Book("Test Title 2", "Test Author 2", "1-56619-909-4", "Cool", "234", "available");
@@ -108,6 +147,9 @@ public class SearchActivity extends AppCompatActivity {
         Book book9 = new Book("Chess Rules 3", "Test Author 7", "1-56619-909-1", "I dont like this book", "567", "available");
         searchBookList.add(book9);
 
+        Book book10 = new Book("Very Nice Book", "Test Author 7", "1-56619-909-1", "I like this book", "567", "available");
+        searchBookList.add(book10);
+
 
 
 
@@ -123,6 +165,11 @@ public class SearchActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
     }
+
+
+
+
+
 
     private void filterBookList(String bookStatus) {
 
@@ -188,6 +235,18 @@ public class SearchActivity extends AppCompatActivity {
         searchBookList.clear();
 
         finish();
+    }
+
+    public void filterButtonPressed(View view) {
+
+        if (filterHidden == true) {
+            filterHidden = false;
+            showFilters();
+        } else {
+            filterHidden = true;
+            hideFilters();
+        }
+
     }
 
 

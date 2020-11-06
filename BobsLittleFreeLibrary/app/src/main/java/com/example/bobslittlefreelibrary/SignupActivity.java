@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bobslittlefreelibrary.templates.BlankTemplateActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -78,14 +77,14 @@ public class SignupActivity extends AppCompatActivity {
                                         User userData = new User(username, email, address);
                                         db.collection("users").document(mAuth.getUid()).set(userData);
 
-                                        Toast.makeText(SignupActivity.this, "Signup success.",
-                                                Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(v, "Signup success.",
+                                                Snackbar.LENGTH_SHORT).show();
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(SignupActivity.this, "Failed to signup, account already exists.",
-                                                Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(v, "Failed to signup, account already exists.",
+                                                Snackbar.LENGTH_SHORT).show();
                                         updateUI(null);
                                     }
                                 }

@@ -12,17 +12,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * This is a test class that tests the functionality of the tab system used in MainActivity.
+ * This is a test class that tests the functionality of the UI in HomeFragment
  * The tests use Robotium and ActivityTestRule (which is depreciated). Maybe consider using ActivityScenarioRule and see if robotium works with it?
+ * TODO: make test for profile button, quick scan button, and then requests overview after its changed, alter openLatestBook() to handle both MyBookViewActivity and PublicBookViewActivity
  *
  * */
-
-public class MainActivityTest {
+public class HomeFragmentTest {
 
     private Solo solo;
 
@@ -54,20 +52,21 @@ public class MainActivityTest {
     }
 
     /**
-     * This test checks if the tab system works.
+     * This test checks if the search button works
      * */
     @Test
-    public void checkSwitchBetweenFragments() {
-        solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
-        // Switch to BooksFragment
-        solo.clickOnView(solo.getView(R.id.books_page));
-        assertTrue(solo.searchText("Books"));
-        // Switch to RequestsFragment
-        solo.clickOnView(solo.getView(R.id.requests_page));
-        assertTrue(solo.searchText("Sent"));
-        // Switch back to HomeFragment
-        solo.clickOnView(solo.getView(R.id.home_page));
-        assertTrue(solo.searchText("Requests Overview"));
+    public void goToSearchActivity() {
+        solo.clickOnButton("Search");
+        solo.assertCurrentActivity("Did not go to SearchActivity", SearchActivity.class);
+    }
+
+    /**
+     * This test checks if the ImageButtons work
+     * */
+    @Test
+    public void openLatestBook() {
+        solo.clickOnImageButton(0);
+        solo.assertCurrentActivity("Did not go to PublicBookView", PublicBookViewActivity.class);
     }
 
     /**

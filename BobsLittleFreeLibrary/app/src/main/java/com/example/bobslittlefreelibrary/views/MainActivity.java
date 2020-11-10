@@ -20,9 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
  * */
 public class MainActivity extends AppCompatActivity {
 
-    private Button formTemplateButton;
-    private Button blankTemplateButton;
-    private Button someAssetsButton;
+    private String lastActiveTab;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,64 +32,15 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Log.d("userEmail",user.getEmail().toString());
 
-        /*formTemplateButton = findViewById(R.id.form_template);
-        blankTemplateButton = findViewById(R.id.blank_template);
-        someAssetsButton = findViewById(R.id.some_assets);
-
-        formTemplateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FormTemplateActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        blankTemplateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BlankTemplateActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
-        someAssetsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SomeAssetsActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });*/
-
         // Setup Bottom Nav view
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home_page);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-        // Get which fragment to show in main activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            switch (extras.getString("WHICH_FRAGMENT")) {
-                case "DASH":
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new HomeFragment()).commit();
-                    bottomNavigationView.setSelectedItemId(R.id.home_page);
-                    break;
-                case "BOOKS":
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new BooksFragment()).commit();
-                    bottomNavigationView.setSelectedItemId(R.id.books_page);
-                    break;
-                case "REQS":
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new RequestsFragment()).commit();
-                    bottomNavigationView.setSelectedItemId(R.id.requests_page);
-                    break;
-            }
-        } else {
-            // Set default screen as home screen
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
-        }
+        // Set default screen as home screen
+        lastActiveTab = "HOME";
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new HomeFragment()).commit();
     }
 
     // We define this listener outside the onCreate method to customize it to our fragments and set it in the OnCreate method
@@ -114,4 +64,34 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment).commit();
                 return true; // true means we select the current item, fragments would still show if this is false.
             };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        switch (lastActiveTab) {
+            case "DASH":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HomeFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.home_page);
+                break;
+            case "BOOKS":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new BooksFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.books_page);
+                break;
+            case "REQS":
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new RequestsFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.requests_page);
+                break;
+        }
+    }
+
+    /**
+     * Updates the value of lastActiveTab
+     * @param tabName the name of the tab to be set as last active
+     * */
+    public void setLastActiveTab(String tabName) {
+        lastActiveTab = tabName;
+    }
 }

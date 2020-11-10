@@ -33,7 +33,8 @@ import java.util.HashMap;
  * This activity provides a location to display all the information that pertains to a Book owned by the User
  * TODO:
  *  - Setup profile button functionality, profile button with username and link it to UserProfileView activity
- *  - Check if book is in the poss4sion of another user before allowing owner to delete it
+ *  - Check if book is in the possession of another user before allowing owner to delete it
+ *  - when coming back from EditBookActivity if the image is changed, the image in this activity doesnt update
  *
  *
  * */
@@ -145,14 +146,13 @@ public class MyBookViewActivity extends AppCompatActivity {
                 intent.putExtra("BOOK_ID", bookID);
                 intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
                 startActivity(intent);
+                finish();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
-                intent.putExtra("WHICH_FRAGMENT", "BOOKS");
-                startActivity(intent);
+                finish();
             }
         });
     }

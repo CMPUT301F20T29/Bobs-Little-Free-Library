@@ -195,6 +195,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
         intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity\
         Log.d(TAG, "exitActivity: " + book.getDescription());
         startActivity(intent);
+        finish();
     }
 
     // Uploads the image file at usersImageFile

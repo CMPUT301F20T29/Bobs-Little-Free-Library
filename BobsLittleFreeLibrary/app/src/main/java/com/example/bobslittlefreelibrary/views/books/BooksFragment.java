@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.example.bobslittlefreelibrary.controllers.CustomList;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -51,7 +52,6 @@ import static android.content.ContentValues.TAG;
  */
 public class BooksFragment extends Fragment{
 
-
     //Instantiate List of books and firebase variables
     ListView bookList;
     ArrayList<Book> dataList;
@@ -59,9 +59,6 @@ public class BooksFragment extends Fragment{
     ArrayAdapter<Book> bookAdapter;
     FirebaseUser user;
     FirebaseFirestore db;
-
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +71,6 @@ public class BooksFragment extends Fragment{
         return inflater.inflate(R.layout.books_fragment, container, false);
     }
 
-
     /**
      * onResume is the point at which the code begins when another post-occuring
      * activity ends and returns to BooksFragment
@@ -84,16 +80,14 @@ public class BooksFragment extends Fragment{
         super.onResume();
     }
 
-
-
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity)getActivity()).setLastActiveTab("BOOKS");
+
         bookList = getActivity().findViewById(R.id.bookList);
         dataList = new ArrayList<>();
         bookIDList = new ArrayList<>();
-
         bookAdapter = new CustomList(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
 
@@ -101,15 +95,11 @@ public class BooksFragment extends Fragment{
         titleCard.setText("Books");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-
         db = FirebaseFirestore.getInstance();
 
-
-
-        /**
+        /*
          *  Accesses database and Uses Querying to select books where ownerID is the Users Id
-         *  Then adds them too the listview of books
+         *  Then adds them to the listview of books
          *
          * Exception handling in case the database is inaccessible
          */
@@ -121,24 +111,16 @@ public class BooksFragment extends Fragment{
                             dataList.clear();
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 Log.d(TAG, document.getId() + " => " +document.getData());
-
                                 Book book = document.toObject(Book.class);
                                 dataList.add(book);
                                 bookIDList.add(document.getId());
                                 bookAdapter.notifyDataSetChanged();
-
                             }
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
-
-
-
-
         //Click listener linking to AddBookActivity
         final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item);
         addItemButton.setOnClickListener(new View.OnClickListener() {
@@ -148,8 +130,6 @@ public class BooksFragment extends Fragment{
                 startActivity(intent);
             }
         });
-
-
         //Click listener linking to filter activity
         Button filterButton = getActivity().findViewById(R.id.filterAllButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -159,8 +139,6 @@ public class BooksFragment extends Fragment{
                 //status.setText("/*Skippidi-pap-pap*/");
             }
         });
-
-
         // In event of an element of the list of books being clicked either
         // PublicBookView or MyBookView are called
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

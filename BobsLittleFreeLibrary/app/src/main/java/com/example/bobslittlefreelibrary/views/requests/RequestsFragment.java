@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.CustomRequestsAdapter;
 import com.example.bobslittlefreelibrary.models.Request;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -156,5 +157,11 @@ public class RequestsFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((MainActivity)getActivity()).setLastActiveTab("REQS");
     }
 }

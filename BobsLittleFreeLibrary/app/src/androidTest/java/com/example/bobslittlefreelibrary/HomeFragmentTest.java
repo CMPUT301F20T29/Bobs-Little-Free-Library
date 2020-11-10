@@ -1,5 +1,8 @@
 package com.example.bobslittlefreelibrary;
 
+import android.app.Activity;
+import android.util.Log;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -67,6 +70,11 @@ public class HomeFragmentTest {
      * */
     @Test
     public void openLatestBook() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Log.d("TEMP", "Error msg: ", e);
+        }
         solo.clickOnImageButton(0);
         solo.assertCurrentActivity("Did not go to PublicBookView", PublicBookViewActivity.class);
     }

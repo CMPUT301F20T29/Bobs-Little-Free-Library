@@ -115,7 +115,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
         titleText = findViewById(R.id.public_book_view_title);
         authorText = findViewById(R.id.public_book_view_author);
         ISBNText = findViewById(R.id.public_book_view_ISBN);
-        descText =findViewById(R.id.public_book_view_desc);
+        descText = findViewById(R.id.public_book_view_desc);
         ownerProfileButton = findViewById(R.id.public_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.public_book_view_status_text);
         requestButton = findViewById(R.id.public_book_view_request_button);

@@ -124,7 +124,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         titleText = findViewById(R.id.my_book_view_title);
         authorText = findViewById(R.id.my_book_view_author);
         ISBNText = findViewById(R.id.my_book_view_ISBN);
-        descText =findViewById(R.id.my_book_view_desc);
+        descText = findViewById(R.id.my_book_view_desc);
         ownerProfileButton = findViewById(R.id.my_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.my_book_view_status_text);
         removeBookButton = findViewById(R.id.my_book_view_remove_button);

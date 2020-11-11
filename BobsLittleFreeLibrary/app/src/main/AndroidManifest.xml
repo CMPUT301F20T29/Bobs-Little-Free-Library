@@ -18,25 +18,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditBookActivity"></activity>
-        <activity android:name=".ReceivedRequestActivity" />
-        <activity android:name=".SentRequestActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".AddBookActivity" />
-        <activity android:name=".templates.SomeAssetsActivity" />
-        <activity android:name=".templates.BlankTemplateActivity" />
-        <activity android:name=".templates.FormTemplateActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".views.books.EditBookActivity"></activity>
+        <activity android:name=".views.requests.ReceivedRequestActivity" />
+        <activity android:name=".views.requests.SentRequestActivity" />
+        <activity android:name=".views.SearchActivity" />
+        <activity android:name=".views.books.AddBookActivity" />
+        <activity android:name=".views.templates.SomeAssetsActivity" />
+        <activity android:name=".views.templates.BlankTemplateActivity" />
+        <activity android:name=".views.templates.FormTemplateActivity" />
+        <activity android:name=".views.users.SignupActivity" />
+        <activity android:name=".views.users.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".MyBookViewActivity" />
-        <activity android:name=".PublicBookViewActivity" />
+        <activity android:name=".views.MainActivity"/>
+        <activity android:name=".views.books.MyBookViewActivity" />
+        <activity android:name=".views.books.PublicBookViewActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

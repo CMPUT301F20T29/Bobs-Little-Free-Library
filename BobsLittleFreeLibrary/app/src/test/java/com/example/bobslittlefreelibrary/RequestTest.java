@@ -1,6 +1,6 @@
 package com.example.bobslittlefreelibrary;
 
-import org.junit.Test;
+import com.example.bobslittlefreelibrary.models.Request;
 
 import static junit.framework.TestCase.assertEquals;
 

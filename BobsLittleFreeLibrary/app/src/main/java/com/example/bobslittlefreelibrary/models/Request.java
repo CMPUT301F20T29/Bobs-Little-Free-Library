@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.models;
 
 import java.io.Serializable;
 

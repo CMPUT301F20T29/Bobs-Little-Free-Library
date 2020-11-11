@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views.books;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,28 +15,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.controllers.SelectImageFragment;
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -47,7 +39,7 @@ import java.util.HashMap;
  *
  * TODO: Save book to user's collection in firestore.
  */
-public class EditBookActivity extends AppCompatActivity implements SelectImageFragment.OnFragmentInteractionListener{
+public class EditBookActivity extends AppCompatActivity implements SelectImageFragment.OnFragmentInteractionListener {
 
     final String TAG = "EditBookActivity";
 
@@ -203,6 +195,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
         intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity\
         Log.d(TAG, "exitActivity: " + book.getDescription());
         startActivity(intent);
+        finish();
     }
 
     // Uploads the image file at usersImageFile

@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.bobslittlefreelibrary.utils.DownloadImageTask;
+import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.models.User;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,7 +38,10 @@ import java.util.ArrayList;
 /**
  * This fragment is manages all the references and interactions on the home screen.
  *
- * TODO: Figure out final direction for the Requests Overview, setup functionality for profile button, fix the profile button changing size when switching between fragments
+ * TODO:
+ *     - Figure out final direction for the Requests Overview
+ *     - setup functionality for profile button
+ *     - fix the profile button changing size when switching between fragments
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
  * since values are only initialized once on this fragment. At no other time would they be called,
@@ -47,11 +55,10 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
 
     // Variables
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    ArrayList<Book> listOfBooks;
-    TableLayout latestBooks;
-    TableLayout requestsOverview;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+    private TableLayout latestBooks;
+    private Button profileButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,13 +74,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity)getActivity()).setLastActiveTab("HOME");
         Log.d("TEMP", "Home Fragment view has been created");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
         // Setup references to UI elements
         Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
-        Button profileButton = getView().findViewById(R.id.home_user_profile_button);
+        profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
         latestBooks = getView().findViewById(R.id.latest_books_view);
-        requestsOverview = getView().findViewById(R.id.requests_overview_display);
+        TableLayout requestsOverview = getView().findViewById(R.id.requests_overview_display);
 
         // Initialize UI
         db.collection("users").document(user.getUid())
@@ -84,7 +96,6 @@ public class HomeFragment extends Fragment {
                 profileButton.setText(user.getUsername());
             }
         });
-
         // Setup listeners
         searchButton.setOnClickListener(v -> {
             Log.d("TEMP", "Search Button Pressed");
@@ -95,11 +106,11 @@ public class HomeFragment extends Fragment {
         quickScanButton.setOnClickListener(v -> Log.d("TEMP", "Quick Scan Button Pressed"));
 
         // Initialize Latest Books and setup listeners for ImageButtons
-        listOfBooks = new ArrayList<>();
+        ArrayList<Book> listOfBooks = new ArrayList<>();
         CollectionReference bookCollectionRef = db.collection("books");
 
         bookCollectionRef
-                .orderBy("dateAdded", Query.Direction.DESCENDING).limit(6)
+                .orderBy("dateAdded", Query.Direction.ASCENDING).limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

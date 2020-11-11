@@ -5,16 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchActivity">
+    tools:context=".views.SearchActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:id="@+id/public_book_view_back_button"
-        style="@style/BackButton"
-        android:text="@string/back"
-        android:onClick="backButtonPressed"/>
+    <!-- Top Buttons -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/searchListBackButton"
+            style="@style/BackButton"
+            android:layout_width="wrap_content"
+            android:onClick="backButtonPressed"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/filterButton"
+            style="@style/SecondaryButton"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="filterButtonPressed"
+            android:text="filter" />
 
 
+    </RelativeLayout>
+
+
+    <!-- Search View/ Search Bar -->
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +39,10 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search Bob's Little Free Library"></SearchView>
 
+
+    <!-- The next three linear layouts are the filter option buttons -->
     <LinearLayout
+        android:id="@+id/firstLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -33,7 +53,7 @@
             android:layout_height="match_parent"
             android:text="All"
             android:id="@+id/allBooksFilter"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorAccent"
             android:textColor="@color/colorLight"
             android:onClick="allFilterPressed"/>
 
@@ -41,6 +61,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/secondLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -51,7 +72,7 @@
             android:layout_height="match_parent"
             android:text="Available"
             android:id="@+id/availableBooksFilter"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorAccent"
             android:textColor="@color/colorLight"
             android:onClick="availableFilterPressed"/>
 
@@ -61,13 +82,14 @@
             android:layout_height="match_parent"
             android:text="Requested"
             android:id="@+id/requestedBooksFilter"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorAccent"
             android:textColor="@color/colorLight"
             android:onClick="requestedFilterPressed"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/thirdLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -78,7 +100,7 @@
             android:layout_height="match_parent"
             android:text="Accepted"
             android:id="@+id/acceptedBooksFilter"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorAccent"
             android:textColor="@color/colorLight"
             android:onClick="acceptedFilterPressed"/>
 
@@ -88,13 +110,14 @@
             android:layout_height="match_parent"
             android:text="Borrowed"
             android:id="@+id/borrowedBooksFilter"
-            android:background="@color/colorSecondary"
+            android:background="@color/colorAccent"
             android:textColor="@color/colorLight"
             android:onClick="borrowedFilterPressed"/>
 
 
     </LinearLayout>
 
+    <!-- List view for dummy books right now -->
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

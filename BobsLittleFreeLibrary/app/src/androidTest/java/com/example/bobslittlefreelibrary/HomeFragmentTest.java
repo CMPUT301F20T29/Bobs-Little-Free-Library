@@ -1,10 +1,12 @@
 package com.example.bobslittlefreelibrary;
 
-import android.app.Activity;
-
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.users.LoginActivity;
+import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
+import com.example.bobslittlefreelibrary.views.SearchActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;

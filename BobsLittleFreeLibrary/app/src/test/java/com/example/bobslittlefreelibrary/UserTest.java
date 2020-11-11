@@ -1,5 +1,8 @@
 package com.example.bobslittlefreelibrary;
 
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.models.User;
+
 import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 

@@ -3,6 +3,7 @@ package com.example.bobslittlefreelibrary;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;

@@ -152,6 +152,7 @@ public class BooksFragment extends Fragment{
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", bookIDList.get(position));
                     intent.putExtra("BOOK", dataList.get(position));
                     startActivity(intent);
                 }

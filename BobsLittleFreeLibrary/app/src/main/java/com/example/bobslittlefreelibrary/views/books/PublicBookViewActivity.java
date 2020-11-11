@@ -27,7 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO: Setup profile button functionality, populate profile button with username and link it to UserProfileView activity, make it so that when a Book is requested, the user cannot send another request
+ * TODO:
+ *    -Setup profile button functionality
+ *    - populate profile button with username and link it to UserProfileView activity
+ *    - make it so that when a Book is requested, the user cannot send another request
  *
  * Currently, if a user leaves the activity and views it again, they will be able to press the request button and add another request to the db
  *

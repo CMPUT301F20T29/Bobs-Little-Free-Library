@@ -1,25 +1,22 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF000000"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FF000000">
+
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
         />
+    
+    <ImageView
+        android:id="@+id/bar"
+        android:src="@drawable/ic_baseline_remove_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
-    <Button
-        android:text="PRESS"
-        style="@style/SecondaryButton"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        />
 
-
-</RelativeLayout>
+</FrameLayout>

@@ -1,49 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.ScanFragment"
-    android:padding="11dp">
+    android:background="#FF000000"
+    >
 
-    <RelativeLayout
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        />
 
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/form_container"
-            android:layout_below="@+id/top_buttons">
-
-            <!-- Username Field Start-->
-            <TextView
-                android:id="@+id/isbn_label"
-                android:text="ISBN"
-                style="@style/FormLabel"
-                />
-
-            <EditText
-                android:id="@+id/isbn_input"
-                android:inputType="textPersonName"
-                android:layout_below="@+id/isbn_label"
-                style="@style/FormInput"
-                />
-            <!--Username Field End-->
+    <Button
+        android:text="PRESS"
+        style="@style/SecondaryButton"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        />
 
 
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/submit_button"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:layout_below="@+id/form_container"
-            android:text="Submit"
-            style="@style/SubmitButton"
-
-            />
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>

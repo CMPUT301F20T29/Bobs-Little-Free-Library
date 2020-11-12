@@ -1,27 +1,76 @@
-package com.example.bobslittlefreelibrary.controllers;
+package com.example.bobslittlefreelibrary;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.camera2.Camera2Config;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraXConfig;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.core.Preview;
+import androidx.camera.core.UseCase;
+import androidx.camera.extensions.HdrImageCaptureExtender;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.example.bobslittlefreelibrary.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.common.InputImage;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /*
  * ScanFragment presents a full screen bottom sheet with a camera view.
@@ -38,6 +87,13 @@ public class ScanFragment extends BottomSheetDialogFragment {
     private EditText isbnInput;
     private Button submitButton;
     private OnFragmentInteractionListener listener;
+    private String usersImageFile;
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private PreviewView previewView;
+    private Preview.SurfaceProvider sp;
+    private ProcessCameraProvider cameraProvider;
+
+
 
     public interface OnFragmentInteractionListener {
         void onIsbnFound(String isbn);
@@ -60,27 +116,48 @@ public class ScanFragment extends BottomSheetDialogFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 100);
+
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
 
-        isbnInput = view.findViewById(R.id.isbn_input);
-        submitButton = view.findViewById(R.id.submit_button);
+        previewView = view.findViewById(R.id.preview);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isbnInput.getText() != null) {
-                    String isbnCandidate = isbnInput.getText().toString().trim();
-                    if (isbnCandidate.length() == 10 || isbnCandidate.length() == 13) {
-                        listener.onIsbnFound("9781305109391"); // i use this for testing so i don't have to remember a isbn :D
-//                        listener.onIsbnFound(isbnCandidate);
-                        dismiss();
-                    }
-                }
+        cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+        cameraProviderFuture.addListener(() -> {
+            try {
+                cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
             }
-        });
+        }, ContextCompat.getMainExecutor(getContext()));
 
         return view;
     }
+
+
+    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+        Preview preview = new Preview.Builder()
+                .build();
+
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
+
+        ImageAnalysis imageAnalysis =
+                new ImageAnalysis.Builder()
+                        .setTargetResolution(new Size(1280, 720))
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
+                        .build();
+
+
+        imageAnalysis.setAnalyzer(Executors.newFixedThreadPool(1), new BarcodeAnalyzer());
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
+    }
+
 
     /*
      * Overrided onCreateDialog() makes the bottom sheet cover the entire screen.
@@ -120,5 +197,46 @@ public class ScanFragment extends BottomSheetDialogFragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
+    }
+
+    private class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
+
+        @Override
+        public void analyze(@NonNull ImageProxy imageProxy) {
+            BarcodeScannerOptions options =
+                    new BarcodeScannerOptions.Builder()
+                            .setBarcodeFormats(
+                                    Barcode.FORMAT_EAN_13)
+                            .build();
+
+            @SuppressLint("UnsafeExperimentalUsageError") Image mediaImage = imageProxy.getImage();
+            if (mediaImage != null) {
+                InputImage image =
+                        InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                BarcodeScanner scanner = BarcodeScanning.getClient();
+
+                Task<List<Barcode>> result = scanner.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                            @Override
+                            public void onSuccess(List<Barcode> barcodes) {
+                                if (!barcodes.isEmpty()) {
+                                    listener.onIsbnFound(barcodes.get(0).getRawValue());
+                                    dismiss();
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("FAIL", "onFailure: FAIL");
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
+                            @Override
+                            public void onComplete(@NonNull Task<List<Barcode>> task) {
+                                imageProxy.close();
+                            }
+                        });
+            }
+        }
     }
 }

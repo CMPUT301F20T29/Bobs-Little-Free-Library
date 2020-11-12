@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".views.templates.BlankTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp"
+    >
+
+    <!--        Top buttons begin-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_buttons">
+
+        <Button
+            android:id="@+id/back_button"
+            android:text="Back"
+            style="@style/BackButton"/>
+        <Button
+            android:id="@+id/edit_button"
+            android:text="Edit"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/SecondaryButton"/>
+    </RelativeLayout>
+    <!--        Top buttons end-->
+
+    <TextView
+        android:id="@+id/user_name"
+        android:text="Lee Sin"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/top_buttons"
+        style="@style/ViewTitle"
+        />
+
+    <TextView
+        android:id="@+id/user_email"
+        android:text="morello@riot.com"
+        android:layout_below="@+id/user_name"
+        style="@style/FormLabel"
+        />
+
+    <TextView
+        android:id="@+id/user_address"
+        android:text="Summoner's Rift, California"
+        android:layout_below="@+id/user_email"
+        style="@style/FormLabel"
+        />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/books_owned"
+        android:text="Books Owned"
+        android:layout_below="@+id/user_address"
+        style="@style/ViewTitle"
+        />
+
+    <ScrollView
+        android:layout_below="@+id/books_owned"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/books_listView"/>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

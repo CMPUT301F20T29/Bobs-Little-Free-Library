@@ -72,7 +72,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/*
+/**
  * ScanFragment presents a full screen bottom sheet with a camera view.
  *
  * TODO: implement camera view and barcode scanning in firebase.
@@ -84,21 +84,17 @@ import java.util.concurrent.Executors;
  */
 public class ScanFragment extends BottomSheetDialogFragment {
 
-    private EditText isbnInput;
-    private Button submitButton;
     private OnFragmentInteractionListener listener;
-    private String usersImageFile;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private PreviewView previewView;
-    private Preview.SurfaceProvider sp;
     private ProcessCameraProvider cameraProvider;
-
 
 
     public interface OnFragmentInteractionListener {
         void onIsbnFound(String isbn);
     }
 
+    // Enforce Activity that's using this fragment to also implement it's interface
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -110,18 +106,23 @@ public class ScanFragment extends BottomSheetDialogFragment {
         }
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        // Get user's permission to use device's camera
         ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 100);
 
+        // Inflate view
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
 
+        // Get PreviewView
         previewView = view.findViewById(R.id.preview);
 
+        // Request a camera provider
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
         cameraProviderFuture.addListener(() -> {
             try {
@@ -136,11 +137,12 @@ public class ScanFragment extends BottomSheetDialogFragment {
         return view;
     }
 
-
+    // Sets up camera use cases and bind to the previewView
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder()
                 .build();
 
+        // Select the back facing camera
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
@@ -151,10 +153,13 @@ public class ScanFragment extends BottomSheetDialogFragment {
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
                         .build();
 
-
+        // Set analyzer for the incoming camera frames
         imageAnalysis.setAnalyzer(Executors.newFixedThreadPool(1), new BarcodeAnalyzer());
+
+        // link preview to the previewView
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
+        // Bind the camera and it's use cases to the fragment's lifecycle
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
     }
 
@@ -199,26 +204,36 @@ public class ScanFragment extends BottomSheetDialogFragment {
         return displayMetrics.heightPixels;
     }
 
+
+     // BarcodeAnalyzer is used by the ImageAnalysis CameraX use case to check each frame
+     // of camera input for a barcode.
     private class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
 
         @Override
         public void analyze(@NonNull ImageProxy imageProxy) {
+
+            // Set up barcode scanning options - ISBN bar codes are of type EAN-13
             BarcodeScannerOptions options =
                     new BarcodeScannerOptions.Builder()
                             .setBarcodeFormats(
                                     Barcode.FORMAT_EAN_13)
                             .build();
 
+            // For every frame of camera input create an Image object and check it for a barcode
             @SuppressLint("UnsafeExperimentalUsageError") Image mediaImage = imageProxy.getImage();
             if (mediaImage != null) {
-                InputImage image =
-                        InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+
+                InputImage image = InputImage.fromMediaImage(mediaImage,
+                        imageProxy.getImageInfo().getRotationDegrees());
+
                 BarcodeScanner scanner = BarcodeScanning.getClient();
 
                 Task<List<Barcode>> result = scanner.process(image)
                         .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                             @Override
                             public void onSuccess(List<Barcode> barcodes) {
+                                // if we see a barcode in the camera then call onIsbnFound() and
+                                // dismiss this fragment
                                 if (!barcodes.isEmpty()) {
                                     listener.onIsbnFound(barcodes.get(0).getRawValue());
                                     dismiss();
@@ -228,7 +243,7 @@ public class ScanFragment extends BottomSheetDialogFragment {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d("FAIL", "onFailure: FAIL");
+                                Log.d("analyze", "onFailure: FAIL");
                             }
                         }).addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
                             @Override

@@ -48,6 +48,7 @@ public class SelectImageFragment extends BottomSheetDialogFragment {
         void imageSelected(int requestCode, int resultCode, Intent imageReturnedIntent, String currentPhotoPath);
     }
 
+    // Enforce Activity that's using this fragment to also implement it's interface
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

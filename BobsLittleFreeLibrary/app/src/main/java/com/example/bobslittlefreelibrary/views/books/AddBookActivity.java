@@ -2,8 +2,13 @@ package com.example.bobslittlefreelibrary.views.books;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,9 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bobslittlefreelibrary.ScanFragment;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.R;
-import com.example.bobslittlefreelibrary.controllers.ScanFragment;
 import com.example.bobslittlefreelibrary.controllers.SelectImageFragment;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
@@ -376,4 +381,5 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             }
         });
     }
+
 }

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.bobslittlefreelibrary.controllers.FullScreenBottomSheet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +57,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -82,22 +85,24 @@ import java.util.concurrent.Executors;
  *      2. use the isbn in the onIsbnFound() method
  *
  */
-public class ScanFragment extends BottomSheetDialogFragment {
+public class ScanFragment extends FullScreenBottomSheet {
 
+    private static final int PERMISSION_REQUEST_CODE = 200;
     private OnFragmentInteractionListener listener;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private PreviewView previewView;
     private ProcessCameraProvider cameraProvider;
-
+    View view;
 
     public interface OnFragmentInteractionListener {
         void onIsbnFound(String isbn);
     }
 
-    // Enforce Activity that's using this fragment to also implement it's interface
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        // Enforce Activity that's using this fragment to also implement it's interface
         if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
         } else {
@@ -106,19 +111,27 @@ public class ScanFragment extends BottomSheetDialogFragment {
         }
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        // Get user's permission to use device's camera
-        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 100);
+        Log.d("SCAN_FRAG", "onCreateView: ");
 
         // Inflate view
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
+        view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
 
+        if (checkPermission()) {
+            startCamera();
+        } else {
+            requestPermission();
+        }
+
+        return view;
+    }
+
+    // Gets the previewView then starts camera
+    private void startCamera() {
         // Get PreviewView
         previewView = view.findViewById(R.id.preview);
 
@@ -133,8 +146,6 @@ public class ScanFragment extends BottomSheetDialogFragment {
                 // This should never be reached.
             }
         }, ContextCompat.getMainExecutor(getContext()));
-
-        return view;
     }
 
     // Sets up camera use cases and bind to the previewView
@@ -162,48 +173,6 @@ public class ScanFragment extends BottomSheetDialogFragment {
         // Bind the camera and it's use cases to the fragment's lifecycle
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
     }
-
-
-    /*
-     * Overrided onCreateDialog() makes the bottom sheet cover the entire screen.
-     *
-     * Code from answer by user "Gabriele Mariotti" on SO:
-     * https://stackoverflow.com/questions/58065771/bottomsheetdialogfragment-full-screen
-     *
-     */
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                setupFullHeight(bottomSheetDialog);
-            }
-        });
-        return  dialog;
-    }
-
-    private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
-        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
-
-        int windowHeight = getWindowHeight();
-        if (layoutParams != null) {
-            layoutParams.height = windowHeight;
-        }
-        bottomSheet.setLayoutParams(layoutParams);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
-
-    private int getWindowHeight() {
-        // Calculate window height for fullscreen use
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
-    }
-
 
      // BarcodeAnalyzer is used by the ImageAnalysis CameraX use case to check each frame
      // of camera input for a barcode.
@@ -239,19 +208,42 @@ public class ScanFragment extends BottomSheetDialogFragment {
                                     dismiss();
                                 }
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("analyze", "onFailure: FAIL");
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
-                            @Override
-                            public void onComplete(@NonNull Task<List<Barcode>> task) {
-                                imageProxy.close();
-                            }
                         });
+                imageProxy.close();
             }
+        }
+    }
+
+    // Checks if the user has given permissions to user camera
+    private boolean checkPermission() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    // Requests for permission to use camera from user
+    private void requestPermission() {
+        requestPermissions(
+                new String[]{Manifest.permission.CAMERA},
+                PERMISSION_REQUEST_CODE);
+    }
+
+    // Is called when the user allows or denies camera permissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCamera();
+                } else {
+                    Toast.makeText(getContext(),
+                            "Please allow camera permissions in settings to scan a book.",
+                            Toast.LENGTH_LONG).show();
+                    dismiss();
+                }
+                break;
         }
     }
 }

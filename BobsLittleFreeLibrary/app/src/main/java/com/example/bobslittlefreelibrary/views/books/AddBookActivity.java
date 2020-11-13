@@ -49,6 +49,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /*
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
  * have it's info be autofilled by Google Books API.
@@ -233,7 +234,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         Log.d(TAG, "onIsbnFound: " + isbn);
 
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + isbn
-                + "&key=AIzaSyA8uqm_F6NxRRpkXt0dDQ3RqkqATEmsuvM";
+                + "&key=" + getString(R.string.BOOKS_API_KEY);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

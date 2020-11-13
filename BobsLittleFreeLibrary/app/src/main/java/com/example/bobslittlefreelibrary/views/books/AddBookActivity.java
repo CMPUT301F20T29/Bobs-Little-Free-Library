@@ -21,11 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-<<<<<<< Updated upstream
-=======
-import com.example.bobslittlefreelibrary.BuildConfig;
-import com.example.bobslittlefreelibrary.ScanFragment;
->>>>>>> Stashed changes
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.ScanFragment;

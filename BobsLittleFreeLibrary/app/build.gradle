@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     compileSdkVersion 30
@@ -7,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.bobslittlefreelibrary"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -17,6 +19,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            resValue("string", "BOOKS_API_KEY", localProperties['booksApiKey'])
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -49,4 +54,12 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.mlkit:barcode-scanning:16.0.3'
+
+    def camerax_version = "1.0.0-beta12"
+
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation"androidx.camera:camera-view:1.0.0-alpha18"
+    implementation "androidx.camera:camera-extensions:1.0.0-alpha18"
 }

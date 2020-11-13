@@ -21,6 +21,7 @@ import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -102,7 +103,11 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             startActivity(intent);
         });
-        profileButton.setOnClickListener(v -> Log.d("TEMP", "User Profile Button Pressed"));
+        profileButton.setOnClickListener(v -> {
+            Log.d("TEMP", "User Profile Button Pressed");
+            Intent intent = new Intent(getActivity(), MyProfileViewActivity.class);
+            startActivity(intent);
+        });
         quickScanButton.setOnClickListener(v -> Log.d("TEMP", "Quick Scan Button Pressed"));
 
         // Initialize Latest Books and setup listeners for ImageButtons

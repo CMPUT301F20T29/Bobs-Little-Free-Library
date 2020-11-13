@@ -37,6 +37,8 @@
         <activity android:name=".views.MainActivity"/>
         <activity android:name=".views.books.MyBookViewActivity" />
         <activity android:name=".views.books.PublicBookViewActivity" />
+        <activity android:name=".views.users.MyProfileViewActivity" />
+        <activity android:name=".views.users.PublicProfileViewActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

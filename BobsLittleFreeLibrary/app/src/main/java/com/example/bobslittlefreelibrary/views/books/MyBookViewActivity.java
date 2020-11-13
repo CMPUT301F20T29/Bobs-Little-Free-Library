@@ -18,6 +18,7 @@ import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,6 +81,8 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Owner Profile button pressed");
+                Intent intent = new Intent(MyBookViewActivity.this, MyProfileViewActivity.class);
+                startActivity(intent);
             }
         });
         removeBookButton.setOnClickListener(new View.OnClickListener() {

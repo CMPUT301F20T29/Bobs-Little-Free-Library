@@ -69,11 +69,6 @@ public class HomeFragment extends Fragment {
     private ArrayList<Book> listOfBooks;
     private ArrayList<String> listOfBookIDS;
 
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
-    private static final int NUM_PAGES = 6;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,9 +148,15 @@ public class HomeFragment extends Fragment {
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onPageSelected(int position) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 updateLatestBooksImageView(position);
-                Log.d("TEMP", "position = "+position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                updateLatestBooksImageView(position);
             }
         });
 
@@ -181,7 +182,8 @@ public class HomeFragment extends Fragment {
         ImageView imageView;
         Book currentBook = listOfBooks.get(position);
 
-        imageView = (ImageView)viewPager.findViewById(R.id.latest_books_image);
+        imageView = (ImageView)viewPager.findViewWithTag(position);
+        Log.d("TEMP", "imageView = " + imageView);
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
@@ -208,8 +210,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * A simple pager adapter that represents 6 ScreenSlidePageFragment objects, in
-     * sequence.
+     * A simple pager adapter that represents up to 6 LatestBooksSlidePageFragments in sequence.
      */
     private class LatestBooksPagerAdapter extends FragmentStateAdapter {
 
@@ -219,7 +220,12 @@ public class HomeFragment extends Fragment {
 
         @Override
         public Fragment createFragment(int position) {
-            return new LatestBooksSlidePageFragment();
+            LatestBooksSlidePageFragment fragment = new LatestBooksSlidePageFragment();
+            // Give position to fragment to set as tag for view
+            Bundle args = new Bundle();
+            args.putInt("position", position);
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override

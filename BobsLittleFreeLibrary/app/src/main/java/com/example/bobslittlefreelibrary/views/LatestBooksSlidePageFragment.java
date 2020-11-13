@@ -17,6 +17,10 @@ public class LatestBooksSlidePageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return (ViewGroup) inflater.inflate(R.layout.fragment_latest_books_slide_screen, container, false);
+        Bundle args = getArguments();
+        int position = args.getInt("position");
+        View view = (ViewGroup) inflater.inflate(R.layout.fragment_latest_books_slide_screen, container, false);
+        view.findViewById(R.id.latest_books_image).setTag(position);
+        return view;
     }
 }

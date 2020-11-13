@@ -17,7 +17,6 @@ import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
-import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

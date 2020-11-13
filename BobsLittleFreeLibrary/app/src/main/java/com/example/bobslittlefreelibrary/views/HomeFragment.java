@@ -1,5 +1,6 @@
 package com.example.bobslittlefreelibrary.views;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,12 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
@@ -41,7 +46,7 @@ import java.util.ArrayList;
  *
  * TODO:
  *     - Figure out final direction for the Requests Overview
- *     - setup functionality for profile button
+ *     - figure out how to get the viewpager pages to load the images
  *     - fix the profile button changing size when switching between fragments
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
@@ -58,12 +63,24 @@ public class HomeFragment extends Fragment {
     // Variables
     private FirebaseUser user;
     private FirebaseFirestore db;
-    private TableLayout latestBooks;
     private Button profileButton;
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter pagerAdapter;
+    private ArrayList<Book> listOfBooks;
+    private ArrayList<String> listOfBookIDS;
+
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private static final int NUM_PAGES = 6;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        listOfBooks = new ArrayList<>();
+        listOfBookIDS = new ArrayList<>();
     }
 
     @Nullable
@@ -78,15 +95,15 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).setLastActiveTab("HOME");
         Log.d("TEMP", "Home Fragment view has been created");
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
         // Setup references to UI elements
         Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        latestBooks = getView().findViewById(R.id.latest_books_view);
         TableLayout requestsOverview = getView().findViewById(R.id.requests_overview_display);
+        // Instantiate a ViewPager2 and a PagerAdapter.
+        viewPager = getView().findViewById(R.id.home_view_pager);
+        pagerAdapter = new LatestBooksPagerAdapter(getActivity());
+        viewPager.setAdapter(pagerAdapter);
 
         // Initialize UI
         db.collection("users").document(user.getUid())
@@ -111,27 +128,36 @@ public class HomeFragment extends Fragment {
         quickScanButton.setOnClickListener(v -> Log.d("TEMP", "Quick Scan Button Pressed"));
 
         // Initialize Latest Books and setup listeners for ImageButtons
-        ArrayList<Book> listOfBooks = new ArrayList<>();
         CollectionReference bookCollectionRef = db.collection("books");
 
         bookCollectionRef
+                //.whereNotEqualTo("pictureURL", null)
+                //.orderBy("pictureURL")
                 .orderBy("dateAdded", Query.Direction.ASCENDING).limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            int i = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                setupImageButton(document, i);
-                                i++;
+                                addBookToList(document);
+                                pagerAdapter.notifyDataSetChanged();
+                                Log.d("TEMP", "size of listofbooks = " + listOfBooks.size());
+                                Log.d("TEMP", "size of listofbookIDs = " + listOfBookIDS.size());
                             }
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateLatestBooksImageView(position);
+                Log.d("TEMP", "position = "+position);
+            }
+        });
 
         // Initialize Requests Overview
 
@@ -144,46 +170,61 @@ public class HomeFragment extends Fragment {
         Log.d("TEMP", "Home Fragment is paused and the view will be deleted");
     }
 
-    /**
-     * This method sets up the ImageButtons that show the latest books added to the database.
-     * @param document The current document to pull data from (i.e. the book document that will be displayed)
-     * @param i the index of the current ImageButton we are setting up.
-     * */
-    private void setupImageButton(QueryDocumentSnapshot document, int i) {
-
+    private void addBookToList(QueryDocumentSnapshot document) {
         Book currentBook = document.toObject(Book.class);
-        ImageButton button;
-        TableRow row;
+        String bookID = document.getId();
+        listOfBooks.add(currentBook);
+        listOfBookIDS.add(bookID);
+    }
 
-        // Get correct button at (row, i%3)
-        if (i < 3) {
-            row = (TableRow) latestBooks.getChildAt(0);
-        } else {
-            row = (TableRow) latestBooks.getChildAt(1);
-        }
-        button = (ImageButton) row.getChildAt(i%3);
+    private void updateLatestBooksImageView(int position) {
+        ImageView imageView;
+        Book currentBook = listOfBooks.get(position);
+
+        imageView = (ImageView)viewPager.findViewById(R.id.latest_books_image);
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
-            new DownloadImageTask(button).execute(pictureURL);
+            new DownloadImageTask(imageView).execute(pictureURL);
         } else {
-            button.setImageResource(R.drawable.blue_book);
+            imageView.setImageResource(R.drawable.blue_book);
         }
         // Select which book view activity pressing on the button leads to
         if (user.getUid().equals(currentBook.getOwnerID())) {
-            button.setOnClickListener(v -> {
+            imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                intent.putExtra("BOOK_ID", document.getId());
+                intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
                 intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
                 startActivity(intent);
             });
         } else {
-            button.setOnClickListener(v -> {
+            imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                intent.putExtra("BOOK_ID", document.getId());
+                intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
                 intent.putExtra("BOOK", currentBook);
                 startActivity(intent);
             });
+        }
+    }
+
+    /**
+     * A simple pager adapter that represents 6 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    private class LatestBooksPagerAdapter extends FragmentStateAdapter {
+
+        public LatestBooksPagerAdapter(FragmentActivity fa) {
+            super(fa);
+        }
+
+        @Override
+        public Fragment createFragment(int position) {
+            return new LatestBooksSlidePageFragment();
+        }
+
+        @Override
+        public int getItemCount() {
+            return listOfBooks.size();
         }
     }
 }

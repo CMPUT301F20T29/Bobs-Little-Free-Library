@@ -1,6 +1,5 @@
 package com.example.bobslittlefreelibrary.views;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bobslittlefreelibrary.R;
 
+/**
+ * This fragment is used for pages for the ViewPager in HomeFragment.
+ * Instances of this fragment contain a single ImageView, which we tag with the position of the
+ * page in the ViewPager.
+ * */
 public class LatestBooksSlidePageFragment extends Fragment {
 
     @Nullable

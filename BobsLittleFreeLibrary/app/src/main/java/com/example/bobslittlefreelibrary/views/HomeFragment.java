@@ -1,6 +1,5 @@
 package com.example.bobslittlefreelibrary.views;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +29,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -42,12 +38,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 /**
- * This fragment is manages all the references and interactions on the home screen.
+ * This fragment manages all the references and interactions on the home screen.
  *
  * TODO:
  *     - Figure out final direction for the Requests Overview
- *     - figure out how to get the viewpager pages to load the images
  *     - fix the profile button changing size when switching between fragments
+ *     - EXTRA: turn latestBooks viewpager into a carousel
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
  * since values are only initialized once on this fragment. At no other time would they be called,
@@ -95,6 +91,7 @@ public class HomeFragment extends Fragment {
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
         TableLayout requestsOverview = getView().findViewById(R.id.requests_overview_display);
+
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
         pagerAdapter = new LatestBooksPagerAdapter(getActivity());
@@ -122,10 +119,8 @@ public class HomeFragment extends Fragment {
         });
         quickScanButton.setOnClickListener(v -> Log.d("TEMP", "Quick Scan Button Pressed"));
 
-        // Initialize Latest Books and setup listeners for ImageButtons
-        CollectionReference bookCollectionRef = db.collection("books");
-
-        bookCollectionRef
+        // Query for latest books and add them to listOfBooks
+        db.collection("books")
                 //.whereNotEqualTo("pictureURL", null)
                 //.orderBy("pictureURL")
                 .orderBy("dateAdded", Query.Direction.ASCENDING).limit(6)
@@ -136,9 +131,7 @@ public class HomeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 addBookToList(document);
-                                pagerAdapter.notifyDataSetChanged();
-                                Log.d("TEMP", "size of listofbooks = " + listOfBooks.size());
-                                Log.d("TEMP", "size of listofbookIDs = " + listOfBookIDS.size());
+                                pagerAdapter.notifyDataSetChanged();  // Update pagerAdapter
                             }
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());
@@ -146,13 +139,8 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
+        // Added functionality to viewpager to update the ImageView inside the fragment page when a page is selected.
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                updateLatestBooksImageView(position);
-            }
-
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -168,9 +156,12 @@ public class HomeFragment extends Fragment {
     public void onPause() {
         // Is called when the user switches away from the fragment
         super.onPause();
-        Log.d("TEMP", "Home Fragment is paused and the view will be deleted");
     }
 
+    /**
+     * This method adds Books and bookIDs to corresponding ArrayLists
+     * @param document the document of the book object to draw values from.
+     * */
     private void addBookToList(QueryDocumentSnapshot document) {
         Book currentBook = document.toObject(Book.class);
         String bookID = document.getId();
@@ -178,12 +169,15 @@ public class HomeFragment extends Fragment {
         listOfBookIDS.add(bookID);
     }
 
+    /**
+     * This method gets a reference to the ImageView of a LatestBooksSlidePageFragment and update's the imageView
+     * and sets an onClick listener for the ImageView.
+     * @param position The position of the current page in the ViewPager
+     * */
     private void updateLatestBooksImageView(int position) {
         ImageView imageView;
         Book currentBook = listOfBooks.get(position);
-
         imageView = (ImageView)viewPager.findViewWithTag(position);
-        Log.d("TEMP", "imageView = " + imageView);
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
@@ -211,6 +205,8 @@ public class HomeFragment extends Fragment {
 
     /**
      * A simple pager adapter that represents up to 6 LatestBooksSlidePageFragments in sequence.
+     * When a new fragment is created, we pass in the position of that fragment to be used when
+     * setting the tag of it's ImageView.
      */
     private class LatestBooksPagerAdapter extends FragmentStateAdapter {
 

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
@@ -37,10 +38,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
+    // Class variables
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
     private String bookID;
-
+    private boolean userAlreadyRequested;
+    // UI Variables
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -60,26 +64,12 @@ public class PublicBookViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Class variables
         book = (Book) intent.getSerializableExtra("BOOK");
+        bookID = intent.getStringExtra("BOOK_ID");
         // Set references to UI elements
         setupUIReferences();
+        checkAlreadyRequested();
         // Set UI values
         setUIValues(book);
-
-        // Change colour of status text based on book's status
-        switch (bookStatus.getText().toString()) {
-            case "Available":
-                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
-                break;
-            case "Requested":
-                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
-                break;
-            case "Accepted":
-                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
-                break;
-            case "Borrowed":
-                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
-                break;
-        }
 
         // Set onClickListeners for the buttons
         ownerProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -91,12 +81,9 @@ public class PublicBookViewActivity extends AppCompatActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Request Book button pressed");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 // Get access to requests collection
                 CollectionReference requestCollectionRef = db.collection("requests");
-                // Get bookID from intent
-                bookID = intent.getStringExtra("BOOK_ID");
                 // Create Request Object
                 Request request = new Request(user.getUid(), book.getOwnerID(), bookID, book.getPictureURL(), book.getTitle());
                 // Add request to db
@@ -128,11 +115,33 @@ public class PublicBookViewActivity extends AppCompatActivity {
         titleText = findViewById(R.id.public_book_view_title);
         authorText = findViewById(R.id.public_book_view_author);
         ISBNText = findViewById(R.id.public_book_view_ISBN);
-        descText =findViewById(R.id.public_book_view_desc);
+        descText = findViewById(R.id.public_book_view_desc);
         ownerProfileButton = findViewById(R.id.public_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.public_book_view_status_text);
         requestButton = findViewById(R.id.public_book_view_request_button);
         backButton = findViewById(R.id.public_book_view_back_button);
+    }
+
+    /**
+     * This method runs a query that checks whether or not the user has already requested this book.
+     * */
+    private void checkAlreadyRequested() {
+        // Check if the user has already requested this book
+        db.collection("requests")
+                .whereEqualTo("bookRequestedID", bookID)
+                .whereEqualTo("reqSenderID", user.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        userAlreadyRequested = !queryDocumentSnapshots.isEmpty();
+                        Log.d("TEMP", "userAlreadyRequested right after query = " + userAlreadyRequested);
+                        if (userAlreadyRequested) {
+                            requestButton.setClickable(false);
+                            requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                        }
+                    }
+                });
     }
 
     /**
@@ -159,5 +168,20 @@ public class PublicBookViewActivity extends AppCompatActivity {
             }
         });
         bookStatus.setText(book.getStatus());
+        // Change colour of status text based on book's status
+        switch (bookStatus.getText().toString()) {
+            case "Available":
+                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
+                break;
+            case "Requested":
+                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
+                break;
+            case "Accepted":
+                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
+                break;
+            case "Borrowed":
+                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
+                break;
+        }
     }
 }

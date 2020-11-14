@@ -126,7 +126,6 @@ public class ScanFragment extends FullScreenBottomSheet {
         } else {
             requestPermission();
         }
-
         return view;
     }
 

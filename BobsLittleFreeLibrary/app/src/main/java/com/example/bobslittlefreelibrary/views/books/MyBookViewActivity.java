@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,15 +17,19 @@ import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
-import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,17 +38,18 @@ import java.util.HashMap;
  * This activity provides a location to display all the information that pertains to a Book owned by the User
  * TODO:
  *  - Setup profile button functionality, profile button with username and link it to UserProfileView activity
- *  - Check if book is in the possession of another user before allowing owner to delete it
  *  - when coming back from EditBookActivity if the image is changed, the image in this activity doesnt update
  *
  *
  * */
 public class MyBookViewActivity extends AppCompatActivity {
 
+    // Class variables
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    private Book book;
     private String bookID;
+    // UI variables
     private ImageView bookImage;
     private TextView titleText;
     private TextView authorText;
@@ -62,80 +68,35 @@ public class MyBookViewActivity extends AppCompatActivity {
 
         // Get Book object passed from Intent
         Intent intent = getIntent();
-        // Class variables
-        Book book = (Book) intent.getSerializableExtra("BOOK");
+        book = (Book) intent.getSerializableExtra("BOOK");
+        bookID = intent.getStringExtra("BOOK_ID");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
         setUIValues(book);
-        bookID = intent.getStringExtra("BOOK_ID");
-
-        // Change colour of status text based on book's status
-        switch (bookStatus.getText().toString()) {
-            case "Available":
-                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
-                break;
-            case "Requested":
-                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
-                break;
-            case "Accepted":
-                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
-                break;
-            case "Borrowed":
-                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
-                break;
-        }
 
         // Set onClickListeners for the buttons
         ownerProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Owner Profile button pressed");
+                Intent intent = new Intent(MyBookViewActivity.this, MyProfileViewActivity.class);
+                startActivity(intent);
             }
         });
         removeBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Remove Book button pressed");
-                // First remove the book from the user's bookID array
-                DocumentReference userDoc = db.collection("users").document(user.getUid());
-                userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User userObject = documentSnapshot.toObject(User.class);
-
-                        ArrayList<String> usersBooks = userObject.getBookIDs();
-                        Log.d("TEMP", "onSuccess: " + bookID);
-                        usersBooks.remove(bookID);
-
-                        HashMap newBooksMap = new HashMap<String, ArrayList>();
-                        newBooksMap.put("bookIDs", usersBooks);
-
-                        Log.d("TEMP", "onSuccess: " + usersBooks);
-
-                        userDoc.update(newBooksMap);
-                    }
-                });
-
-                // Now remove the book from the books collection
-                DocumentReference bookRef = db.collection("books").document(bookID);
-                bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "onSuccess: " + bookID);
-                        Log.d("TEMP", "Book document deleted");
-                        Snackbar sb = Snackbar.make(v, "Book Deleted", Snackbar.LENGTH_SHORT);
-                        sb.show();
-                        Intent intent = new Intent(MyBookViewActivity.this, MainActivity.class);
-                        intent.putExtra("WHICH_FRAGMENT", "BOOKS");
-                        MyBookViewActivity.this.startActivity(intent);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TEMP", "Error deleting Book document", e);
-                    }
-                });
+                // Check whether the book can be deleted or not
+                if (bookStatus.getText().equals("Available") || bookStatus.getText().equals("Requested")) {
+                    removeBookID();
+                    removeBookRequests();
+                    removeFromBookCollection();
+                    finish();
+                } else {
+                    Snackbar snackbar = Snackbar.make(v, "Unable to delete: Your book is currently being borrowed / will be borrowed soon.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
             }
         });
         editInfoButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +126,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         titleText = findViewById(R.id.my_book_view_title);
         authorText = findViewById(R.id.my_book_view_author);
         ISBNText = findViewById(R.id.my_book_view_ISBN);
-        descText =findViewById(R.id.my_book_view_desc);
+        descText = findViewById(R.id.my_book_view_desc);
         ownerProfileButton = findViewById(R.id.my_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.my_book_view_status_text);
         removeBookButton = findViewById(R.id.my_book_view_remove_button);
@@ -197,5 +158,99 @@ public class MyBookViewActivity extends AppCompatActivity {
             }
         });
         bookStatus.setText(book.getStatus());
+        // Change colour of status text based on book's status
+        switch (bookStatus.getText().toString()) {
+            case "Available":
+                bookStatus.setTextColor(getResources().getColor(R.color.available_green));
+                break;
+            case "Requested":
+                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
+                break;
+            case "Accepted":
+                bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
+                break;
+            case "Borrowed":
+                bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
+                break;
+        }
+    }
+
+    /**
+     * This method runs a query that searches for the user document of the owner of the book and removes the book ID from bookIDs
+     * */
+    private void removeBookID() {
+        DocumentReference userDoc = db.collection("users").document(user.getUid());
+        userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User userObject = documentSnapshot.toObject(User.class);
+
+                ArrayList<String> usersBooks = userObject.getBookIDs();
+                Log.d("TEMP", "onSuccess: " + bookID);
+                usersBooks.remove(bookID);
+
+                HashMap newBooksMap = new HashMap<String, ArrayList>();
+                newBooksMap.put("bookIDs", usersBooks);
+
+                Log.d("TEMP", "onSuccess: " + usersBooks);
+
+                userDoc.update(newBooksMap);
+            }
+        });
+    }
+
+    /**
+     * This method runs a query that removes the book document for this book from the books collection
+     * */
+    private void removeFromBookCollection() {
+        // Now remove the book from the books collection
+        DocumentReference bookRef = db.collection("books").document(bookID);
+        bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("TAG", "onSuccess: " + bookID);
+                Log.d("TEMP", "Book document deleted");
+                Toast toast = Toast.makeText(getApplicationContext(), "Book Deleted", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("TEMP", "Error deleting Book document", e);
+            }
+        });
+    }
+
+    /**
+     * This method runs a query that searches for all the requests for this book and deletes them from the db
+     * */
+    private void removeBookRequests() {
+        db.collection("requests")
+                .whereEqualTo("bookRequestedID", bookID)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("requests").document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("TEMP", "Error deleting document", e);
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d("TEMP", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }

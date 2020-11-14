@@ -31,6 +31,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private Button userProfileButton;
     private Button deleteRequestButton;
     private Button backButton;
+    private Button mapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class SentRequestActivity extends AppCompatActivity {
         userProfileButton = findViewById(R.id.provider_profile_button);
         deleteRequestButton = findViewById(R.id.delete_request_button);
         backButton = findViewById(R.id.back_button);
+        mapButton = findViewById(R.id.open_map_button);
 
         // query for the username
         db.collection("users")
@@ -107,6 +109,13 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TEMP", "Map button pressed");
             }
         });
     }

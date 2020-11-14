@@ -2,6 +2,7 @@ package com.example.bobslittlefreelibrary.views.requests;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Button acceptRequestButton;
     private Button declineRequestButton;
     private Button backButton;
+    private Button mapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         acceptRequestButton = findViewById(R.id.accept_request_button);
         declineRequestButton = findViewById(R.id.decline_request_button);
         backButton = findViewById(R.id.back_button);
+        mapButton = findViewById(R.id.open_map_button);
 
         // query for the username
         db.collection("users")
@@ -116,6 +119,14 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
     }

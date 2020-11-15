@@ -10,4 +10,5 @@
     <string name="username">username</string>
     <string name="request_book">Request Book</string>
     <string name="title_activity_maps">Map</string>
+    <string name="request_not_accepted">Request Not Accepted</string>
 </resources>

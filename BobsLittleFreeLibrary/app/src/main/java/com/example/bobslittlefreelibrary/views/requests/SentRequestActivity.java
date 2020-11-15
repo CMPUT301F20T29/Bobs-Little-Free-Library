@@ -1,5 +1,9 @@
 package com.example.bobslittlefreelibrary.views.requests;
 
+/**
+ * This class is the activity for a sent request.
+ */
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -115,7 +119,9 @@ public class SentRequestActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Map button pressed");
+                Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
+                intent.putExtra("REQUESTTYPE", 1);
+                startActivity(intent);
             }
         });
     }

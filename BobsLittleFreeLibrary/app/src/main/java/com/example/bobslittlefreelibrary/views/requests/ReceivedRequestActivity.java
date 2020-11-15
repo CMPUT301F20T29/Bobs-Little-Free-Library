@@ -1,5 +1,9 @@
 package com.example.bobslittlefreelibrary.views.requests;
 
+/**
+ * This class is the activity for received requests
+ */
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -126,6 +130,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
+                intent.putExtra("REQUESTTYPE", 0);
                 startActivity(intent);
             }
         });

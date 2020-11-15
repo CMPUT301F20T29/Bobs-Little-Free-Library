@@ -9,4 +9,5 @@
     <string name="book_status">Book Status</string>
     <string name="username">username</string>
     <string name="request_book">Request Book</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

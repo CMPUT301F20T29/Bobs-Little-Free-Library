@@ -19,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +47,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Button declineRequestButton;
     private Button backButton;
     private Button mapButton;
+    private Book currentBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currentBook = documentSnapshot.toObject(Book.class);
                         String pictureURL = currentRequest.getBookImageURL();
                         if (pictureURL != null) {
                             new DownloadImageTask(bookImage).execute(pictureURL);
@@ -159,7 +163,10 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         bookInfoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "BOOK VIEW pressed");
+                Intent intent = new Intent(ReceivedRequestActivity.this , MyBookViewActivity.class);
+                intent.putExtra("BOOK_ID", currentRequest.getBookRequestedID());
+                intent.putExtra("BOOK", currentBook);
+                startActivity(intent);
             }
         });
 

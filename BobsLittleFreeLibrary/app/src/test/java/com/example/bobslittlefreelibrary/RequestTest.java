@@ -29,18 +29,24 @@ public class RequestTest {
         return "Behavior Modification: Principles and Procedures";
     }
 
-    private LatLng mockLocation() {
-        return new LatLng(-34, 151);
+    private double mockLat() {
+        return -34;
+    }
+
+    private double mockLong() {
+        return 151;
     }
 
     @Test
     public void testSetLocation() {
         Request testRequest = mockRequest();
 
-        assertEquals(testRequest.getLocation(), null);
+        assertEquals(testRequest.getLatitude(), Double.NaN);
+        assertEquals(testRequest.getLongitude(), Double.NaN);
 
-        LatLng location = mockLocation();
-        testRequest.setLocation(location);
-        assertEquals(testRequest.getLocation(), location);
+        testRequest.setLatitude(mockLat());
+        testRequest.setLongitude(mockLong());
+        assertEquals(testRequest.getLatitude(), mockLat());
+        assertEquals(testRequest.getLongitude(), mockLong());
     }
 }

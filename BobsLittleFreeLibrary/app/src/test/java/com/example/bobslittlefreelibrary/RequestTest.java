@@ -1,6 +1,9 @@
 package com.example.bobslittlefreelibrary;
 
 import com.example.bobslittlefreelibrary.models.Request;
+import com.google.android.gms.maps.model.LatLng;
+
+import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -26,6 +29,18 @@ public class RequestTest {
         return "Behavior Modification: Principles and Procedures";
     }
 
-    //TODO: Test for location
+    private LatLng mockLocation() {
+        return new LatLng(-34, 151);
+    }
 
+    @Test
+    public void testSetLocation() {
+        Request testRequest = mockRequest();
+
+        assertEquals(testRequest.getLocation(), null);
+
+        LatLng location = mockLocation();
+        testRequest.setLocation(location);
+        assertEquals(testRequest.getLocation(), location);
+    }
 }

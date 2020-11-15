@@ -1,5 +1,7 @@
 package com.example.bobslittlefreelibrary.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
 /**
@@ -10,7 +12,7 @@ public class Request implements Serializable {
     private String reqSenderID;
     private String reqReceiverID;
     private String bookRequestedID;
-    private String location;
+    private LatLng location;
     private String bookImageURL;
     private String bookTitle;
 
@@ -42,7 +44,7 @@ public class Request implements Serializable {
      *
      * @return the location, null if it has not been set yet
      */
-    public String getLocation() {
+    public LatLng getLocation() {
         return this.location;
     }
 
@@ -51,7 +53,7 @@ public class Request implements Serializable {
      *
      * @param location the location to be set
      */
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 

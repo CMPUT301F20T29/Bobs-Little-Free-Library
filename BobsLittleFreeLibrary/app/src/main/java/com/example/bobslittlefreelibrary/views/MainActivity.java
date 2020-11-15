@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String lastActiveTab;
     private BottomNavigationView bottomNavigationView;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,5 +94,13 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void setLastActiveTab(String tabName) {
         lastActiveTab = tabName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

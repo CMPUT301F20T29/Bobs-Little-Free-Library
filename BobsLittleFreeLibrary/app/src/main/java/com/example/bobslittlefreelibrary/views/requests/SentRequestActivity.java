@@ -1,5 +1,9 @@
 package com.example.bobslittlefreelibrary.views.requests;
 
+/**
+ * This class is the activity for a sent request.
+ */
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -31,6 +35,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private Button userProfileButton;
     private Button deleteRequestButton;
     private Button backButton;
+    private Button mapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,7 @@ public class SentRequestActivity extends AppCompatActivity {
         userProfileButton = findViewById(R.id.provider_profile_button);
         deleteRequestButton = findViewById(R.id.delete_request_button);
         backButton = findViewById(R.id.back_button);
+        mapButton = findViewById(R.id.open_map_button);
 
         // query for the username
         db.collection("users")
@@ -107,6 +113,15 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
+                intent.putExtra("REQUESTTYPE", 1);
+                startActivity(intent);
             }
         });
     }

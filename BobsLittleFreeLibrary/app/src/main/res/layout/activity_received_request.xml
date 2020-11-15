@@ -91,11 +91,20 @@
             android:layout_marginTop="10dp"
             android:background="?android:attr/dividerVertical" />
 
-        <!-- THIS SPACE IS WHERE THE MAP GOES -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="130dp" />
+
+        <Button
+            android:id="@+id/open_map_button"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Select Location" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="330dp" />
+            android:layout_height="130dp" />
 
         <!-- Other info starts -->
         <RelativeLayout

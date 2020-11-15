@@ -37,10 +37,8 @@ import java.util.HashMap;
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
  * TODO:
- *  - Setup profile button functionality, profile button with username and link it to UserProfileView activity
  *  - when coming back from EditBookActivity if the image is changed, the image in this activity doesnt update
- *
- *
+ *  - Add a button that takes us to the ShowAllRequests activity (shows all the requests for this one book)
  * */
 public class MyBookViewActivity extends AppCompatActivity {
 

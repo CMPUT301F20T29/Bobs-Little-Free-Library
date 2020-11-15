@@ -89,6 +89,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets the username of the user
+     * @return Returns a String that contains the username of the user.
+     * */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
      * Updates the value of lastActiveTab
      * @param tabName the name of the tab to be set as last active
      * */
@@ -96,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         lastActiveTab = tabName;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
+    /**
+     * Sets the value of the user's username for later use and prevent re-querying of the same value
+     * @param username the username to be stored
+     * */
     public void setUsername(String username) {
         this.username = username;
     }

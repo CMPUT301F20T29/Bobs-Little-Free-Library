@@ -16,6 +16,7 @@ import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,12 +30,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
  * TODO:
- *    -Setup profile button functionality
- *    - populate profile button with username and link it to UserProfileView activity
- *    - make it so that when a Book is requested, the user cannot send another request
- *
- * Currently, if a user leaves the activity and views it again, they will be able to press the request button and add another request to the db
- *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
@@ -76,6 +71,8 @@ public class PublicBookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Owner Profile button pressed");
+                Intent intent = new Intent(PublicBookViewActivity.this, MyProfileViewActivity.class);
+                startActivity(intent);
             }
         });
         requestButton.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +94,15 @@ public class PublicBookViewActivity extends AppCompatActivity {
                                 requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
                             }
                         });
+
+                // Update Book document
+                db.collection("books").document(bookID)
+                        .update("numberOfRequests", book.getNumberOfRequests() + 1);
+                if (book.getNumberOfRequests() == 0) { // The book object we are getting the value from has not been updated yet so the number of requests would still be n - 1
+                    // Update book status
+                    db.collection("books").document(bookID)
+                            .update("status", "Requested");
+                }
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

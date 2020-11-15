@@ -22,6 +22,7 @@ import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -174,5 +175,10 @@ public class SentRequestActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            mapButton.setText(R.string.request_not_accepted);
+            mapButton.setClickable(false);
+        }
     }
 }

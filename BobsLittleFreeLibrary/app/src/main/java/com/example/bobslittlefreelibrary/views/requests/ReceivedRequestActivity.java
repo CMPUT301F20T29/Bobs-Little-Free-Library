@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Request;
@@ -107,6 +108,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         acceptRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
                 Log.d("TEMP", "Accept button pressed");
             }
         });
@@ -133,6 +135,8 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                            Toast toast = Toast.makeText(getApplicationContext(), "Request Declined", Toast.LENGTH_SHORT);
+                                                            toast.show();
                                                             finish();
                                                         }
                                                     })

@@ -41,8 +41,8 @@ public class RequestTest {
     public void testSetLocation() {
         Request testRequest = mockRequest();
 
-        assertEquals(testRequest.getLatitude(), Double.NaN);
-        assertEquals(testRequest.getLongitude(), Double.NaN);
+        assertEquals(testRequest.getLatitude(), 1000.0);
+        assertEquals(testRequest.getLongitude(), 1000.0);
 
         testRequest.setLatitude(mockLat());
         testRequest.setLongitude(mockLong());

@@ -24,6 +24,8 @@ public class Request implements Serializable {
 
     /**
      * This is the constructor for a Request object.
+     * Note: Since NaN doesn't work in firebase and Lat/Long have defined ranges,
+     * we set Lat/Long out of the ranges to know if it's valid or invalud
      * @param reqSenderUserID The user ID of the request sender
      * @param recReceiverUserID The user ID of the request receiver
      * @param bookRequestedID The ID of the book requested
@@ -35,8 +37,8 @@ public class Request implements Serializable {
         this.reqSenderID = reqSenderUserID;
         this.reqReceiverID = recReceiverUserID;
         this.bookRequestedID = bookRequestedID;
-        this.latitude = Double.NaN;
-        this.longitude = Double.NaN;
+        this.latitude = 1000;
+        this.longitude = 1000;
         this.bookImageURL = bookImageURL;
         this.bookTitle = bookTitle;
     }

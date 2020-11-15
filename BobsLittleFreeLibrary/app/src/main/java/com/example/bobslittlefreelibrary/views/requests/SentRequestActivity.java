@@ -4,6 +4,7 @@ package com.example.bobslittlefreelibrary.views.requests;
  * This class is the activity for a sent request.
  */
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -18,9 +19,14 @@ import android.widget.TextView;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SentRequestActivity extends AppCompatActivity {
 
@@ -98,7 +104,41 @@ public class SentRequestActivity extends AppCompatActivity {
         deleteRequestButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Log.d("TEMP", "Delete button pressed");
+               db.collection("requests")
+                       .whereEqualTo("reqSenderID", currentRequest.getReqSenderID())
+                       .get()
+                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                           @Override
+                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                               if (task.isSuccessful()) {
+                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                       Request tempRequest = document.toObject(Request.class);
+                                       if ((currentRequest.getReqReceiverID().equals(tempRequest.getReqReceiverID())) &&
+                                               (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
+                                       {
+                                           String documentID = document.getId();
+                                           db.collection("requests").document(documentID)
+                                                   .delete()
+                                                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                       @Override
+                                                       public void onSuccess(Void aVoid) {
+                                                           Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                           finish();
+                                                       }
+                                                   })
+                                                   .addOnFailureListener(new OnFailureListener() {
+                                                       @Override
+                                                       public void onFailure(@NonNull Exception e) {
+                                                           Log.w("TEMP", "Error deleting document", e);
+                                                       }
+                                                   });
+                                       }
+                                   }
+                               } else {
+                                   Log.d("TEMP", "Error getting documents: ", task.getException());
+                               }
+                           }
+                       });
            }
         });
 

@@ -118,24 +118,7 @@ public class ScanFragment extends FullScreenBottomSheet {
                              @Nullable Bundle savedInstanceState) {
         Log.d("SCAN_FRAG", "onCreateView: ");
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
-
-        isbnInput = view.findViewById(R.id.isbn_input);
-        submitButton = view.findViewById(R.id.submit_button);
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isbnInput.getText() != null) {
-                    String isbnCandidate = isbnInput.getText().toString().trim();
-                    if (isbnCandidate.length() == 10 || isbnCandidate.length() == 13) {
-                        //listener.onIsbnFound("9781305109391"); // i use this for testing so i don't have to remember a isbn :D
-                        listener.onIsbnFound(isbnCandidate);
-                        dismiss();
-                    }
-                }
-            }
-        });
+        view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
 
         if (checkPermission()) {
             startCamera();

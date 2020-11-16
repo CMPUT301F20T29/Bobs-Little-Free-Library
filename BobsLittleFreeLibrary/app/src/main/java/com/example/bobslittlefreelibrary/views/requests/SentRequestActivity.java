@@ -4,6 +4,7 @@ package com.example.bobslittlefreelibrary.views.requests;
  * This class is the activity for a sent request.
  */
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,13 +15,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SentRequestActivity extends AppCompatActivity {
 
@@ -36,6 +46,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private Button deleteRequestButton;
     private Button backButton;
     private Button mapButton;
+    private Book currentBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,7 @@ public class SentRequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currentBook = documentSnapshot.toObject(Book.class);
                         String pictureURL = currentRequest.getBookImageURL();
                         if (pictureURL != null) {
                             new DownloadImageTask(bookImage).execute(pictureURL);
@@ -98,14 +110,53 @@ public class SentRequestActivity extends AppCompatActivity {
         deleteRequestButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Log.d("TEMP", "Delete button pressed");
+               db.collection("requests")
+                       .whereEqualTo("reqSenderID", currentRequest.getReqSenderID())
+                       .get()
+                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                           @Override
+                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                               if (task.isSuccessful()) {
+                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                       Request tempRequest = document.toObject(Request.class);
+                                       if ((currentRequest.getReqReceiverID().equals(tempRequest.getReqReceiverID())) &&
+                                               (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
+                                       {
+                                           String documentID = document.getId();
+                                           db.collection("requests").document(documentID)
+                                                   .delete()
+                                                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                       @Override
+                                                       public void onSuccess(Void aVoid) {
+                                                           Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                           Toast toast = Toast.makeText(getApplicationContext(), "Request Deleted", Toast.LENGTH_SHORT);
+                                                           toast.show();
+                                                           finish();
+                                                       }
+                                                   })
+                                                   .addOnFailureListener(new OnFailureListener() {
+                                                       @Override
+                                                       public void onFailure(@NonNull Exception e) {
+                                                           Log.w("TEMP", "Error deleting document", e);
+                                                       }
+                                                   });
+                                       }
+                                   }
+                               } else {
+                                   Log.d("TEMP", "Error getting documents: ", task.getException());
+                               }
+                           }
+                       });
            }
         });
 
         bookInfoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "BOOK VIEW pressed");
+                Intent intent = new Intent(SentRequestActivity.this, PublicBookViewActivity.class);
+                intent.putExtra("BOOK_ID", currentRequest.getBookRequestedID());
+                intent.putExtra("BOOK", currentBook);
+                startActivity(intent);
             }
         });
 
@@ -124,5 +175,10 @@ public class SentRequestActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            mapButton.setText(R.string.request_not_accepted);
+            mapButton.setClickable(false);
+        }
     }
 }

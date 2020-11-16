@@ -4,6 +4,7 @@ package com.example.bobslittlefreelibrary.views.requests;
  * This class is the activity for received requests
  */
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -15,13 +16,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ReceivedRequestActivity extends AppCompatActivity {
 
@@ -38,6 +47,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Button declineRequestButton;
     private Button backButton;
     private Button mapButton;
+    private Book currentBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +88,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currentBook = documentSnapshot.toObject(Book.class);
                         String pictureURL = currentRequest.getBookImageURL();
                         if (pictureURL != null) {
                             new DownloadImageTask(bookImage).execute(pictureURL);
@@ -101,6 +112,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         acceptRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
                 Log.d("TEMP", "Accept button pressed");
             }
         });
@@ -108,14 +120,53 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         declineRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Decline button pressed");
+                db.collection("requests")
+                        .whereEqualTo("reqReceiverID", currentRequest.getReqReceiverID())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Request tempRequest = document.toObject(Request.class);
+                                        if ((currentRequest.getReqSenderID().equals(tempRequest.getReqSenderID())) &&
+                                                (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
+                                        {
+                                            String documentID = document.getId();
+                                            db.collection("requests").document(documentID)
+                                                    .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                            Toast toast = Toast.makeText(getApplicationContext(), "Request Declined", Toast.LENGTH_SHORT);
+                                                            toast.show();
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w("TEMP", "Error deleting document", e);
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                } else {
+                                    Log.d("TEMP", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
 
         bookInfoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "BOOK VIEW pressed");
+                Intent intent = new Intent(ReceivedRequestActivity.this , MyBookViewActivity.class);
+                intent.putExtra("BOOK_ID", currentRequest.getBookRequestedID());
+                intent.putExtra("BOOK", currentBook);
+                startActivity(intent);
             }
         });
 

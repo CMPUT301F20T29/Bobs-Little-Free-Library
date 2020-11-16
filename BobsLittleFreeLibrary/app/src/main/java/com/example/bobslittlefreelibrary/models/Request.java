@@ -12,7 +12,8 @@ public class Request implements Serializable {
     private String reqSenderID;
     private String reqReceiverID;
     private String bookRequestedID;
-    private LatLng location;
+    private double latitude;
+    private double longitude;
     private String bookImageURL;
     private String bookTitle;
 
@@ -23,6 +24,8 @@ public class Request implements Serializable {
 
     /**
      * This is the constructor for a Request object.
+     * Note: Since NaN doesn't work in firebase and Lat/Long have defined ranges,
+     * we set Lat/Long out of the ranges to know if it's valid or invalud
      * @param reqSenderUserID The user ID of the request sender
      * @param recReceiverUserID The user ID of the request receiver
      * @param bookRequestedID The ID of the book requested
@@ -34,27 +37,46 @@ public class Request implements Serializable {
         this.reqSenderID = reqSenderUserID;
         this.reqReceiverID = recReceiverUserID;
         this.bookRequestedID = bookRequestedID;
-        this.location = null;
+        this.latitude = 1000;
+        this.longitude = 1000;
         this.bookImageURL = bookImageURL;
         this.bookTitle = bookTitle;
     }
 
     /**
-     * Getter for location, returns null if location has not been set yet.
-     *
-     * @return the location, null if it has not been set yet
+     * A getter for the latitude
+     * @return latitude
      */
-    public LatLng getLocation() {
-        return this.location;
+
+    public double getLatitude() {
+        return latitude;
     }
 
     /**
-     * A setter for location
-     *
-     * @param location the location to be set
+     * A setter for latitude
+     * @param latitude the latitude
      */
-    public void setLocation(LatLng location) {
-        this.location = location;
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * A getter for longitude
+     * @return longitude
+     */
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * A setter for longitude
+     * @param longitude the longitude
+     */
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     /**

@@ -45,19 +45,19 @@ public class LoginActivityTest {
         solo.enterText(0, "abcd");
         solo.enterText(1, "chickennuggets");
         solo.clickOnButton("Login");
-        assertTrue(solo.waitForText("Incorrect email or password", 1, 200));
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         solo.enterText(0, "ab34523452cd@gmail.com");
         solo.enterText(1, "chickennuggets");
         solo.clickOnButton("Login");
-        assertTrue(solo.waitForText("Incorrect email or password", 1, 200));
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         solo.enterText(0, "");
         solo.enterText(1, "chickennuggets");
         solo.clickOnButton("Login");
-        assertTrue(solo.waitForText("Email is empty", 1, 200));
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         solo.enterText(0, "ab34523452cd@gmail.com");
         solo.enterText(1, "");
         solo.clickOnButton("Login");
-        assertTrue(solo.waitForText("Password is empty", 1, 200));
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
     }
 
     /**

@@ -118,6 +118,7 @@ public class ScanFragment extends FullScreenBottomSheet {
                              @Nullable Bundle savedInstanceState) {
         Log.d("SCAN_FRAG", "onCreateView: ");
 
+        // Inflate view
         view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
 
         if (checkPermission()) {

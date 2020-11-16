@@ -19,8 +19,7 @@
 
             <Button
                 android:id="@+id/my_book_view_back_button"
-                style="@style/BackButton"
-                android:text="@string/back" />
+                style="@style/BackButton"/>
 
             <View
                 android:id="@+id/my_book_view_divider1"
@@ -31,7 +30,6 @@
 
         </RelativeLayout>
         <!-- Top button end-->
-
 
         <!-- Book Image and Text starts -->
         <LinearLayout
@@ -81,24 +79,26 @@
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:id="@+id/my_book_view_divider2"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="10dp"
-            android:background="?android:attr/dividerVertical" />
 
         <LinearLayout
             android:id="@+id/my_book_view_desc_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/my_book_view_divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/dividerVertical"/>
 
             <TextView
                 android:id="@+id/my_book_view_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="This is a test description. I am trying to make it
             really long so I can see how it looks. Now I'm gonna copy paste this\n
             bruhThis is a test description. I am trying to make it
@@ -108,16 +108,16 @@
             bruhThis is a test description. I am trying to make it
             really long so I can see how it looks. Now I'm gonna copy paste this\n
             bruh"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <!-- Other info starts -->
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/my_book_view_other_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
 
             <View
                 android:id="@+id/my_book_view_divider3"
@@ -126,52 +126,49 @@
                 android:layout_marginBottom="10dp"
                 android:background="?android:attr/dividerVertical" />
 
-            <TextView
-                android:id="@+id/my_book_view_owner_text"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_below="@+id/my_book_view_divider3"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
+            <LinearLayout
+                android:id="@+id/my_book_view_owner_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/book_owner"
-                android:textSize="30sp" />
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/my_book_view_owner_profile_button"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:layout_below="@+id/my_book_view_divider3"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/my_book_view_owner_text"
-                android:layout_toEndOf="@+id/my_book_view_owner_text"
-                android:background="@color/colorPrimary"
-                android:drawableStart="@drawable/user_icon"
-                android:drawableLeft="@drawable/user_icon"
-                android:padding="16dp"
-                android:text="@string/username"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/my_book_view_owner_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="@string/book_owner"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/my_book_view_owner_profile_button"
+                    style="@style/ProfileButton"
+                    android:layout_marginStart="10dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/my_book_view_status_text"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_below="@+id/my_book_view_owner_text"
                 android:gravity="center"
                 android:text="@string/book_status"
                 android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/my_book_view_see_requests_button"
+                style="@style/SecondaryButton"
+                android:text="View Requests"
+                android:layout_gravity="center"/>
 
             <View
                 android:id="@+id/my_book_view_divider4"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_below="@+id/my_book_view_status_text"
                 android:layout_marginTop="10dp"
                 android:background="?android:attr/dividerVertical" />
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <!-- Buttons -->
         <LinearLayout
@@ -183,14 +180,12 @@
 
             <Button
                 android:id="@+id/my_book_view_remove_button"
-                android:layout_width="125dp"
-                android:layout_height="wrap_content"
+                style="@style/NegativeButtonStyle"
                 android:text="Remove Book" />
 
             <Button
                 android:id="@+id/my_book_view_edit_button"
-                android:layout_width="125dp"
-                android:layout_height="wrap_content"
+                style="@style/PositiveButtonStyle"
                 android:text="Edit Info" />
         </LinearLayout>
     </LinearLayout>

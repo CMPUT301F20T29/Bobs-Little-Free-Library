@@ -54,7 +54,7 @@
             android:text="All"
             android:id="@+id/allBooksFilter"
             android:background="@color/colorAccent"
-            android:textColor="@color/colorLight"
+            android:textColor="@color/colorPrimaryLight"
             android:onClick="allFilterPressed"/>
 
 
@@ -73,7 +73,7 @@
             android:text="Available"
             android:id="@+id/availableBooksFilter"
             android:background="@color/colorAccent"
-            android:textColor="@color/colorLight"
+            android:textColor="@color/colorPrimaryLight"
             android:onClick="availableFilterPressed"/>
 
         <Button
@@ -83,7 +83,7 @@
             android:text="Requested"
             android:id="@+id/requestedBooksFilter"
             android:background="@color/colorAccent"
-            android:textColor="@color/colorLight"
+            android:textColor="@color/colorPrimaryLight"
             android:onClick="requestedFilterPressed"/>
 
     </LinearLayout>
@@ -101,7 +101,7 @@
             android:text="Accepted"
             android:id="@+id/acceptedBooksFilter"
             android:background="@color/colorAccent"
-            android:textColor="@color/colorLight"
+            android:textColor="@color/colorPrimaryLight"
             android:onClick="acceptedFilterPressed"/>
 
         <Button
@@ -111,7 +111,7 @@
             android:text="Borrowed"
             android:id="@+id/borrowedBooksFilter"
             android:background="@color/colorAccent"
-            android:textColor="@color/colorLight"
+            android:textColor="@color/colorPrimaryLight"
             android:onClick="borrowedFilterPressed"/>
 
 

@@ -42,7 +42,6 @@ import java.util.ArrayList;
  *
  * TODO:
  *     - Figure out final direction for the Requests Overview
- *     - fix the profile button changing size when switching between fragments
  *     - EXTRA: turn latestBooks viewpager into a carousel
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
@@ -98,14 +97,21 @@ public class HomeFragment extends Fragment {
         viewPager.setAdapter(pagerAdapter);
 
         // Initialize UI
-        db.collection("users").document(user.getUid())
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                profileButton.setText(user.getUsername());
-            }
-        });
+        String username = ((MainActivity)getActivity()).getUsername();
+        if (username == null) {
+            db.collection("users").document(user.getUid())
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User user = documentSnapshot.toObject(User.class);
+                    ((MainActivity)getActivity()).setUsername(user.getUsername());
+                    profileButton.setText(user.getUsername());
+                }
+            });
+        } else {
+            profileButton.setText(username);
+        }
+
         // Setup listeners
         searchButton.setOnClickListener(v -> {
             Log.d("TEMP", "Search Button Pressed");

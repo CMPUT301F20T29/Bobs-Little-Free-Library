@@ -1,14 +1,12 @@
 package com.example.bobslittlefreelibrary;
 
-import android.util.Log;
-
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.MainActivity;
-import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.example.bobslittlefreelibrary.views.SearchActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -36,7 +34,7 @@ public class HomeFragmentTest {
 
     /**
      * Runs before all tests and creates the solo instance
-     * @throws Exception
+     * @throws Exception if setup cannot be completed.
      * */
     @Before
     public void setup() throws Exception {
@@ -65,22 +63,17 @@ public class HomeFragmentTest {
     }
 
     /**
-     * This test checks if the ImageButtons work
+     * This test checks if the profile button works
      * */
     @Test
-    public void openLatestBook() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Log.d("TEMP", "Error msg: ", e);
-        }
-        solo.clickOnImageButton(0);
-        solo.assertCurrentActivity("Did not go to PublicBookView", PublicBookViewActivity.class);
+    public void goToMyProfileViewActivity() {
+        solo.clickOnButton(1);
+        solo.assertCurrentActivity("Did not go to MyProfileViewActivity", MyProfileViewActivity.class);
     }
 
     /**
      * Closes the activity after each test
-     * @throws Exception
+     * @throws Exception if the currently opened activities cannot be closed.
      * */
     @After
     public void tearDown() throws Exception {

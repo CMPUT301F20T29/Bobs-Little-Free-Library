@@ -26,15 +26,12 @@ public class MainActivityTest {
 
     private Solo solo;
 
-    /**
-     *
-     * */
     @Rule
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
      * Runs before all tests and creates the solo instance
-     * @throws Exception
+     * @throws Exception if setup cannot be completed.
      * */
     @Before
     public void setup() throws Exception {
@@ -72,7 +69,7 @@ public class MainActivityTest {
 
     /**
      * Closes the activity after each test
-     * @throws Exception
+     * @throws Exception if the currently opened activities cannot be closed.
      * */
     @After
     public void tearDown() throws Exception {

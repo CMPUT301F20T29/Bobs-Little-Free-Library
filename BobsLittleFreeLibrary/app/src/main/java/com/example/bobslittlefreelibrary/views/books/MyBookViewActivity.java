@@ -55,6 +55,7 @@ public class MyBookViewActivity extends AppCompatActivity {
     private TextView descText;
     private Button ownerProfileButton;
     private TextView bookStatus;
+    private Button viewRequestsButton;
     private Button removeBookButton;
     private Button editInfoButton;
     private Button backButton;
@@ -80,6 +81,12 @@ public class MyBookViewActivity extends AppCompatActivity {
                 Log.d("TEMP", "Owner Profile button pressed");
                 Intent intent = new Intent(MyBookViewActivity.this, MyProfileViewActivity.class);
                 startActivity(intent);
+            }
+        });
+        viewRequestsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: setup intent to go to activity that shows list of all requests for current book
             }
         });
         removeBookButton.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +134,7 @@ public class MyBookViewActivity extends AppCompatActivity {
         descText = findViewById(R.id.my_book_view_desc);
         ownerProfileButton = findViewById(R.id.my_book_view_owner_profile_button);
         bookStatus = findViewById(R.id.my_book_view_status_text);
+        viewRequestsButton = findViewById(R.id.my_book_view_see_requests_button);
         removeBookButton = findViewById(R.id.my_book_view_remove_button);
         editInfoButton = findViewById(R.id.my_book_view_edit_button);
         backButton = findViewById(R.id.my_book_view_back_button);

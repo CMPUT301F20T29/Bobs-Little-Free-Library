@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7A6F9B</color>
-    <color name="colorSecondary">#B185A7</color>
-    <color name="colorLight">#FFFF</color>
-    <color name="colorPrimaryDark">#000</color>
-    <color name="colorAccent">#8B85C1</color>
-    <color name="colorNegative">#86092C</color>
-    <color name="colorPositive">#6BB378</color>
-    <color name="black_overlay">#66000000</color>
+
+    <!-- Normal Colours -->
+    <color name="Black">#000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="Grey">#858585</color>
+    <color name="Red">#FF0000</color>
+    <color name="Orange">#FF9300</color>
+    <color name="Yellow">#FFFF00</color>
+    <color name="Green">#13FF00</color>
+    <color name="Blue">#0074FF</color>
+    <color name="Purple">#6400FF</color>
+    <color name="Pink">#F300FF</color>
+
+    <!-- UI Colours -->
+    <color name="colorPrimary">#8D6B94</color>
+    <color name="colorPrimaryDark">#7A6F9B</color>
+    <color name="colorPrimaryLight">#B185A7</color>
+    <color name="colorSecondary">#815E5B</color>
+    <color name="colorSecondaryDark">#685155</color>
+    <color name="colorSecondaryLight">#C3A29E</color>
+    <color name="colorAccent">#DEFFFC</color>
+    <color name="colorNegative">#EF959C</color>
+    <color name="colorPositive">#95ADB6</color>
 
     <!-- Colours for colour-coding the status of a book -->
     <color name="borrowed_red">#C64343</color>

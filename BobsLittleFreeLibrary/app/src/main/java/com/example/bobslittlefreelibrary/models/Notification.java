@@ -10,15 +10,17 @@ public class Notification {
     String message;
     String timestamp;
     String bookID;
+    String userID; // The userID is the ID of the User the notification belongs to
 
 
     public Notification() {}
 
-    public Notification(NotificationType type, String message, String timestamp, String bookID) {
+    public Notification(NotificationType type, String message, String timestamp, String bookID, String userID) {
         this.type = type;
         this.message = message;
         this.timestamp = timestamp;
         this.bookID = bookID;
+        this.userID = userID;
     }
 
     public NotificationType getType() {
@@ -47,5 +49,13 @@ public class Notification {
 
     public void setBookID(String bookID) {
         this.bookID = bookID;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }

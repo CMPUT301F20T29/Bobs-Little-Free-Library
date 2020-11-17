@@ -97,11 +97,11 @@
             android:textSize="25sp"
             android:text="Address"/>
 
-        <EditText
-            android:id="@+id/address_signup"
-            android:inputType="text"
+        <fragment android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
     </LinearLayout>
 
     <Button

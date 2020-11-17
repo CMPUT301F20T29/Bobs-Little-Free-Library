@@ -11,6 +11,9 @@ public class User implements Serializable  {
     private String username;
     private String email;
     private String address;
+    private double latitude;
+    private double longitude;
+    private String phone;
     private ArrayList<String> bookIDs;
 
     /**
@@ -24,10 +27,13 @@ public class User implements Serializable  {
      * @param email This is the email of the User.
      * @param address This is the address of the User.
      * */
-    public User(String username, String email, String address) {
+    public User(String username, String email, String address, double lat, double lng) {
         this.username = username;
         this.email = email;
         this.address = address;
+        this.latitude = lat;
+        this.longitude = lng;
+        this.phone = "";
         this.bookIDs = new ArrayList<>();
     }
 
@@ -75,4 +81,27 @@ public class User implements Serializable  {
 
     public void setAddress(String address) { this.address = address; }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

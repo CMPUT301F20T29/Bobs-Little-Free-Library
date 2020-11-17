@@ -1,5 +1,6 @@
 package com.example.bobslittlefreelibrary;
 
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -9,6 +10,7 @@ import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.users.SignupActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -32,7 +34,8 @@ public class SignupActivityTest {
     @Before
     public void setUp() throws Exception{
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-        solo.clickOnButton("Sign Up");
+        Button testBtn = (Button) solo.getView("signUpBtn");
+        solo.clickOnView(testBtn);
     }
 
     /**
@@ -67,7 +70,7 @@ public class SignupActivityTest {
         solo.enterText(3, "choco123");
         solo.enterText(4, "8510 111 Street");
         solo.clickOnButton("Sign Up");
-        assertTrue(solo.waitForText("account already exists.",1,200));
+        solo.assertCurrentActivity("Wrong Activity", SignupActivity.class);
         solo.clearEditText(0);
         solo.clearEditText(1);
         solo.clearEditText(2);
@@ -89,6 +92,9 @@ public class SignupActivityTest {
     public void tearDown(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
+        assert user.getEmail().equals("tester@gmail.com");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(user.getUid()).delete();
         user.delete();
     }
 

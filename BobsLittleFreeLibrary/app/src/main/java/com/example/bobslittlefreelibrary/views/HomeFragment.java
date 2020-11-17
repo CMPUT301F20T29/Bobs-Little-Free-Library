@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment {
         Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        TableLayout requestsOverview = getView().findViewById(R.id.requests_overview_display);
+        ListView requestsOverview = getView().findViewById(R.id.home_requests_overview_list);
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
@@ -183,7 +184,7 @@ public class HomeFragment extends Fragment {
     private void updateLatestBooksImageView(int position) {
         ImageView imageView;
         Book currentBook = listOfBooks.get(position);
-        imageView = (ImageView)viewPager.findViewWithTag(position);
+        imageView = viewPager.findViewWithTag(position);
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
@@ -207,6 +208,13 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             });
         }
+    }
+
+    /**
+     * This method runs a query which finds all of the new requests
+     * */
+    private void getLatestRequestsNotifications() {
+
     }
 
     /**

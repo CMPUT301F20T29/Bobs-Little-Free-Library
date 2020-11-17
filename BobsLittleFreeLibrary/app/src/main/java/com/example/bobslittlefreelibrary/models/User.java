@@ -15,6 +15,7 @@ public class User implements Serializable  {
     private double longitude;
     private String phone;
     private ArrayList<String> bookIDs;
+    private ArrayList<String> notificationIDs;
 
     /**
      * This is an empty constructor for a User object

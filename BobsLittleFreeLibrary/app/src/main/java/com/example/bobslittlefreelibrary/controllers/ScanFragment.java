@@ -160,7 +160,7 @@ public class ScanFragment extends FullScreenBottomSheet {
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
                         .setTargetResolution(new Size(1280, 720))
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build();
 
         // Set analyzer for the incoming camera frames
@@ -196,20 +196,35 @@ public class ScanFragment extends FullScreenBottomSheet {
 
                 BarcodeScanner scanner = BarcodeScanning.getClient();
 
-                Task<List<Barcode>> result = scanner.process(image)
-                        .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                            @Override
-                            public void onSuccess(List<Barcode> barcodes) {
-                                // if we see a barcode in the camera then call onIsbnFound() and
-                                // dismiss this fragment
-                                if (!barcodes.isEmpty()) {
-                                    listener.onIsbnFound(barcodes.get(0).getRawValue());
-                                    dismiss();
-                                }
+                Task<List<Barcode>> result = scanner.process(image);
+                result.addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                        @Override
+                        public void onSuccess(List<Barcode> barcodes) {
+                            Log.d("analyze", "onSuccess: ");
+                            if (!barcodes.isEmpty()) {
+                                listener.onIsbnFound(barcodes.get(0).getRawValue());
+                                dismiss();
                             }
-                        });
-                imageProxy.close();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("analyze", "onFailure: ");
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
+                        @Override
+                        public void onComplete(@NonNull Task<List<Barcode>> task) {
+                            Log.d("analyze", "onComplete: ");
+                            mediaImage.close();
+                            imageProxy.close();
+                        }
+                    });
+
+
             }
+
         }
     }
 

@@ -29,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
- * TODO:
+ *
  * */
 public class PublicBookViewActivity extends AppCompatActivity {
 
@@ -92,6 +92,8 @@ public class PublicBookViewActivity extends AppCompatActivity {
                                 sb.show();
                                 requestButton.setClickable(false);
                                 requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                                bookStatus.setText("Requested");
+                                bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
                             }
                         });
 

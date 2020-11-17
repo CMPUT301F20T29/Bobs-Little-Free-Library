@@ -221,8 +221,6 @@ public class ScanFragment extends FullScreenBottomSheet {
                             imageProxy.close();
                         }
                     });
-
-
             }
 
         }

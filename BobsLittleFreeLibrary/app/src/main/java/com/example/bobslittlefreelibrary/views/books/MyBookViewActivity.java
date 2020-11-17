@@ -30,6 +30,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,6 +213,16 @@ public class MyBookViewActivity extends AppCompatActivity {
     private void removeFromBookCollection() {
         // Now remove the book from the books collection
         DocumentReference bookRef = db.collection("books").document(bookID);
+
+        // Get Book from db and then delete it's image file in storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference bookImagesRef = storageRef.child("book-images");
+
+        // Create and get Storage reference to to /books-images/{bookId}.jpg
+        StorageReference imageRef = bookImagesRef.child(bookID + ".jpg");
+
+        imageRef.delete();
+
         bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

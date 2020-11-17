@@ -76,6 +76,8 @@ public class User implements Serializable  {
      * */
     public ArrayList<String> getBookIDs() { return bookIDs; }
 
+    public ArrayList<String> getNotificationIDs() { return notificationIDs; }
+
     // Setters - We can probably remove these later since we will be changing values directly in db
     public void setUsername(String username) { this.username = username; }
 

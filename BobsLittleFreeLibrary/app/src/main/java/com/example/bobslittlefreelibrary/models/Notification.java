@@ -6,10 +6,46 @@ package com.example.bobslittlefreelibrary.models;
  * */
 public class Notification {
     // Class variables
-    String type; // Determines the Icon shown ; Types: Request, Accepted, Declined, ...
+    NotificationType type;
     String message;
     String timestamp;
+    String bookID;
 
 
+    public Notification() {}
 
+    public Notification(NotificationType type, String message, String timestamp, String bookID) {
+        this.type = type;
+        this.message = message;
+        this.timestamp = timestamp;
+        this.bookID = bookID;
+    }
+
+    public NotificationType getType() {
+        return type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getBookID() {
+        return bookID;
+    }
+
+    public void setBookID(String bookID) {
+        this.bookID = bookID;
+    }
 }

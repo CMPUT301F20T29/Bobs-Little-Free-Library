@@ -36,6 +36,7 @@ public class User implements Serializable  {
         this.longitude = lng;
         this.phone = "";
         this.bookIDs = new ArrayList<>();
+        this.notificationIDs = new ArrayList<>();
     }
 
     // Methods

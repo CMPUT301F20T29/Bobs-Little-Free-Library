@@ -129,31 +129,8 @@ public class PublicBookViewActivity extends AppCompatActivity {
                             notificationMessage = String.format(notificationMessage, book.getTitle(), thisUser.getUsername());
                             String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                            Notification notification = new Notification(NotificationType.REQUEST, notificationMessage, timestamp, bookID, book.getOwnerID());
-                            db.collection("notifications").add(notification)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            String notificationID = documentReference.getId();
-                                            // Get document for User that we want to send notification to (i.e. owner of the book)
-                                            db.collection("users").document(book.getOwnerID())
-                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                    usersNotifs.add(notificationID);
-
-                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                    newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                    db.collection("users").
-                                                            document(user.getUid()).update(newBooksMap);
-                                                }
-                                            });
-                                        }
-                                    });
+                            Notification notification = new Notification(NotificationType.BORROW, notificationMessage, timestamp, bookID, book.getOwnerID());
+                            db.collection("notifications").add(notification);
                         }
                     }
                 });

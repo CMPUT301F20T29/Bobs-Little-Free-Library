@@ -55,8 +55,11 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
 
         // Set UI Values
         switch (notification.getType()) {
-            case REQUEST:
+            case BORROW:
                 notificationIcon.setImageResource(R.drawable.ic_baseline_notification_important_24);
+                break;
+            case RETURN:
+                notificationIcon.setImageResource(R.drawable.ic_baseline_keyboard_return_24);
                 break;
             case DELETE:
                 notificationIcon.setImageResource(R.drawable.ic_baseline_delete_forever_24);

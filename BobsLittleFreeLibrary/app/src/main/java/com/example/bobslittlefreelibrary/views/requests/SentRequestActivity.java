@@ -41,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class SentRequestActivity extends AppCompatActivity {
@@ -170,7 +171,7 @@ public class SentRequestActivity extends AppCompatActivity {
                        if (document.exists()) {
                            User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the delete request button
                            notificationMessage = String.format(notificationMessage, thisUser.getUsername(), currentBook.getTitle());
-                           Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                           String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
                            Notification notification = new Notification(NotificationType.DELETE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
                            db.collection("notifications").add(notification)
@@ -238,10 +239,11 @@ public class SentRequestActivity extends AppCompatActivity {
         if (currentRequest.isReturnRequest()) {
             // TODO: Make bottom button disappear and map button to view return location
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            // TODO: Have default location already set for the request, but allowing user to
-            // choose a new location with map button, and bottom two buttons are enabled (accept/decline)
+            mapButton.setText(R.string.request_not_accepted);
+            mapButton.setClickable(false);
         } else if (currentBook.getStatus().equals("Borrowed")) {
-            //TODO:Disable all buttons, nothing to do here
+            //TODO: Set map button to be able to select a location & bottom button to send return request
+            // LOCATATION DEFAULT TO ORIGINAL SPOT, BUT USER CAN SWITCH
         } else {
             // TODO: Be able to view the map for the location but bottom buttons gone
         }

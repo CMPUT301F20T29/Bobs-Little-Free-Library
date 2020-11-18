@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Snackbar sb = Snackbar.make(view, "Notification Deleted", Snackbar.LENGTH_SHORT);
+                                Snackbar sb = Snackbar.make(getView(), "Notification Deleted", Snackbar.LENGTH_SHORT);
                                 sb.show();
                             }
                         });

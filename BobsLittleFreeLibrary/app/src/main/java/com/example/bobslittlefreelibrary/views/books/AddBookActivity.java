@@ -353,8 +353,8 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     // Exits AddBookActivity and returns to MainActivity showing BooksFragment
     private void exitActivity(){
         Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
-        intent.putExtra("WHICH_FRAGMENT", "BOOKS");
-        AddBookActivity.this.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     // Uploads the image file at usersImageFile

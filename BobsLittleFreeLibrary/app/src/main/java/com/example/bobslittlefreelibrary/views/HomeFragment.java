@@ -203,18 +203,18 @@ public class HomeFragment extends Fragment {
         requestsOverview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Select which activity to go to based on notification type.
-                // If type == borrow or return, the person getting notification is the owner of the book
-                // If type == accept or decline, the person getting notification is the requester
-                if (listOfNotifications.get(position).getType() == NotificationType.BORROW || listOfNotifications.get(position).getType() == NotificationType.RETURN) {
+                // Select which activity to go to based on the owner of the book.
+                Book currentBook = listOfNotifBooks.get(position);
+                Notification notification = listOfNotifications.get(position);
+                if (currentBook.getOwnerID().equals(user.getUid())) {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", listOfNotifications.get(position).getBookID());
-                    intent.putExtra("BOOK", listOfNotifBooks.get(position));  // Send book to be displayed in book view activity
+                    intent.putExtra("BOOK_ID", notification.getBookID());
+                    intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", listOfNotifications.get(position).getBookID());
-                    intent.putExtra("BOOK", listOfNotifBooks.get(position));
+                    intent.putExtra("BOOK_ID", notification.getBookID());
+                    intent.putExtra("BOOK", currentBook);
                     startActivity(intent);
                 }
             }

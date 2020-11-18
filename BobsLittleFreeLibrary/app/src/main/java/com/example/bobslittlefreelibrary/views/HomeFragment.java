@@ -6,10 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +22,7 @@ import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.NotificationAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Notification;
+import com.example.bobslittlefreelibrary.models.NotificationType;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
@@ -30,6 +31,7 @@ import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -67,6 +69,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<Book> listOfBooks;
     private ArrayList<String> listOfBookIDS;
     private ArrayList<Notification> listOfNotifications;
+    private ArrayList<String> listOfNotifIDs;
+    private ArrayList<Book> listOfNotifBooks;
     private NotificationAdapter notificationAdapter;
 
     @Override
@@ -77,6 +81,8 @@ public class HomeFragment extends Fragment {
         listOfBooks = new ArrayList<>();
         listOfBookIDS = new ArrayList<>();
         listOfNotifications = new ArrayList<>();
+        listOfNotifIDs = new ArrayList<>();
+        listOfNotifBooks = new ArrayList<>();
     }
 
     @Nullable
@@ -163,7 +169,22 @@ public class HomeFragment extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Notification notification = document.toObject(Notification.class);
                         listOfNotifications.add(notification);
+                        listOfNotifIDs.add(document.getId());
                         notificationAdapter.notifyDataSetChanged();
+
+                        // Add a Book object to listOfNotifBooks for setting onclick functionality
+                        db.collection("books").document(notification.getBookID())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    Book book = document.toObject(Book.class);
+                                    listOfNotifBooks.add(book);
+                                    Log.d("TEMP", "Book added to listofnotifbooks");
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -178,8 +199,45 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Initialize Requests Overview
-
+        // Setup Requests Overview listeners
+        requestsOverview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Select which activity to go to based on notification type.
+                // If type == borrow or return, the person getting notification is the owner of the book
+                // If type == accept or decline, the person getting notification is the requester
+                if (listOfNotifications.get(position).getType() == NotificationType.BORROW || listOfNotifications.get(position).getType() == NotificationType.RETURN) {
+                    Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", listOfNotifications.get(position).getBookID());
+                    intent.putExtra("BOOK", listOfNotifBooks.get(position));  // Send book to be displayed in book view activity
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", listOfNotifications.get(position).getBookID());
+                    intent.putExtra("BOOK", listOfNotifBooks.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+        // Listener for deleting a notification
+        requestsOverview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Delete the notification
+                Notification notificationToRemove = (Notification) requestsOverview.getItemAtPosition(position);
+                db.collection("notifications").document(listOfNotifIDs.get(position)).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Snackbar sb = Snackbar.make(getView(), "Notification Deleted", Snackbar.LENGTH_SHORT);
+                                sb.show();
+                            }
+                        });
+                listOfNotifications.remove(notificationToRemove);
+                notificationAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
-import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,8 +32,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -128,33 +127,10 @@ public class PublicBookViewActivity extends AppCompatActivity {
                         if (document.exists()) {
                             User thisUser = document.toObject(User.class); // thisUser refers to the user that pressed the request button
                             notificationMessage = String.format(notificationMessage, book.getTitle(), thisUser.getUsername());
-                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                            String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                            Notification notification = new Notification(NotificationType.REQUEST, notificationMessage, timestamp.toString(), bookID, book.getOwnerID());
-                            db.collection("notifications").add(notification)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            String notificationID = documentReference.getId();
-                                            // Get document for User that we want to send notification to (i.e. owner of the book)
-                                            db.collection("users").document(book.getOwnerID())
-                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                    usersNotifs.add(notificationID);
-
-                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                    newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                    db.collection("users").
-                                                            document(user.getUid()).update(newBooksMap);
-                                                }
-                                            });
-                                        }
-                                    });
+                            Notification notification = new Notification(NotificationType.BORROW, notificationMessage, timestamp, bookID, book.getOwnerID());
+                            db.collection("notifications").add(notification);
                         }
                     }
                 });

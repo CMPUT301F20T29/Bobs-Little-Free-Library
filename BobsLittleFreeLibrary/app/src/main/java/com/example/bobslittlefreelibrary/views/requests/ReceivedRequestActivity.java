@@ -213,31 +213,8 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                 notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
                                 String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                                Notification notification = new Notification(NotificationType.DECLINE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
-                                db.collection("notifications").add(notification)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                String notificationID = documentReference.getId();
-                                                // Get document of the user we want to send notification to (i.e. the person who sent the request)
-                                                db.collection("users").document(currentRequest.getReqSenderID())
-                                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                        User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                        ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                        usersNotifs.add(notificationID);
-
-                                                        HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                        newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                        db.collection("users").
-                                                                document(user.getUid()).update(newBooksMap);
-                                                    }
-                                                });
-                                            }
-                                        });
+                                Notification notification = new Notification(NotificationType.DECLINE, notificationMessage, timestamp, currentRequest.getBookRequestedID(), currentRequest.getReqSenderID()); // Notif belongs to sender of the request
+                                db.collection("notifications").add(notification);
                             }
                         }
                     });
@@ -274,31 +251,8 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                     notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
                                     String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                                    Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
-                                    db.collection("notifications").add(notification)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    String notificationID = documentReference.getId();
-                                                    // Get document of the user we want to send notification to (i.e. the person who sent the request)
-                                                    db.collection("users").document(currentRequest.getReqSenderID())
-                                                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                            User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                            ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                            usersNotifs.add(notificationID);
-
-                                                            HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                            newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                            db.collection("users").
-                                                                    document(user.getUid()).update(newBooksMap);
-                                                        }
-                                                    });
-                                                }
-                                            });
+                                    Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentRequest.getReqSenderID());
+                                    db.collection("notifications").add(notification);
                                 }
                             }
                         });

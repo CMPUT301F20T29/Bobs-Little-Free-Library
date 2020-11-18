@@ -1,10 +1,12 @@
 package com.example.bobslittlefreelibrary.models;
 
+import java.io.Serializable;
+
 /**
  * This class represents a Notification object. Notification objects contain information about events
  * that affect a User, i.e. receiving a request for one of their Books, or one of their requests getting accepted.
  * */
-public class Notification {
+public class Notification implements Serializable {
     // Class variables
     NotificationType type;
     String message;

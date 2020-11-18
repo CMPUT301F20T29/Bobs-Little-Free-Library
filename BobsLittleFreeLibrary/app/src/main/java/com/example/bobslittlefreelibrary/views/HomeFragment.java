@@ -46,7 +46,6 @@ import java.util.ArrayList;
  * This fragment manages all the references and interactions on the home screen.
  *
  * TODO:
- *     - Figure out final direction for the Requests Overview
  *     - EXTRA: turn latestBooks viewpager into a carousel
  *
  * All of the 'would-be' class variables are only local variables within onActivityCreated()
@@ -101,11 +100,11 @@ public class HomeFragment extends Fragment {
         Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        ListView requestsOverview = getView().findViewById(R.id.home_requests_overview_list);
+        ListView notificationView = getView().findViewById(R.id.home_requests_overview_list);
 
         // Setup adapter for requests overview
         notificationAdapter = new NotificationAdapter(getContext(), listOfNotifications);
-        requestsOverview.setAdapter(notificationAdapter);
+        notificationView.setAdapter(notificationAdapter);
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
@@ -154,11 +153,12 @@ public class HomeFragment extends Fragment {
                                 pagerAdapter.notifyDataSetChanged();  // Update pagerAdapter
                             }
                         } else {
-                            Log.d("TEMP", "Error getting documents: ", task.getException());
+                            Log.d("QUERY", "Error getting documents: ", task.getException());
                         }
                     }
                 });
 
+        ArrayList<Task<QuerySnapshot>> taskArrayList = new ArrayList<>();
         // Query for the User's notifications and add them to listOfNotifications
         db.collection("notifications")
                 .whereEqualTo("userID", user.getUid())
@@ -174,15 +174,11 @@ public class HomeFragment extends Fragment {
 
                         // Add a Book object to listOfNotifBooks for setting onclick functionality
                         db.collection("books").document(notification.getBookID())
-                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    Book book = document.toObject(Book.class);
-                                    listOfNotifBooks.add(book);
-                                    Log.d("TEMP", "Book added to listofnotifbooks");
-                                }
+                            public void onSuccess(DocumentSnapshot document) {
+                                Book book = document.toObject(Book.class);
+                                listOfNotifBooks.add(book);
                             }
                         });
                     }
@@ -199,13 +195,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Setup Requests Overview listeners
-        requestsOverview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*// Setup Requests Overview listeners
+        notificationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Select which activity to go to based on the owner of the book.
-                Book currentBook = listOfNotifBooks.get(position);
                 Notification notification = listOfNotifications.get(position);
+                Book currentBook = listOfNotifBooks.get(position);
                 if (currentBook.getOwnerID().equals(user.getUid())) {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
                     intent.putExtra("BOOK_ID", notification.getBookID());
@@ -218,13 +214,15 @@ public class HomeFragment extends Fragment {
                     startActivity(intent);
                 }
             }
-        });
+        });*/
         // Listener for deleting a notification
-        requestsOverview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        notificationView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // Delete the notification
-                Notification notificationToRemove = (Notification) requestsOverview.getItemAtPosition(position);
+                // Delete the notification from db
+                Notification notificationToRemove = (Notification) notificationView.getItemAtPosition(position);
+                Book bookToRemove = listOfNotifBooks.get(position);
+                String notifIDToRemove = listOfNotifIDs.get(position);
                 db.collection("notifications").document(listOfNotifIDs.get(position)).delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -233,7 +231,10 @@ public class HomeFragment extends Fragment {
                                 sb.show();
                             }
                         });
+                // Delete all data related to the notification
                 listOfNotifications.remove(notificationToRemove);
+                listOfNotifBooks.remove(bookToRemove);
+                listOfNotifIDs.remove(notifIDToRemove);
                 notificationAdapter.notifyDataSetChanged();
                 return true;
             }

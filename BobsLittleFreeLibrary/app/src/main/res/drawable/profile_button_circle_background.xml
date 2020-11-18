@@ -4,7 +4,7 @@
         android:radius="50dp"
         />
     <solid
-        android:color="@color/colorPrimaryLight"
+        android:color="@color/colorSecondaryLight"
         />
 
 </shape>

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String lastActiveTab;
     private BottomNavigationView bottomNavigationView;
-    private String username;
+    private String username = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

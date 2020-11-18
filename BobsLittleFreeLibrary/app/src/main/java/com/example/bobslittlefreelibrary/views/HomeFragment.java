@@ -164,6 +164,7 @@ public class HomeFragment extends Fragment {
                         Notification notification = document.toObject(Notification.class);
                         listOfNotifications.add(notification);
                         notificationAdapter.notifyDataSetChanged();
+                        Log.d("TEMP", "Notification added");
                     }
                 }
             }

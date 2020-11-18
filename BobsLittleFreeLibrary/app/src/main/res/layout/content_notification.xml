@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="75dp"
     android:orientation="vertical"
     android:background="@drawable/notification_circle_background"
-    android:paddingVertical="8dp"
-    android:paddingHorizontal="28dp">
+    android:paddingHorizontal="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="message"
-                android:textSize="20sp">
+                android:textSize="16sp"
+                android:textColor="@color/Black">
             </TextView>
 
             <TextView
@@ -39,7 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="timestamp"
-                android:textSize="12sp">
+                android:textSize="12sp"
+                android:textColor="@color/White">
             </TextView>
 
         </LinearLayout>

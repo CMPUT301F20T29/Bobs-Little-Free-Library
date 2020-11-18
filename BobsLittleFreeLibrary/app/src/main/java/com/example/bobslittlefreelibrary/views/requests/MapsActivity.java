@@ -56,39 +56,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(43.6827853, -79.7335434);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 10));
-        currentRequest.setLatitude(21);
-        Log.d("TEMP", currentRequest.getLatitude() + "hehe");
-        Intent data = new Intent();
-        data.putExtra("NEW_REQUEST", currentRequest);
-        setResult(RESULT_OK, data);
+        // Add a marker at the default location & move the camera
+        LatLng defaultLocation = new LatLng(currentRequest.getLatitude(), currentRequest.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(defaultLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15));
 
-        // 0 for edit and 1 for view only
+        // If the typeOfRequest is 0, we allow the user to click and move the marker on the map,
+        // updating the location information as necessary
+        // If it's anything else, it's just view so we don't need to do anything
         if (typeOfRequest == 0) {
-            //TODO
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {
                 @Override
                 public void onMapClick(LatLng arg0)
                 {
-                    Log.d("TEMP", "0 pressed");
                     mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(arg0).title("NEW"));
-                }
-            });
-        } else {
-            //TODO i dont evne need an onclicklistener, just view
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-            {
-                @Override
-                public void onMapClick(LatLng arg0)
-                {
-                    Log.d("TEMP", "1 pressed");
+                    mMap.addMarker(new MarkerOptions().position(arg0));
+                    currentRequest.setLatitude(arg0.latitude);
+                    currentRequest.setLongitude(arg0.longitude);
                 }
             });
         }
+    }
+
+    // When the user is done and presses back, the last location selected will be saved and
+    // sent back.
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra("NEW_REQUEST", currentRequest);
+        setResult(RESULT_OK, data);
+        super.onBackPressed();
     }
 }

@@ -30,7 +30,7 @@
                 android:id="@+id/notification_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your request for <book> was <action> by <username>"
+                android:text="message"
                 android:textSize="20sp">
             </TextView>
 
@@ -38,7 +38,7 @@
                 android:id="@+id/notification_timestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="17/11/2020 3:06 PM"
+                android:text="timestamp"
                 android:textSize="12sp">
             </TextView>
 

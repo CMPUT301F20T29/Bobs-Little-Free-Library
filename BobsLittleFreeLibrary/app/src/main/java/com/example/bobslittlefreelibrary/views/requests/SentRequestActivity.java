@@ -7,6 +7,7 @@ package com.example.bobslittlefreelibrary.views.requests;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -216,8 +217,6 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
-                //TODO REMOVE
-                Log.d("TEMP", currentRequest.getLatitude() + "hehe");
             }
         });
 
@@ -245,4 +244,14 @@ public class SentRequestActivity extends AppCompatActivity {
             // TODO: Be able to view the map for the location but bottom buttons gone
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        currentRequest = (Request) data.getSerializableExtra("NEW_REQUEST");
+    }
+
 }

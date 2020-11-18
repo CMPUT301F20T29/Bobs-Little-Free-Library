@@ -7,6 +7,7 @@ package com.example.bobslittlefreelibrary.views.requests;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -294,5 +295,14 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         } else {
             // TODO: Be able to view the map for the location but bottom button gone
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        currentRequest = (Request) data.getSerializableExtra("NEW_REQUEST");
     }
 }

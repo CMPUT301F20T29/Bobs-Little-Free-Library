@@ -61,6 +61,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         currentRequest.setLatitude(21);
+        Log.d("TEMP", currentRequest.getLatitude() + "hehe");
+        Intent data = new Intent();
+        data.putExtra("NEW_REQUEST", currentRequest);
+        setResult(RESULT_OK, data);
 
         // 0 for edit and 1 for view only
         if (typeOfRequest == 0) {

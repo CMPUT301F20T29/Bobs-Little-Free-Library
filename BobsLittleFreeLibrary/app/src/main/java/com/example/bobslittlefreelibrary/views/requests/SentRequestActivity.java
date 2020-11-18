@@ -216,6 +216,8 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+                //TODO REMOVE
+                Log.d("TEMP", currentRequest.getLatitude() + "hehe");
             }
         });
 
@@ -224,13 +226,23 @@ public class SentRequestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
                 intent.putExtra("REQUESTTYPE", 1);
+                intent.putExtra("REQUEST", currentRequest);
                 startActivity(intent);
             }
         });
 
-        if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            mapButton.setText(R.string.request_not_accepted);
-            mapButton.setClickable(false);
+        // In order, the if statements go: when user has requested to return,
+        // when the request has not been accepted, when the book has been exchanged already to the
+        // borrower, and when the book has been accepted but not exchanged yet.
+        if (currentRequest.isReturnRequest()) {
+            // TODO: Make bottom button disappear and map button to view return location
+        } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            // TODO: Have default location already set for the request, but allowing user to
+            // choose a new location with map button, and bottom two buttons are enabled (accept/decline)
+        } else if (currentBook.getStatus().equals("Borrowed")) {
+            //TODO:Disable all buttons, nothing to do here
+        } else {
+            // TODO: Be able to view the map for the location but bottom buttons gone
         }
     }
 }

@@ -58,6 +58,9 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
             case REQUEST:
                 notificationIcon.setImageResource(R.drawable.ic_baseline_notification_important_24);
                 break;
+            case DELETE:
+                notificationIcon.setImageResource(R.drawable.ic_baseline_delete_forever_24);
+                break;
             case ACCEPT:
                 notificationIcon.setImageResource(R.drawable.ic_baseline_check_circle_24);
                 break;

@@ -234,13 +234,6 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * This method runs a query which finds all of the new requests
-     * */
-    private void getLatestRequestsNotifications() {
-
-    }
-
-    /**
      * A simple pager adapter that represents up to 6 LatestBooksSlidePageFragments in sequence.
      * When a new fragment is created, we pass in the position of that fragment to be used when
      * setting the tag of it's ImageView.

@@ -8,16 +8,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Notification;
+import com.example.bobslittlefreelibrary.models.NotificationType;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +33,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by another User
  *
@@ -35,10 +45,12 @@ public class PublicBookViewActivity extends AppCompatActivity {
 
     // Class variables
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String username;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
     private String bookID;
     private boolean userAlreadyRequested;
+    private String notificationMessage;
     // UI Variables
     private ImageView bookImage;
     private TextView titleText;
@@ -105,6 +117,47 @@ public class PublicBookViewActivity extends AppCompatActivity {
                     db.collection("books").document(bookID)
                             .update("status", "Requested");
                 }
+
+                // Create a Notification that will be for the Owner of this book
+                notificationMessage = "Your book %s has been requested by %s.";
+                db.collection("users").document(user.getUid())
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            User thisUser = document.toObject(User.class); // thisUser refers to the user that pressed the request button
+                            notificationMessage = String.format(notificationMessage, book.getTitle(), thisUser.getUsername());
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                            Notification notification = new Notification(NotificationType.REQUEST, notificationMessage, timestamp.toString(), bookID, book.getOwnerID());
+                            db.collection("notifications").add(notification)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            String notificationID = documentReference.getId();
+                                            // Get document for User that we want to send notification to (i.e. owner of the book)
+                                            db.collection("users").document(book.getOwnerID())
+                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                    usersNotifs.add(notificationID);
+
+                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                    newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                    db.collection("users").
+                                                            document(user.getUid()).update(newBooksMap);
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    }
+                });
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

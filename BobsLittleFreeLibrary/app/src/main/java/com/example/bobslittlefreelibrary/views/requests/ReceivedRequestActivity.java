@@ -20,22 +20,32 @@ import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.models.Notification;
+import com.example.bobslittlefreelibrary.models.NotificationType;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ReceivedRequestActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Request currentRequest;
     private LinearLayout bookInfoContainer;
     private ImageView bookImage;
@@ -48,6 +58,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Button backButton;
     private Button mapButton;
     private Book currentBook;
+    private String notificationMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +125,49 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
                 Log.d("TEMP", "Accept button pressed");
+
+
+
+                // Create a Notification that will be for the requester  -- Note: Feel free to move this to a better spot if you have conditionals for if the accept passes or fails
+                notificationMessage = "Your request for %s has been accepted by %s.";
+                db.collection("users").document(user.getUid())
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the accept button
+                            notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                            Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                            db.collection("notifications").add(notification)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            String notificationID = documentReference.getId();
+                                            // Get document of the user we want to send notification to (i.e. the person who sent the request)
+                                            db.collection("users").document(currentRequest.getReqSenderID())
+                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                    usersNotifs.add(notificationID);
+
+                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                    newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                    db.collection("users").
+                                                            document(user.getUid()).update(newBooksMap);
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    }
+                });
             }
         });
 
@@ -157,6 +211,46 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                // Create a Notification that will be for the requester
+                notificationMessage = "Your request for %s has been declined by %s.";
+                db.collection("users").document(user.getUid())
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the decline button
+                            notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                            Notification notification = new Notification(NotificationType.DECLINE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                            db.collection("notifications").add(notification)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            String notificationID = documentReference.getId();
+                                            // Get document of the user we want to send notification to (i.e. the person who sent the request)
+                                            db.collection("users").document(currentRequest.getReqSenderID())
+                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                    usersNotifs.add(notificationID);
+
+                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                    newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                    db.collection("users").
+                                                            document(user.getUid()).update(newBooksMap);
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    }
+                });
             }
         });
 

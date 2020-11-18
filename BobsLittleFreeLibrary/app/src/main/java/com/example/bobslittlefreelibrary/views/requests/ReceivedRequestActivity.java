@@ -123,7 +123,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         acceptRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
+                // TODO REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
                 Log.d("TEMP", "Accept button pressed");
 
 

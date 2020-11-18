@@ -7,6 +7,7 @@ package com.example.bobslittlefreelibrary.views.requests;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -40,6 +42,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ReceivedRequestActivity extends AppCompatActivity {
@@ -59,6 +62,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Button mapButton;
     private Book currentBook;
     private String notificationMessage;
+    private boolean hasSelectedMap = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,17 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                     }
                 });
 
+        db.collection("users")
+                .document(currentRequest.getReqReceiverID())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currentRequest.setLongitude((double) documentSnapshot.get("longitude"));
+                        currentRequest.setLatitude((double) documentSnapshot.get("latitude"));
+                    }
+                });
+
         // query for the book information
         db.collection("books")
                 .document(currentRequest.getBookRequestedID())
@@ -120,140 +135,6 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             }
         });
 
-        acceptRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
-                Log.d("TEMP", "Accept button pressed");
-
-
-
-                // Create a Notification that will be for the requester  -- Note: Feel free to move this to a better spot if you have conditionals for if the accept passes or fails
-                notificationMessage = "Your request for %s has been accepted by %s.";
-                db.collection("users").document(user.getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the accept button
-                            notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
-                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-                            Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
-                            db.collection("notifications").add(notification)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            String notificationID = documentReference.getId();
-                                            // Get document of the user we want to send notification to (i.e. the person who sent the request)
-                                            db.collection("users").document(currentRequest.getReqSenderID())
-                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                    usersNotifs.add(notificationID);
-
-                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                    newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                    db.collection("users").
-                                                            document(user.getUid()).update(newBooksMap);
-                                                }
-                                            });
-                                        }
-                                    });
-                        }
-                    }
-                });
-            }
-        });
-
-        declineRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.collection("requests")
-                        .whereEqualTo("reqReceiverID", currentRequest.getReqReceiverID())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Request tempRequest = document.toObject(Request.class);
-                                        if ((currentRequest.getReqSenderID().equals(tempRequest.getReqSenderID())) &&
-                                                (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
-                                        {
-                                            String documentID = document.getId();
-                                            db.collection("requests").document(documentID)
-                                                    .delete()
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Log.d("TEMP", "DocumentSnapshot successfully deleted!");
-                                                            Toast toast = Toast.makeText(getApplicationContext(), "Request Declined", Toast.LENGTH_SHORT);
-                                                            toast.show();
-                                                            finish();
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.w("TEMP", "Error deleting document", e);
-                                                        }
-                                                    });
-                                        }
-                                    }
-                                } else {
-                                    Log.d("TEMP", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-                // Create a Notification that will be for the requester
-                notificationMessage = "Your request for %s has been declined by %s.";
-                db.collection("users").document(user.getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the decline button
-                            notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
-                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-                            Notification notification = new Notification(NotificationType.DECLINE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
-                            db.collection("notifications").add(notification)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            String notificationID = documentReference.getId();
-                                            // Get document of the user we want to send notification to (i.e. the person who sent the request)
-                                            db.collection("users").document(currentRequest.getReqSenderID())
-                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User userToSendNotif = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
-                                                    usersNotifs.add(notificationID);
-
-                                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                                    newBooksMap.put("notificationIDs", usersNotifs);
-
-                                                    db.collection("users").
-                                                            document(user.getUid()).update(newBooksMap);
-                                                }
-                                            });
-                                        }
-                                    });
-                        }
-                    }
-                });
-            }
-        });
-
         bookInfoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,16 +149,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
-            }
-        });
-
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
-                intent.putExtra("REQUESTTYPE", 0);
-                intent.putExtra("REQUEST", currentRequest);
-                startActivity(intent);
+                Log.d("TEMP", currentRequest.getLatitude() +" " + currentRequest.getLongitude());
             }
         });
 
@@ -287,12 +159,169 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         if (currentRequest.isReturnRequest()) {
             // TODO: Make bottom buttons disappear and map button to view return location
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            mapButton.setText(R.string.request_not_accepted);
-            mapButton.setClickable(false);
+            // TODO: Have default location already set for the request, but allowing user to choose new location
+
+            declineRequestButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    db.collection("requests")
+                            .whereEqualTo("reqReceiverID", currentRequest.getReqReceiverID())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Request tempRequest = document.toObject(Request.class);
+                                            if ((currentRequest.getReqSenderID().equals(tempRequest.getReqSenderID())) &&
+                                                    (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
+                                            {
+                                                String documentID = document.getId();
+                                                db.collection("requests").document(documentID)
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                                Toast toast = Toast.makeText(getApplicationContext(), "Request Declined", Toast.LENGTH_SHORT);
+                                                                toast.show();
+                                                                finish();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w("TEMP", "Error deleting document", e);
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    } else {
+                                        Log.d("TEMP", "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                    // Create a Notification that will be for the requester
+                    notificationMessage = "Your request for %s has been declined by %s.";
+                    db.collection("users").document(user.getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the decline button
+                                notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
+                                String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
+
+                                Notification notification = new Notification(NotificationType.DECLINE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                                db.collection("notifications").add(notification)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                String notificationID = documentReference.getId();
+                                                // Get document of the user we want to send notification to (i.e. the person who sent the request)
+                                                db.collection("users").document(currentRequest.getReqSenderID())
+                                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                        ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                        usersNotifs.add(notificationID);
+
+                                                        HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                        newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                        db.collection("users").
+                                                                document(user.getUid()).update(newBooksMap);
+                                                    }
+                                                });
+                                            }
+                                        });
+                            }
+                        }
+                    });
+                }
+            });
+
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hasSelectedMap = true;
+                    Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
+                    intent.putExtra("REQUESTTYPE", 0);
+                    intent.putExtra("REQUEST", currentRequest);
+                    startActivityForResult(intent, 0);
+                }
+            });
+
+            acceptRequestButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
+                    // SHOW TOAST FOR IF ACCEPTED RIGHT REQWUEST
+                    if (hasSelectedMap) {
+                        //TODO HANDLE ACCEPTING THE REQUEST
+                        // Create a Notification that will be for the requester  -- Note: Feel free to move this to a better spot if you have conditionals for if the accept passes or fails
+                        notificationMessage = "Your request for %s has been accepted by %s.";
+                        db.collection("users").document(user.getUid())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the accept button
+                                    notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
+                                    String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
+
+                                    Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                                    db.collection("notifications").add(notification)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    String notificationID = documentReference.getId();
+                                                    // Get document of the user we want to send notification to (i.e. the person who sent the request)
+                                                    db.collection("users").document(currentRequest.getReqSenderID())
+                                                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                            User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                            ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                            usersNotifs.add(notificationID);
+
+                                                            HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                            newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                            db.collection("users").
+                                                                    document(user.getUid()).update(newBooksMap);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                }
+                            }
+                        });
+                    } else {
+                        Snackbar sb = Snackbar.make(v, "Please select a location!", Snackbar.LENGTH_SHORT);
+                        sb.show();
+                    }
+                }
+            });
+
         } else if (currentBook.getStatus().equals("Borrowed")) {
-            //TODO: Set map button to be able to select a location & bottom button to send return request
+            //TODO:Disable all buttons, nothing to do here
         } else {
             // TODO: Be able to view the map for the location but bottom button gone
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        currentRequest = (Request) data.getSerializableExtra("NEW_REQUEST");
     }
 }

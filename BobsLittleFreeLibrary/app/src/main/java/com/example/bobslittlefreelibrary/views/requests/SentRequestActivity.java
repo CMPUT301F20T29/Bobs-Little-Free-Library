@@ -217,6 +217,8 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+                //TODO REMOVE
+                Log.d("TEMP", currentRequest.getLatitude() + "hehe");
             }
         });
 

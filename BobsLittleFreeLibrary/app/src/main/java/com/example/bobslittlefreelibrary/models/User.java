@@ -15,6 +15,7 @@ public class User implements Serializable  {
     private double longitude;
     private String phone;
     private ArrayList<String> bookIDs;
+    private ArrayList<String> notificationIDs;
 
     /**
      * This is an empty constructor for a User object
@@ -35,6 +36,7 @@ public class User implements Serializable  {
         this.longitude = lng;
         this.phone = "";
         this.bookIDs = new ArrayList<>();
+        this.notificationIDs = new ArrayList<>();
     }
 
     // Methods
@@ -73,6 +75,8 @@ public class User implements Serializable  {
      * @return Returns bookIDs
      * */
     public ArrayList<String> getBookIDs() { return bookIDs; }
+
+    public ArrayList<String> getNotificationIDs() { return notificationIDs; }
 
     // Setters - We can probably remove these later since we will be changing values directly in db
     public void setUsername(String username) { this.username = username; }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.models.Request;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,6 +23,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private int typeOfRequest;
+    private Request currentRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +35,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // get the type of request from the intent and store it for future use
-        // sent will be default because sent is where they cannot add markers to the map and manipulate it
+        // 0 for being able to manipulate and add markers and 1 for view only
+        // 1 default because that is where they cannot add markers to the map and manipulate it
         Intent intent = getIntent();
         typeOfRequest = intent.getIntExtra("REQUESTTYPE", 1);
+        // obtain the request too from the intent
+        currentRequest = (Request) intent.getSerializableExtra("REQUEST");
     }
 
     /**
@@ -55,7 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        currentRequest.setLatitude(21);
 
+        // 0 for edit and 1 for view only
         if (typeOfRequest == 0) {
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.controllers.NotificationAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.models.Notification;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
@@ -63,6 +66,8 @@ public class HomeFragment extends Fragment {
     private FragmentStateAdapter pagerAdapter;
     private ArrayList<Book> listOfBooks;
     private ArrayList<String> listOfBookIDS;
+    private ArrayList<Notification> listOfNotifications;
+    private NotificationAdapter notificationAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +76,7 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         listOfBooks = new ArrayList<>();
         listOfBookIDS = new ArrayList<>();
+        listOfNotifications = new ArrayList<>();
     }
 
     @Nullable
@@ -89,7 +95,11 @@ public class HomeFragment extends Fragment {
         Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        TableLayout requestsOverview = getView().findViewById(R.id.requests_overview_display);
+        ListView requestsOverview = getView().findViewById(R.id.home_requests_overview_list);
+
+        // Setup adapter for requests overview
+        notificationAdapter = new NotificationAdapter(getContext(), listOfNotifications);
+        requestsOverview.setAdapter(notificationAdapter);
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
@@ -127,8 +137,6 @@ public class HomeFragment extends Fragment {
 
         // Query for latest books and add them to listOfBooks
         db.collection("books")
-                //.whereNotEqualTo("pictureURL", null)
-                //.orderBy("pictureURL")
                 .orderBy("dateAdded", Query.Direction.ASCENDING).limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -144,6 +152,22 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
+
+        // Query for the User's notifications and add them to listOfNotifications
+        db.collection("notifications")
+                .whereEqualTo("userID", user.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Notification notification = document.toObject(Notification.class);
+                        listOfNotifications.add(notification);
+                        notificationAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
 
         // Added functionality to viewpager to update the ImageView inside the fragment page when a page is selected.
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -183,7 +207,7 @@ public class HomeFragment extends Fragment {
     private void updateLatestBooksImageView(int position) {
         ImageView imageView;
         Book currentBook = listOfBooks.get(position);
-        imageView = (ImageView)viewPager.findViewWithTag(position);
+        imageView = viewPager.findViewWithTag(position);
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {

@@ -79,45 +79,11 @@
             android:text="@string/requests_overview"
             android:textColor="@color/Black"/>
 
-        <TableLayout
-            android:id="@+id/requests_overview_display"
+        <ListView
+            android:id="@+id/home_requests_overview_list"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/requests_inbound_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:gravity="center_horizontal" />
-                <TextView
-                    android:id="@+id/requests_outbound_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="0" />
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
-                <Button
-                    android:id="@+id/requests_inbound_button"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Inbound" />
-                <Button
-                    android:id="@+id/requests_outbound_button"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Outbound" />
-            </TableRow>
-        </TableLayout>
+            android:layout_height="250dp">
+        </ListView>
 
         <View android:id="@+id/home_divider3"
             android:layout_width="match_parent"

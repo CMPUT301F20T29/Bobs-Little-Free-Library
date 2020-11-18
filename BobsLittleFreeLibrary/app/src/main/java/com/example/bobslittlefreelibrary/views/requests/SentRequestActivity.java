@@ -19,23 +19,33 @@ import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.models.Notification;
+import com.example.bobslittlefreelibrary.models.NotificationType;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SentRequestActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Request currentRequest;
     private LinearLayout bookInfoContainer;
     private ImageView bookImage;
@@ -47,6 +57,8 @@ public class SentRequestActivity extends AppCompatActivity {
     private Button backButton;
     private Button mapButton;
     private Book currentBook;
+    private String notificationMessage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +159,46 @@ public class SentRequestActivity extends AppCompatActivity {
                                }
                            }
                        });
+               // Create a Notification that will be for the requester
+               notificationMessage = "%s has deleted their request for your book %s.";
+               db.collection("users").document(user.getUid())
+                       .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       DocumentSnapshot document = task.getResult();
+                       if (document.exists()) {
+                           User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the delete request button
+                           notificationMessage = String.format(notificationMessage, thisUser.getUsername(), currentBook.getTitle());
+                           Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                           Notification notification = new Notification(NotificationType.DELETE, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                           db.collection("notifications").add(notification)
+                                   .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                       @Override
+                                       public void onSuccess(DocumentReference documentReference) {
+                                           String notificationID = documentReference.getId();
+                                           // Get document of the user we want to send notification to (i.e. the person who sent the request)
+                                           db.collection("users").document(currentRequest.getReqReceiverID())
+                                                   .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                               @Override
+                                               public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                   User userToSendNotif = documentSnapshot.toObject(User.class);
+
+                                                   ArrayList<String> usersNotifs = userToSendNotif.getNotificationIDs();
+                                                   usersNotifs.add(notificationID);
+
+                                                   HashMap newBooksMap = new HashMap<String, ArrayList>();
+                                                   newBooksMap.put("notificationIDs", usersNotifs);
+
+                                                   db.collection("users").
+                                                           document(user.getUid()).update(newBooksMap);
+                                               }
+                                           });
+                                       }
+                                   });
+                       }
+                   }
+               });
            }
         });
 
@@ -164,6 +216,8 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
+                //TODO REMOVE
+                Log.d("TEMP", currentRequest.getLatitude() + "hehe");
             }
         });
 
@@ -172,13 +226,23 @@ public class SentRequestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
                 intent.putExtra("REQUESTTYPE", 1);
+                intent.putExtra("REQUEST", currentRequest);
                 startActivity(intent);
             }
         });
 
-        if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            mapButton.setText(R.string.request_not_accepted);
-            mapButton.setClickable(false);
+        // In order, the if statements go: when user has requested to return,
+        // when the request has not been accepted, when the book has been exchanged already to the
+        // borrower, and when the book has been accepted but not exchanged yet.
+        if (currentRequest.isReturnRequest()) {
+            // TODO: Make bottom button disappear and map button to view return location
+        } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            // TODO: Have default location already set for the request, but allowing user to
+            // choose a new location with map button, and bottom two buttons are enabled (accept/decline)
+        } else if (currentBook.getStatus().equals("Borrowed")) {
+            //TODO:Disable all buttons, nothing to do here
+        } else {
+            // TODO: Be able to view the map for the location but bottom buttons gone
         }
     }
 }

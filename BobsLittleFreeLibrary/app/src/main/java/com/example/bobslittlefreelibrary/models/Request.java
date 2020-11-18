@@ -16,6 +16,8 @@ public class Request implements Serializable {
     private double longitude;
     private String bookImageURL;
     private String bookTitle;
+    private boolean alreadySeen;
+    private boolean isReturnRequest;
 
     /**
      * This is an empty constructor for a Request object.
@@ -41,6 +43,25 @@ public class Request implements Serializable {
         this.longitude = 1000;
         this.bookImageURL = bookImageURL;
         this.bookTitle = bookTitle;
+        this.alreadySeen = false;
+        this.isReturnRequest = false;       // by default the request is a borrow request
+    }
+
+    /**
+     * Checks to see if it's a borrow request or a return request, default borrow
+     * @return false for borrow request, true return request
+     */
+
+    public boolean isReturnRequest() {
+        return isReturnRequest;
+    }
+
+    /**
+     * Changes the return request to a borrow request
+     */
+
+    public void setReturnRequest() {
+        isReturnRequest = true;
     }
 
     /**
@@ -122,5 +143,19 @@ public class Request implements Serializable {
 
     public String getBookTitle() {
         return bookTitle;
+    }
+
+    /**
+     * This method returns if the request has been seen by the receiver.
+     * @return A boolean value.
+     * */
+    public boolean isAlreadySeen() {
+        return alreadySeen;
+    }
+    /**
+     * This method sets the value of alreadySeen to true.
+     * */
+    public void setAlreadySeen() {
+        this.alreadySeen = true;
     }
 }

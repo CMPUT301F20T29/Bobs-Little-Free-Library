@@ -27,7 +27,7 @@
 
     <style name="ProfileButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:minWidth">200dp</item>
+        <item name="android:minWidth">100dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/profile_button_circle_background</item>
         <item name="android:padding">8dp</item>
@@ -80,13 +80,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">40sp</item>
         <item name="android:fontFamily">@font/title_font</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/Black</item>
     </style>
 
     <style name="FormLabel" parent="Widget.AppCompat.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/Black</item>
         <item name="android:layout_marginTop">14dp</item>
         <item name="android:textSize">20sp</item>
     </style>

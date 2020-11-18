@@ -33,7 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // get the type of request from the intent and store it for future use
-        // sent will be default because sent is where they cannot add markers to the map and manipulate it
+        // 0 for being able to manipulate and add markers and 1 for view only
+        // 1 default because that is where they cannot add markers to the map and manipulate it
         Intent intent = getIntent();
         typeOfRequest = intent.getIntExtra("REQUESTTYPE", 1);
     }
@@ -56,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
+        // 0 for edit and 1 for view only
         if (typeOfRequest == 0) {
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {

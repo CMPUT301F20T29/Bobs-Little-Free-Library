@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RequestTest {
 
@@ -48,5 +50,14 @@ public class RequestTest {
         testRequest.setLongitude(mockLong());
         assertEquals(testRequest.getLatitude(), mockLat());
         assertEquals(testRequest.getLongitude(), mockLong());
+    }
+
+    @Test
+    public void testSetReturnRequest() {
+        Request testRequest = mockRequest();
+
+        assertFalse(testRequest.isReturnRequest());
+        testRequest.setReturnRequest();
+        assertTrue(testRequest.isReturnRequest());
     }
 }

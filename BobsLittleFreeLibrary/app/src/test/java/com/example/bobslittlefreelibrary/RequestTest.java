@@ -57,7 +57,9 @@ public class RequestTest {
         Request testRequest = mockRequest();
 
         assertFalse(testRequest.isReturnRequest());
-        testRequest.setReturnRequest();
+        testRequest.changeToReturnRequest();
         assertTrue(testRequest.isReturnRequest());
+        testRequest.setReturnRequest(false);
+        assertFalse(testRequest.isReturnRequest());
     }
 }

@@ -215,9 +215,13 @@ public class PublicBookViewActivity extends AppCompatActivity {
                 break;
             case "Accepted":
                 bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
+                requestButton.setClickable(false);
+                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
                 break;
             case "Borrowed":
                 bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
+                requestButton.setClickable(false);
+                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
                 break;
         }
     }

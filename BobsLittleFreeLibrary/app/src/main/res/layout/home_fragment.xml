@@ -30,6 +30,7 @@
 
     </RelativeLayout>
 
+    <!-- Latest Books starts here -->
     <LinearLayout
         android:id="@+id/home_latest_books_container"
         android:layout_width="match_parent"
@@ -38,47 +39,44 @@
         android:layout_marginTop="10dp"
         android:layout_below="@+id/home_top_buttons_container">
 
-        <!-- Latest Books starts here -->
         <TextView
             android:id="@+id/latest_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="30sp"
+            android:textSize="28sp"
             android:text="@string/latest_books"
             android:textColor="@color/Black" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/home_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="125dp" />
 
         <View android:id="@+id/home_divider2"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginTop="20dp"
-            android:background="?android:attr/dividerVertical" />
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/dividerVertical"/>
 
     </LinearLayout>
 
+    <!-- Request Overview starts here -->
     <LinearLayout
         android:id="@+id/home_requests_overview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/home_latest_books_container">
 
-
-        <!-- Request Overview starts here -->
         <TextView
             android:id="@+id/requests_overview_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginVertical="10dp"
-            android:textSize="30sp"
-            android:text="@string/requests_overview"
+            android:textSize="28sp"
+            android:text="@string/notifications"
             android:textColor="@color/Black"/>
 
         <ListView

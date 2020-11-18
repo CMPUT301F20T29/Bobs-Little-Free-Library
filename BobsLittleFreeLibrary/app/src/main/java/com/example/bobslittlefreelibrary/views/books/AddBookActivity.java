@@ -114,7 +114,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitActivity();
+                finish();
             }
         });
 
@@ -188,7 +188,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                     });
 
                     // Return to main activity
-                    exitActivity();
+                    finish();
 
                 } else {
                     showInvalidInputSnackbar(v);

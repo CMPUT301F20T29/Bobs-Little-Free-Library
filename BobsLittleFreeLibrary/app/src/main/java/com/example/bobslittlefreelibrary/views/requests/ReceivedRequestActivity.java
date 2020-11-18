@@ -276,8 +276,23 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
                 intent.putExtra("REQUESTTYPE", 0);
+                intent.putExtra("REQUEST", currentRequest);
                 startActivity(intent);
             }
         });
+
+        // In order, the if statements go: when user has requested to return,
+        // when the request has not been accepted, when the book has been exchanged already to the
+        // borrower, and when the book has been accepted but not exchanged yet.
+        if (currentRequest.isReturnRequest()) {
+            // TODO: Make bottom buttons disappear and map button to view return location
+        } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            mapButton.setText(R.string.request_not_accepted);
+            mapButton.setClickable(false);
+        } else if (currentBook.getStatus().equals("Borrowed")) {
+            //TODO: Set map button to be able to select a location & bottom button to send return request
+        } else {
+            // TODO: Be able to view the map for the location but bottom button gone
+        }
     }
 }

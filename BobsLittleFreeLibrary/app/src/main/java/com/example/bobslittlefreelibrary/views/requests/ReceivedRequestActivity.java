@@ -96,17 +96,6 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                     }
                 });
 
-        db.collection("users")
-                .document(currentRequest.getReqReceiverID())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        currentRequest.setLongitude((double) documentSnapshot.get("longitude"));
-                        currentRequest.setLatitude((double) documentSnapshot.get("latitude"));
-                    }
-                });
-
         // query for the book information
         db.collection("books")
                 .document(currentRequest.getBookRequestedID())
@@ -124,6 +113,29 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                         titleText.setText((String)documentSnapshot.get("title"));
                         authorText.setText((String)documentSnapshot.get("author"));
                         ISBNText.setText((String)documentSnapshot.get("isbn"));
+
+                        // If book status has been exchanged but not a return request yet,
+                        // or if it has been accepted but not exchanged yet, setup the UI in that way.
+                        String bookStatus = (String) documentSnapshot.get("status");
+
+                        if (bookStatus.equals("Borrowed") && (!currentRequest.isReturnRequest())) {
+                            acceptRequestButton.setVisibility(View.INVISIBLE);
+                            declineRequestButton.setVisibility(View.INVISIBLE);
+                            mapButton.setVisibility(View.INVISIBLE);
+                        } else if (bookStatus.equals("Accepted")) {
+                            mapButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
+                                    intent.putExtra("REQUESTTYPE", 1);
+                                    intent.putExtra("REQUEST", currentRequest);
+                                    startActivity(intent);
+                                }
+                            });
+                            acceptRequestButton.setVisibility(View.INVISIBLE);
+                            declineRequestButton.setVisibility(View.INVISIBLE);
+                            mapButton.setText("View Location");
+                        }
                     }
                 });
 
@@ -148,18 +160,37 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO
                 Log.d("TEMP", "Borrower Profile button pressed");
-                Log.d("TEMP", currentRequest.getLatitude() +" " + currentRequest.getLongitude());
             }
         });
 
         // In order, the if statements go: when user has requested to return,
-        // when the request has not been accepted, when the book has been exchanged already to the
-        // borrower, and when the book has been accepted but not exchanged yet.
+        // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
-            // TODO: Make bottom buttons disappear and map button to view return location
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ReceivedRequestActivity.this, MapsActivity.class);
+                    intent.putExtra("REQUESTTYPE", 1);
+                    intent.putExtra("REQUEST", currentRequest);
+                    startActivity(intent);
+                }
+            });
+            acceptRequestButton.setVisibility(View.INVISIBLE);
+            declineRequestButton.setVisibility(View.INVISIBLE);
+            mapButton.setText("View Location");
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            // TODO: Have default location already set for the request, but allowing user to choose new location
+            db.collection("users")
+                    .document(currentRequest.getReqReceiverID())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            currentRequest.setLongitude((double) documentSnapshot.get("longitude"));
+                            currentRequest.setLatitude((double) documentSnapshot.get("latitude"));
+                        }
+                    });
 
             declineRequestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -235,10 +266,48 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             acceptRequestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO REMEMBER TO ADD A TOAST FOR ACCEPTED / SNACKBAR IF IT DOESNT WORK PROPERLY LIKE LOCATION FALSE
-                    // SHOW TOAST FOR IF ACCEPTED RIGHT REQWUEST
                     if (hasSelectedMap) {
-                        //TODO HANDLE ACCEPTING THE REQUEST
+                        // Change the status of the book to Accepted
+                        db.collection("books").document(currentRequest.getBookRequestedID()).update("status", "Accepted");
+
+                        // Go through each request for the book, delete if not current request
+                        // and if it is current request update the information.
+                        db.collection("requests")
+                                .whereEqualTo("bookRequestedID", currentRequest.getBookRequestedID())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                //Log.d("TEMP", document.getId() + " => " + document.getData());
+                                                Request tempRequest = document.toObject(Request.class);
+                                                String documentID = document.getId();
+                                                if (currentRequest.getReqSenderID().equals(tempRequest.getReqSenderID())) {
+                                                    db.collection("requests").document(documentID).set(currentRequest);
+                                                } else {
+                                                    db.collection("requests").document(documentID)
+                                                            .delete()
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("TEMP", "Error deleting document", e);
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        } else {
+                                            Log.d("TEMP", "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+
                         // Create a Notification that will be for the requester  -- Note: Feel free to move this to a better spot if you have conditionals for if the accept passes or fails
                         notificationMessage = "Your request for %s has been accepted by %s.";
                         db.collection("users").document(user.getUid())
@@ -256,20 +325,20 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                        // Display toast to notify user and exit out of the request
+                        Toast toast = Toast.makeText(getApplicationContext(), "Request Accepted", Toast.LENGTH_SHORT);
+                        toast.show();
+                        finish();
                     } else {
                         Snackbar sb = Snackbar.make(v, "Please select a location!", Snackbar.LENGTH_SHORT);
                         sb.show();
                     }
                 }
             });
-
-        } else if (currentBook.getStatus().equals("Borrowed")) {
-            //TODO:Disable all buttons, nothing to do here
-        } else {
-            // TODO: Be able to view the map for the location but bottom button gone
         }
     }
 
+    // Get the last location from the MapsActivity and store it.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {

@@ -57,10 +57,19 @@ public class Request implements Serializable {
     }
 
     /**
-     * Changes the return request to a borrow request
+     * A public setter for returnRequest
+     * @param returnRequest true if return request, false if borrow request
      */
 
-    public void setReturnRequest() {
+    public void setReturnRequest(boolean returnRequest) {
+        isReturnRequest = returnRequest;
+    }
+
+    /**
+     * Changes the borrow request to a return request
+     */
+
+    public void changeToReturnRequest() {
         isReturnRequest = true;
     }
 

@@ -126,7 +126,6 @@
                 android:layout_height="60dp"
                 android:layout_below="@+id/public_book_view_divider3"
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:text="From:                "
                 android:textSize="30sp" />
@@ -139,15 +138,9 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/request_user_text"
-                android:background="@color/colorPrimary"
-                android:drawableStart="@drawable/user_icon"
-                android:drawableLeft="@drawable/user_icon"
                 android:padding="16dp"
                 android:text="Name"
-                android:textColor="@color/colorPrimaryDark"
-                app:autoSizeMaxTextSize="20dp"
-                app:autoSizeMinTextSize="5dp"
-                app:autoSizeTextType="uniform" />
+                style="@style/ProfileButton"/>
 
         </RelativeLayout>
 

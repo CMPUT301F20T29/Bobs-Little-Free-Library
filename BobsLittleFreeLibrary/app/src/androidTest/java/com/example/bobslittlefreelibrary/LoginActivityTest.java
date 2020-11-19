@@ -66,8 +66,8 @@ public class LoginActivityTest {
     @Test
     public void checkLoginSuccess() {
         //checks if UI updates to Main Activity on successful login
-        solo.enterText(0, "kvnguyen@ualberta.ca");
-        solo.enterText(1, "chickennuggets");
+        solo.enterText(0, "hyunseo@ualberta.ca");
+        solo.enterText(1, "mari4269");
         solo.clickOnButton("Login");
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }

@@ -189,8 +189,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
         String pictureURL = book.getPictureURL();
         if (pictureURL != null) {
             new DownloadImageTask(bookImage).execute(pictureURL);
-        } else {
-            bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
         titleText.setText(book.getTitle());
         authorText.setText(String.format("Author: %s", book.getAuthor()));

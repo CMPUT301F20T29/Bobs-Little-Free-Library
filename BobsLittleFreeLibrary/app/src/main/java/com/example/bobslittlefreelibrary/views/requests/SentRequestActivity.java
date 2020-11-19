@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -60,6 +61,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private Button mapButton;
     private Book currentBook;
     private String notificationMessage;
+    private boolean hasSelectedMap = false;
 
 
     @Override
@@ -110,6 +112,92 @@ public class SentRequestActivity extends AppCompatActivity {
                         titleText.setText((String)documentSnapshot.get("title"));
                         authorText.setText((String)documentSnapshot.get("author"));
                         ISBNText.setText((String)documentSnapshot.get("isbn"));
+
+                        // If book status has been exchanged but not a return request yet,
+                        // or if it has been accepted but not exchanged yet, setup the UI in that way.
+                        String bookStatus = (String) documentSnapshot.get("status");
+
+                        if (bookStatus.equals("Borrowed") && !(currentRequest.isReturnRequest())) {
+                            mapButton.setText("Select Location");
+                            deleteRequestButton.setText("Request to Return");
+
+                            mapButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    hasSelectedMap = true;
+                                    Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
+                                    intent.putExtra("REQUESTTYPE", 0);
+                                    intent.putExtra("REQUEST", currentRequest);
+                                    startActivityForResult(intent, 0);
+                                }
+                            });
+
+                            deleteRequestButton.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View v) {
+                                   if (hasSelectedMap) {
+                                       currentRequest.changeToReturnRequest();
+                                       db.collection("requests")
+                                               .whereEqualTo("bookRequestedID", currentRequest.getBookRequestedID())
+                                               .get()
+                                               .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                       if (task.isSuccessful()) {
+                                                           for (QueryDocumentSnapshot document : task.getResult()) {
+                                                               //Log.d("TEMP", document.getId() + " => " + document.getData());
+                                                               Request tempRequest = document.toObject(Request.class);
+                                                               String documentID = document.getId();
+                                                               if (currentRequest.getReqSenderID().equals(tempRequest.getReqSenderID())) {
+                                                                   db.collection("requests").document(documentID).set(currentRequest);
+                                                               }
+                                                           }
+                                                       } else {
+                                                           Log.d("TEMP", "Error getting documents: ", task.getException());
+                                                       }
+                                                   }
+                                               });
+
+                                       // Create a Notification that will be for the book owner
+                                       notificationMessage = "%s wants to return your book %s.";
+                                       db.collection("users").document(user.getUid())
+                                               .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                               DocumentSnapshot document = task.getResult();
+                                               if (document.exists()) {
+                                                   User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the request return button
+                                                   notificationMessage = String.format(notificationMessage, thisUser.getUsername(), currentBook.getTitle());
+                                                   String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
+
+                                                   Notification notification = new Notification(NotificationType.RETURN, notificationMessage, timestamp, currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                                                   db.collection("notifications").add(notification);
+                                               }
+                                           }
+                                       });
+
+                                       // Display toast to notify user and exit out of the request
+                                       Toast toast = Toast.makeText(getApplicationContext(), "Request Sent", Toast.LENGTH_SHORT);
+                                       toast.show();
+                                       finish();
+                                   } else {
+                                       Snackbar sb = Snackbar.make(v, "Please select a location!", Snackbar.LENGTH_SHORT);
+                                       sb.show();
+                                   }
+                               }
+                            });
+                        } else if (bookStatus.equals("Accepted")) {
+                            mapButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
+                                    intent.putExtra("REQUESTTYPE", 1);
+                                    intent.putExtra("REQUEST", currentRequest);
+                                    startActivity(intent);
+                                }
+                            });
+                            deleteRequestButton.setVisibility(View.INVISIBLE);
+                        }
                     }
                 });
 
@@ -119,66 +207,6 @@ public class SentRequestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
-
-        deleteRequestButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               db.collection("requests")
-                       .whereEqualTo("reqSenderID", currentRequest.getReqSenderID())
-                       .get()
-                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                           @Override
-                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                               if (task.isSuccessful()) {
-                                   for (QueryDocumentSnapshot document : task.getResult()) {
-                                       Request tempRequest = document.toObject(Request.class);
-                                       if ((currentRequest.getReqReceiverID().equals(tempRequest.getReqReceiverID())) &&
-                                               (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
-                                       {
-                                           String documentID = document.getId();
-                                           db.collection("requests").document(documentID)
-                                                   .delete()
-                                                   .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                       @Override
-                                                       public void onSuccess(Void aVoid) {
-                                                           Log.d("TEMP", "DocumentSnapshot successfully deleted!");
-                                                           Toast toast = Toast.makeText(getApplicationContext(), "Request Deleted", Toast.LENGTH_SHORT);
-                                                           toast.show();
-                                                           finish();
-                                                       }
-                                                   })
-                                                   .addOnFailureListener(new OnFailureListener() {
-                                                       @Override
-                                                       public void onFailure(@NonNull Exception e) {
-                                                           Log.w("TEMP", "Error deleting document", e);
-                                                       }
-                                                   });
-                                       }
-                                   }
-                               } else {
-                                   Log.d("TEMP", "Error getting documents: ", task.getException());
-                               }
-                           }
-                       });
-               // Create a Notification that will be for the requester
-               notificationMessage = "%s has deleted their request for your book %s.";
-               db.collection("users").document(user.getUid())
-                       .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                   @Override
-                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                       DocumentSnapshot document = task.getResult();
-                       if (document.exists()) {
-                           User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the delete request button
-                           notificationMessage = String.format(notificationMessage, thisUser.getUsername(), currentBook.getTitle());
-                           String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
-
-                           Notification notification = new Notification(NotificationType.DELETE, notificationMessage, timestamp, currentRequest.getBookRequestedID(), currentBook.getOwnerID());
-                           db.collection("notifications").add(notification);
-                       }
-                   }
-               });
-           }
         });
 
         bookInfoContainer.setOnClickListener(new View.OnClickListener() {
@@ -195,37 +223,89 @@ public class SentRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("TEMP", "Borrower Profile button pressed");
-                //TODO REMOVE
-                Log.d("TEMP", currentRequest.getLatitude() + "hehe");
-            }
-        });
-
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
-                intent.putExtra("REQUESTTYPE", 1);
-                intent.putExtra("REQUEST", currentRequest);
-                startActivity(intent);
+                //TODO
             }
         });
 
         // In order, the if statements go: when user has requested to return,
-        // when the request has not been accepted, when the book has been exchanged already to the
-        // borrower, and when the book has been accepted but not exchanged yet.
+        // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
-            // TODO: Make bottom button disappear and map button to view return location
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(SentRequestActivity.this, MapsActivity.class);
+                    intent.putExtra("REQUESTTYPE", 1);
+                    intent.putExtra("REQUEST", currentRequest);
+                    startActivity(intent);
+                }
+            });
+            deleteRequestButton.setVisibility(View.INVISIBLE);
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
-            mapButton.setText(R.string.request_not_accepted);
-            mapButton.setClickable(false);
-        } else if (currentBook.getStatus().equals("Borrowed")) {
-            //TODO: Set map button to be able to select a location & bottom button to send return request
-            // LOCATATION DEFAULT TO ORIGINAL SPOT, BUT USER CAN SWITCH
-        } else {
-            // TODO: Be able to view the map for the location but bottom buttons gone
+            mapButton.setVisibility(View.INVISIBLE);
+
+            deleteRequestButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    db.collection("requests")
+                            .whereEqualTo("reqSenderID", currentRequest.getReqSenderID())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Request tempRequest = document.toObject(Request.class);
+                                            if ((currentRequest.getReqReceiverID().equals(tempRequest.getReqReceiverID())) &&
+                                                    (currentRequest.getBookRequestedID().equals(tempRequest.getBookRequestedID())))
+                                            {
+                                                String documentID = document.getId();
+                                                db.collection("requests").document(documentID)
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Log.d("TEMP", "DocumentSnapshot successfully deleted!");
+                                                                Toast toast = Toast.makeText(getApplicationContext(), "Request Deleted", Toast.LENGTH_SHORT);
+                                                                toast.show();
+                                                                finish();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w("TEMP", "Error deleting document", e);
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    } else {
+                                        Log.d("TEMP", "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                    // Create a Notification that will be for the requester
+                    notificationMessage = "%s has deleted their request for your book %s.";
+                    db.collection("users").document(user.getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                User thisUser = document.toObject(User.class); // thisUser refers to the user who pressed on the delete request button
+                                notificationMessage = String.format(notificationMessage, thisUser.getUsername(), currentBook.getTitle());
+                                String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
+
+                                Notification notification = new Notification(NotificationType.DELETE, notificationMessage, timestamp, currentRequest.getBookRequestedID(), currentBook.getOwnerID());
+                                db.collection("notifications").add(notification);
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 
+    // Get the last location from the MapsActivity and store it.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
@@ -234,5 +314,4 @@ public class SentRequestActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         currentRequest = (Request) data.getSerializableExtra("NEW_REQUEST");
     }
-
 }

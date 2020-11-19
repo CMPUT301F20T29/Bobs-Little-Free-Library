@@ -1,5 +1,6 @@
 package com.example.bobslittlefreelibrary.views.users;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
+import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -28,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -88,23 +92,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-
-        db = FirebaseFirestore.getInstance();
-        db.collection("user")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("placedebug", document.getId()+" =>" +document.getData()+", "+document.get("username"));
-                            }
-                        }
-                    }
-                });
-
-
-
         Button signupButton = findViewById(R.id.signup);
         signupButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -116,28 +103,40 @@ public class SignupActivity extends AppCompatActivity {
 
                 if (isInputValid(address)) {
                     // change layout accordingly to use email as longin id instead of username
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                    db = FirebaseFirestore.getInstance();
+                    db.collection("users")
+                            .whereEqualTo("username",username)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign up success, save user info and update UI
-                                        db = FirebaseFirestore.getInstance();
-                                        User userData = new User(username, email, address, Lat[0], Lng[0]);
-                                        db.collection("users").document(mAuth.getUid()).set(userData);
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    if (queryDocumentSnapshots.isEmpty()){
+                                        mAuth.createUserWithEmailAndPassword(email, password)
+                                                .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        if (task.isSuccessful()) {
+                                                            // Sign up success, save user info and update UI
+                                                            db = FirebaseFirestore.getInstance();
+                                                            User userData = new User(username, email, address, Lat[0], Lng[0]);
+                                                            db.collection("users").document(mAuth.getUid()).set(userData);
 
-                                        Snackbar.make(v, "Signup success.",
-                                                Snackbar.LENGTH_SHORT).show();
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        updateUI(user);
+                                                            FirebaseUser user = mAuth.getCurrentUser();
+                                                            updateUI(user);
+                                                        } else {
+                                                            // If sign in fails, display a message to the user.
+                                                            Snackbar.make(v, "Failed to signup, account already exists.",
+                                                                    Snackbar.LENGTH_SHORT).show();
+                                                            updateUI(null);
+                                                        }
+                                                    }
+                                                });
                                     } else {
-                                        // If sign in fails, display a message to the user.
-                                        Snackbar.make(v, "Failed to signup, account already exists.",
-                                                Snackbar.LENGTH_SHORT).show();
-                                        updateUI(null);
+                                        Snackbar.make(v,"Username already exists, try a different username.",Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
                             });
+
                 } else {
                     showInvalidInputSnackbar(v, address);
                 }
@@ -165,7 +164,8 @@ public class SignupActivity extends AppCompatActivity {
 
     public void updateUI(FirebaseUser user){
         if (user != null){
-            finish();
+            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -199,7 +199,9 @@ public class SignupActivity extends AppCompatActivity {
         if (username.contains(" ")) {
             msg += "\n - Username contains empty space";
         }
-        if (username.isEmpty()) { msg += "\n - Username is empty"; }
+        if (username.isEmpty()) { msg += "\n - Username is empty";
+        }
+
         if (address==null) { msg += "\n - Address is empty"; }
 
 
@@ -209,4 +211,5 @@ public class SignupActivity extends AppCompatActivity {
         textView.setMaxLines(8);
         sb.show();
     }
+
 }

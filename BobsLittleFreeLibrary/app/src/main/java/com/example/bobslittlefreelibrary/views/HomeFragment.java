@@ -185,9 +185,14 @@ public class HomeFragment extends Fragment {
      * @param position The position of the current page in the ViewPager
      * */
     private void updateLatestBooksImageView(int position) {
-        ImageView imageView;
+        Log.d("TAG", "updateLatestBooksImageView: " + position);
         Book currentBook = listOfBooks.get(position);
-        imageView = viewPager.findViewWithTag(position);
+
+        ImageView imageView = viewPager.findViewWithTag(position);
+        TextView titleView = viewPager.findViewWithTag(position + 6);
+        CardView view = viewPager.findViewWithTag(position + 12);
+
+        titleView.setText(currentBook.getTitle());
 
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
@@ -196,21 +201,22 @@ public class HomeFragment extends Fragment {
             imageView.setImageResource(R.drawable.blue_book);
         }
         // Select which book view activity pressing on the button leads to
-        if (user.getUid().equals(currentBook.getOwnerID())) {
-            imageView.setOnClickListener(v -> {
-                Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
-                intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
-                startActivity(intent);
-            });
-        } else {
-            imageView.setOnClickListener(v -> {
-                Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
-                intent.putExtra("BOOK", currentBook);
-                startActivity(intent);
-            });
-        }
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.getUid().equals(currentBook.getOwnerID())) {
+                    Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
+                    intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
+                    intent.putExtra("BOOK", currentBook);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     /**

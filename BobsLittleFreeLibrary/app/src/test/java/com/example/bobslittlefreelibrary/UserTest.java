@@ -12,7 +12,7 @@ public class UserTest {
      *  Creates an instance of User class/classes to pass to book class
      * */
     private User mockUser() {
-        return new User("Albert0", "Albert0@gmail.com", "12345 67st NE");
+        return new User("Albert0", "Albert0@gmail.com", "12345 67st NE",  42, 69);
     }
 
     /**
@@ -63,10 +63,14 @@ public class UserTest {
         String username = userTest.getUsername();
         String email = userTest.getEmail();
         String address = userTest.getAddress();
+        Double lat = userTest.getLatitude();
+        Double lng = userTest.getLongitude();
 
         assertEquals("Albert0",username);
         assertEquals("Albert0@gmail.com", email);
         assertEquals("12345 67st NE", address);
+        assertEquals(42.0, lat);
+        assertEquals(69.0, lng);
 
     }
 
@@ -82,20 +86,31 @@ public class UserTest {
         String username = userTest.getUsername();
         String email = userTest.getEmail();
         String address = userTest.getAddress();
+        Double lat = userTest.getLatitude();
+        Double lng = userTest.getLongitude();
         assertEquals("Albert0",username);
         assertEquals("Albert0@gmail.com", email);
         assertEquals("12345 67st NE", address);
+        assertEquals(42.0, lat);
+        assertEquals(69.0, lng);
 
         userTest.setUsername("Roberts80085");
         userTest.setEmail("Roberts80085@gmail.com");
         userTest.setAddress("54321 76st NW");
+        userTest.setLatitude(12.0);
+        userTest.setLongitude(34.0);
 
         String username2 = userTest.getUsername();
         String email2 = userTest.getEmail();
         String address2 = userTest.getAddress();
+        Double lat2 = userTest.getLatitude();
+        Double lng2 = userTest.getLongitude();
         assertEquals("Roberts80085",username2);
         assertEquals("Roberts80085@gmail.com", email2);
         assertEquals("54321 76st NW", address2);
+        assertEquals(12.0, lat2);
+        assertEquals(34.0, lng2);
+
 
     }
 }

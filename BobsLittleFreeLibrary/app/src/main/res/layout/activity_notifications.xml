@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".views.templates.BlankTemplateActivity"
+    android:layout_gravity="start"
+    android:padding="11dp"
+    >
+
+    <!--        Top buttons begin-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_buttons">
+
+        <Button
+            android:id="@+id/back_button"
+            android:text="Back"
+            style="@style/BackButton"/>
+
+    </RelativeLayout>
+    <!--        Top buttons end-->
+
+    <TextView
+        android:id="@+id/notifs_title"
+        android:text="Notifications"
+        android:layout_below="@+id/top_buttons"
+        style="@style/ViewTitle"
+        />
+    <!--        Activity title end-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/form_container"
+        android:layout_below="@+id/notifs_title">
+
+        <ListView
+            android:id="@+id/notifs_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

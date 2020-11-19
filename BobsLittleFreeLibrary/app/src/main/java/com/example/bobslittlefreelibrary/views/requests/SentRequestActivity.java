@@ -106,8 +106,6 @@ public class SentRequestActivity extends AppCompatActivity {
                         String pictureURL = currentRequest.getBookImageURL();
                         if (pictureURL != null) {
                             new DownloadImageTask(bookImage).execute(pictureURL);
-                        } else {
-                            bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
                         }
                         titleText.setText((String)documentSnapshot.get("title"));
                         authorText.setText((String)documentSnapshot.get("author"));

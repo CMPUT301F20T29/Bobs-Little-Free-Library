@@ -14,10 +14,11 @@
 
         <ImageView
             android:id="@+id/bookImage"
-            android:layout_width="75dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:src="@drawable/blue_book"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

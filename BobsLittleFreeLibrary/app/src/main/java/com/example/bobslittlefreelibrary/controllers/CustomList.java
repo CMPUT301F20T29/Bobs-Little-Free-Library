@@ -52,8 +52,6 @@ public class  CustomList extends ArrayAdapter<Book> {
         authorName.setText(book.getAuthor());
         if (pictureURL != null) {
             new DownloadImageTask(picture).execute(pictureURL);
-        } else {
-            picture.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
 
 

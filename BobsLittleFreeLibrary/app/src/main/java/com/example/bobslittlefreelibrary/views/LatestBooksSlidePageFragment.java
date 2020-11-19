@@ -25,6 +25,8 @@ public class LatestBooksSlidePageFragment extends Fragment {
         int position = args.getInt("position");
         View view = (ViewGroup) inflater.inflate(R.layout.fragment_latest_books_slide_screen, container, false);
         view.findViewById(R.id.latest_books_image).setTag(position);
+        view.findViewById(R.id.latest_books_title).setTag(position + 6);
+        view.findViewById(R.id.content).setTag(position + 12);
         return view;
     }
 }

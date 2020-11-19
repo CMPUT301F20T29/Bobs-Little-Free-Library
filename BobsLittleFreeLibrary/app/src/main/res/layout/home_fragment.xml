@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="11dp">
 
     <RelativeLayout
@@ -9,23 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!-- Top buttons -->
-        <Button
+        <ImageButton
             android:id="@+id/home_search_button"
-            style="@style/SecondaryButton"
-            android:text="@string/search"
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:background="@drawable/circle"
             android:padding="8dp"
-            android:drawableStart="@android:drawable/ic_menu_search"/>
+            android:src="@drawable/baseline_search_white_18dp"
+            />
 
-        <Button
+        <ImageButton
             android:id="@+id/home_user_profile_button"
-            style="@style/ProfileButton"
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:background="@drawable/circle"
+            android:padding="8dp"
+            android:src="@drawable/baseline_person_white_18dp"
             android:layout_alignParentEnd="true"/>
 
         <View android:id="@+id/home_divider1"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_below="@id/home_user_profile_button"
-            android:layout_marginTop="10dp"
+            android:layout_marginVertical="10dp"
             android:background="?android:attr/dividerVertical" />
 
     </RelativeLayout>
@@ -36,27 +43,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/home_top_buttons_container">
 
         <TextView
             android:id="@+id/latest_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="28sp"
+            style="@style/ViewTitle"
             android:text="@string/latest_books"
-            android:textColor="@color/Black" />
+            android:textSize="36sp"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="15dp"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/home_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="125dp" />
+            android:layout_height="wrap_content" />
 
         <View android:id="@+id/home_divider2"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginVertical="10dp"
             android:background="?android:attr/dividerVertical"/>
 
     </LinearLayout>
@@ -71,33 +76,84 @@
 
         <TextView
             android:id="@+id/requests_overview_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginVertical="10dp"
-            android:textSize="28sp"
+            style="@style/ViewTitle"
             android:text="@string/notifications"
+            android:layout_marginBottom="10dp"
+            android:textSize="36sp"
             android:textColor="@color/Black"/>
 
-        <ListView
-            android:id="@+id/home_requests_overview_list"
+        <com.google.android.material.card.MaterialCardView
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:id="@+id/notifs_card"
             android:layout_width="match_parent"
-            android:layout_height="225dp">
-        </ListView>
+            android:layout_height="125dp"
+            app:strokeColor="@color/colorSecondary"
+            app:strokeWidth="2dp"
+            android:clickable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_notification_important_24" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        >
+
+                        <!-- Title, secondary and supporting text -->
+                        <TextView
+                            android:id="@+id/num_of_notifs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="50dp"
+                            android:layout_gravity="end"
+                            android:textColor="@color/colorSecondaryDark"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="new notifications"
+                            android:layout_gravity="end"
+                            android:textColor="@color/colorSecondaryDark"
+
+                            />
+                    </LinearLayout>
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <View android:id="@+id/home_divider3"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginVertical="10dp"
             android:background="?android:attr/dividerVertical" />
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/home_requests_overview_container">
 
-    <!-- Quick Scan Button -->
-    <Button
-        android:id="@+id/home_quick_scan_button"
-        style="@style/SecondaryButton"
-        android:layout_below="@id/home_requests_overview_container"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:text="@string/quick_scan"/>
+        <!-- Quick Scan Button -->
+        <Button
+            android:id="@+id/home_quick_scan_button"
+            style="@style/SecondaryButton"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+
+            android:text="@string/quick_scan"/>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

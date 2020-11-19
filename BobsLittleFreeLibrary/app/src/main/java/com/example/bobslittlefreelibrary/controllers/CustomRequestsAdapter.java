@@ -61,8 +61,6 @@ public class CustomRequestsAdapter extends ArrayAdapter<Request> {
         String pictureURL = request.getBookImageURL();
         if (pictureURL != null) {
             new DownloadImageTask(bookImage).execute(pictureURL);
-        } else {
-            bookImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24);
         }
 
         if (isSentTab) {

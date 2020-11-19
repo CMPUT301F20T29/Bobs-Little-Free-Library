@@ -86,6 +86,6 @@
         android:clickable="true"
         android:focusable="true"
         android:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@drawable/baseline_add_white_18dp" />
 
 </RelativeLayout>

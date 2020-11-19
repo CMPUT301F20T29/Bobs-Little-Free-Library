@@ -53,7 +53,7 @@
             android:text="Lebron"
             android:layout_margin="20dp"
             style="@style/ProfileButton"
-            android:background="@drawable/circle"
+            android:background="@drawable/rounded_button"
             android:layout_below="@+id/user_button"
             />
         <Button
@@ -63,7 +63,7 @@
             android:text="Dialog Box"
             style="@style/SubmitButton"
             android:layout_below="@+id/user_button_round"
-            android:background="@drawable/circle"
+            android:background="@drawable/rounded_button"
             />
 
     </RelativeLayout>

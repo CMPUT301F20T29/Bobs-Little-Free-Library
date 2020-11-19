@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -62,15 +65,13 @@ public class HomeFragment extends Fragment {
     // Variables
     private FirebaseUser user;
     private FirebaseFirestore db;
-    private Button profileButton;
+    private ImageButton profileButton;
     private ViewPager2 viewPager;
     private FragmentStateAdapter pagerAdapter;
     private ArrayList<Book> listOfBooks;
     private ArrayList<String> listOfBookIDS;
-    private ArrayList<Notification> listOfNotifications;
-    private ArrayList<String> listOfNotifIDs;
-    private ArrayList<Book> listOfNotifBooks;
-    private NotificationAdapter notificationAdapter;
+    private CardView notificationCard;
+    private TextView numberOfNotifs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,9 +80,6 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         listOfBooks = new ArrayList<>();
         listOfBookIDS = new ArrayList<>();
-        listOfNotifications = new ArrayList<>();
-        listOfNotifIDs = new ArrayList<>();
-        listOfNotifBooks = new ArrayList<>();
     }
 
     @Nullable
@@ -97,35 +95,24 @@ public class HomeFragment extends Fragment {
         Log.d("TEMP", "Home Fragment view has been created");
 
         // Setup references to UI elements
-        Button searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
+        ImageButton searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
         profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        ListView notificationView = getView().findViewById(R.id.home_requests_overview_list);
-
-        // Setup adapter for requests overview
-        notificationAdapter = new NotificationAdapter(getContext(), listOfNotifications);
-        notificationView.setAdapter(notificationAdapter);
-
+        notificationCard = getView().findViewById(R.id.notifs_card);
+        numberOfNotifs = getView().findViewById(R.id.num_of_notifs);
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
         pagerAdapter = new LatestBooksPagerAdapter(getActivity());
         viewPager.setAdapter(pagerAdapter);
 
-        // Initialize UI
-        String username = ((MainActivity)getActivity()).getUsername();
-        if (username == null) {
-            db.collection("users").document(user.getUid())
-                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    User user = documentSnapshot.toObject(User.class);
-                    ((MainActivity)getActivity()).setUsername(user.getUsername());
-                    profileButton.setText(user.getUsername());
-                }
-            });
-        } else {
-            profileButton.setText(username);
-        }
+        // Get number of notifications
+        db.collection("notifications").whereEqualTo("userID", user.getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                numberOfNotifs.setText(String.valueOf(queryDocumentSnapshots.size()));
+            }
+        });
 
         // Setup listeners
         searchButton.setOnClickListener(v -> {
@@ -158,33 +145,12 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-        ArrayList<Task<QuerySnapshot>> taskArrayList = new ArrayList<>();
-        // Query for the User's notifications and add them to listOfNotifications
-        db.collection("notifications")
-                .whereEqualTo("userID", user.getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Notification notification = document.toObject(Notification.class);
-                        listOfNotifications.add(notification);
-                        listOfNotifIDs.add(document.getId());
-                        notificationAdapter.notifyDataSetChanged();
-
-                        // Add a Book object to listOfNotifBooks for setting onclick functionality
-                        db.collection("books").document(notification.getBookID())
-                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot document) {
-                                Book book = document.toObject(Book.class);
-                                listOfNotifBooks.add(book);
-                            }
-                        });
-                    }
-                }
-            }
+        notificationCard.setOnClickListener(v -> {
+            Log.d("TEMP", "User Profile Button Pressed");
+            Intent intent = new Intent(getActivity(), NotificationsActivity.class);
+            startActivity(intent);
         });
+
 
         // Added functionality to viewpager to update the ImageView inside the fragment page when a page is selected.
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -192,51 +158,6 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 updateLatestBooksImageView(position);
-            }
-        });
-
-        /*// Setup Requests Overview listeners
-        notificationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Select which activity to go to based on the owner of the book.
-                Notification notification = listOfNotifications.get(position);
-                Book currentBook = listOfNotifBooks.get(position);
-                if (currentBook.getOwnerID().equals(user.getUid())) {
-                    Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", notification.getBookID());
-                    intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", notification.getBookID());
-                    intent.putExtra("BOOK", currentBook);
-                    startActivity(intent);
-                }
-            }
-        });*/
-        // Listener for deleting a notification
-        notificationView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // Delete the notification from db
-                Notification notificationToRemove = (Notification) notificationView.getItemAtPosition(position);
-                Book bookToRemove = listOfNotifBooks.get(position);
-                String notifIDToRemove = listOfNotifIDs.get(position);
-                db.collection("notifications").document(listOfNotifIDs.get(position)).delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Snackbar sb = Snackbar.make(getView(), "Notification Deleted", Snackbar.LENGTH_SHORT);
-                                sb.show();
-                            }
-                        });
-                // Delete all data related to the notification
-                listOfNotifications.remove(notificationToRemove);
-                listOfNotifBooks.remove(bookToRemove);
-                listOfNotifIDs.remove(notifIDToRemove);
-                notificationAdapter.notifyDataSetChanged();
-                return true;
             }
         });
     }

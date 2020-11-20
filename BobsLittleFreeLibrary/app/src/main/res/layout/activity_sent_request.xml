@@ -128,7 +128,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="To:                "
+                android:text="To:"
                 android:textSize="30sp" />
 
             <Button
@@ -138,10 +138,10 @@
                 android:layout_below="@+id/public_book_view_divider3"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/request_user_text"
                 android:padding="16dp"
                 android:text="Name"
-                style="@style/ProfileButton" />
+                style="@style/ProfileButton"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
 

@@ -124,7 +124,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                             acceptRequestButton.setVisibility(View.INVISIBLE);
                             declineRequestButton.setVisibility(View.INVISIBLE);
                             mapButton.setVisibility(View.INVISIBLE);
-                            requestStatusText.setText("Exchanged");
+                            requestStatusText.setText("Borrowed");
                         } else if (bookStatus.equals("Accepted")) {
                             requestStatusText.setText("Accepted");
                             mapButton.setOnClickListener(new View.OnClickListener() {

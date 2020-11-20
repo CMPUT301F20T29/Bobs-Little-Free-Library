@@ -120,7 +120,7 @@ public class SentRequestActivity extends AppCompatActivity {
                         String bookStatus = (String) documentSnapshot.get("status");
 
                         if (bookStatus.equals("Borrowed") && !(currentRequest.isReturnRequest())) {
-                            requestStatusText.setText("Exchanged");
+                            requestStatusText.setText("Borrowed");
                             mapButton.setText("Select Location");
                             deleteRequestButton.setText("Request to Return");
 

@@ -74,8 +74,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
         // Set references to UI elements
         setupUIReferences();
         checkAlreadyRequested();
-        // Set UI values
-        setUIValues(book);
 
         // Set onClickListeners for the buttons
         ownerProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +140,9 @@ public class PublicBookViewActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Set UI values
+        setUIValues(book);
     }
 
     /**

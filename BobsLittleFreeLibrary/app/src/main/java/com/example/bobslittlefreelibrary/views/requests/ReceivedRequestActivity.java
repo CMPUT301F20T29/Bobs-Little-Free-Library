@@ -63,6 +63,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private Book currentBook;
     private String notificationMessage;
     private boolean hasSelectedMap = false;
+    private TextView requestStatusText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         declineRequestButton = findViewById(R.id.decline_request_button);
         backButton = findViewById(R.id.back_button);
         mapButton = findViewById(R.id.open_map_button);
+        requestStatusText = findViewById(R.id.request_status_text);
 
         // query for the username
         db.collection("users")
@@ -122,7 +124,9 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                             acceptRequestButton.setVisibility(View.INVISIBLE);
                             declineRequestButton.setVisibility(View.INVISIBLE);
                             mapButton.setVisibility(View.INVISIBLE);
+                            requestStatusText.setText("Exchanged");
                         } else if (bookStatus.equals("Accepted")) {
+                            requestStatusText.setText("Accepted");
                             mapButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -168,6 +172,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         // In order, the if statements go: when user has requested to return,
         // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
+            requestStatusText.setText("Returning");
             mapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -181,6 +186,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             declineRequestButton.setVisibility(View.INVISIBLE);
             mapButton.setText("View Location");
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            requestStatusText.setText("Request Not Accepted");
             db.collection("users")
                     .document(currentRequest.getReqReceiverID())
                     .get()

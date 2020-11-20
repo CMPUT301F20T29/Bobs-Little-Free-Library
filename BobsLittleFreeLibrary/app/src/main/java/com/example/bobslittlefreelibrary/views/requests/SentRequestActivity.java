@@ -62,6 +62,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private Book currentBook;
     private String notificationMessage;
     private boolean hasSelectedMap = false;
+    private TextView requestStatusText;
 
 
     @Override
@@ -83,6 +84,7 @@ public class SentRequestActivity extends AppCompatActivity {
         deleteRequestButton = findViewById(R.id.delete_request_button);
         backButton = findViewById(R.id.back_button);
         mapButton = findViewById(R.id.open_map_button);
+        requestStatusText = findViewById(R.id.request_status_text);
 
         // query for the username
         db.collection("users")
@@ -118,6 +120,7 @@ public class SentRequestActivity extends AppCompatActivity {
                         String bookStatus = (String) documentSnapshot.get("status");
 
                         if (bookStatus.equals("Borrowed") && !(currentRequest.isReturnRequest())) {
+                            requestStatusText.setText("Exchanged");
                             mapButton.setText("Select Location");
                             deleteRequestButton.setText("Request to Return");
 
@@ -187,6 +190,7 @@ public class SentRequestActivity extends AppCompatActivity {
                                }
                             });
                         } else if (bookStatus.equals("Accepted")) {
+                            requestStatusText.setText("Accepted");
                             mapButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -230,6 +234,7 @@ public class SentRequestActivity extends AppCompatActivity {
         // In order, the if statements go: when user has requested to return,
         // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
+            requestStatusText.setText("Returning");
             mapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -241,6 +246,7 @@ public class SentRequestActivity extends AppCompatActivity {
             });
             deleteRequestButton.setVisibility(View.INVISIBLE);
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
+            requestStatusText.setText("Request Not Accepted");
             mapButton.setVisibility(View.INVISIBLE);
 
             deleteRequestButton.setOnClickListener(new View.OnClickListener() {

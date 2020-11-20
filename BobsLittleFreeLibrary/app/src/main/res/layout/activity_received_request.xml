@@ -93,18 +93,19 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="130dp" />
+            android:layout_height="100dp" />
 
         <Button
             android:id="@+id/open_map_button"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Select Location" />
+            android:text="Select Location"
+            />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="130dp" />
+            android:layout_height="100dp" />
 
         <!-- Other info starts -->
         <RelativeLayout
@@ -143,6 +144,14 @@
                 style="@style/ProfileButton"/>
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/request_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="Request Status"
+            android:textSize="30sp" />
 
         <!-- Buttons -->
         <LinearLayout

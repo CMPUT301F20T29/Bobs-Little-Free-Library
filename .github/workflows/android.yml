@@ -20,7 +20,7 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./BobsLittleFreeLibrary/gradlew
     - name: Update gradlew
-      run: git update-index --chmod=+x gradlew
+      run: git update-index --chmod=+x ./BobsLittleFreeLibrary/gradlew
     - name: Make gradew executable
       run: git commit -m "Make gradlew executable"
     - name: Build with Gradle

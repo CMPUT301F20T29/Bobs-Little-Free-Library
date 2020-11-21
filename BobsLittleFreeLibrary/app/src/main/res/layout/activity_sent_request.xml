@@ -93,7 +93,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="130dp" />
+            android:layout_height="100dp" />
 
         <Button
             android:id="@+id/open_map_button"
@@ -104,7 +104,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="130dp" />
+            android:layout_height="100dp" />
 
         <!-- Other info starts -->
         <RelativeLayout
@@ -128,7 +128,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="To:                "
+                android:text="To:"
                 android:textSize="30sp" />
 
             <Button
@@ -138,12 +138,20 @@
                 android:layout_below="@+id/public_book_view_divider3"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/request_user_text"
                 android:padding="16dp"
                 android:text="Name"
-                style="@style/ProfileButton" />
+                style="@style/ProfileButton"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/request_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="Request Status"
+            android:textSize="30sp" />
 
         <!-- Buttons -->
         <LinearLayout

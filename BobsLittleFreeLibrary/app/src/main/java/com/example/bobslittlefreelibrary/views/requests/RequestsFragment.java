@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -21,28 +22,38 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.CustomRequestsAdapter;
+import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RequestsFragment extends Fragment {
 
     private ListView requestsList;
     private Context context;
-    private CustomRequestsAdapter sentRequestsAdapter;
-    private ArrayList<Request> sentRequestList;
-    private CustomRequestsAdapter receivedRequestsAdapter;
-    private ArrayList<Request> receivedRequestList;
+    private ArrayList<Request> sentRequestsList;
+    private ArrayList<Request> receivedRequestsList;
+    private ArrayList<Request> currentRequestsList;
+    private CustomRequestsAdapter currentAdapter;
     private int tabPosition = 0;
+    private Button filterAllButton;
+    private Button filterNotAcceptedButton;
+    private Button filterAcceptedButton;
+    private Button filterExchangedButton;
+    private Button filterReturnButton;
 
     @Nullable
     @Override
@@ -58,10 +69,16 @@ public class RequestsFragment extends Fragment {
         ListView requestsList = view.findViewById(R.id.requests_list);
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         context = this.getActivity();
-        sentRequestList = new ArrayList<>();
-        receivedRequestList = new ArrayList<>();
-        receivedRequestsAdapter = new CustomRequestsAdapter(context, receivedRequestList, false);
-        sentRequestsAdapter = new CustomRequestsAdapter(context, sentRequestList, true);
+        sentRequestsList = new ArrayList<>();
+        receivedRequestsList = new ArrayList<>();
+        currentRequestsList = new ArrayList<>();
+        currentAdapter = new CustomRequestsAdapter(context, currentRequestsList, false);
+        requestsList.setAdapter(currentAdapter);                                // we start with received tab and set the adapter
+        filterAllButton = view.findViewById(R.id.filterAllButton);
+        filterNotAcceptedButton = view.findViewById(R.id.filterNotAcceptedButton);
+        filterAcceptedButton = view.findViewById(R.id.filterAcceptedButton);
+        filterExchangedButton = view.findViewById(R.id.filterExchangedButton);
+        filterReturnButton = view.findViewById(R.id.filterReturnButton);
 
         // Create the top tabs when the fragment is created
         tabLayout.addTab(tabLayout.newTab().setText("Received"));
@@ -72,7 +89,8 @@ public class RequestsFragment extends Fragment {
         String userID = user.getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // query all the received requests, add them to the list and then make an adapter
+        // query all the received requests, add them to the list
+        // add to current list too because we display received first, and notify the adapter
         db.collection("requests")
                 .whereEqualTo("reqReceiverID", userID)
                 .get()
@@ -82,8 +100,9 @@ public class RequestsFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 //Log.d("TEMP", document.getId() + " => " + document.getData());
-                                receivedRequestList.add(document.toObject(Request.class));
-                                receivedRequestsAdapter.notifyDataSetChanged();
+                                receivedRequestsList.add(document.toObject(Request.class));
+                                currentRequestsList.add(document.toObject(Request.class));
+                                currentAdapter.notifyDataSetChanged();
                             }
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());
@@ -91,7 +110,7 @@ public class RequestsFragment extends Fragment {
                     }
                 });
 
-        // query all the sent requests, add them to the list and then make an adapter
+        // query all the sent requests, add them to the list
         db.collection("requests")
                 .whereEqualTo("reqSenderID", userID)
                 .get()
@@ -101,17 +120,13 @@ public class RequestsFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 //Log.d("TEMP", document.getId() + " => " + document.getData());
-                                sentRequestList.add(document.toObject(Request.class));
-                                sentRequestsAdapter.notifyDataSetChanged();
+                                sentRequestsList.add(document.toObject(Request.class));
                             }
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
-        // display the received tab
-        requestsList.setAdapter(receivedRequestsAdapter);
 
         // set a tab on click listener to know when the tabs have been switched & methods to handle
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -121,10 +136,20 @@ public class RequestsFragment extends Fragment {
 
                 if (tabPosition == 0) {
                     // Received requests tab
-                    requestsList.setAdapter(receivedRequestsAdapter);
+                    currentRequestsList.clear();
+                    currentAdapter.setSentTab(false);
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        currentRequestsList.add(receivedRequestsList.get(i));
+                    }
+                    currentAdapter.notifyDataSetChanged();
                 } else {
                     // Sent requests tab
-                    requestsList.setAdapter(sentRequestsAdapter);
+                    currentRequestsList.clear();
+                    currentAdapter.setSentTab(true);
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        currentRequestsList.add(sentRequestsList.get(i));
+                    }
+                    currentAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -147,16 +172,184 @@ public class RequestsFragment extends Fragment {
                 // Based on which tab the user is on, it will decide which activity to go to
                 if (tabPosition == 0) {
                     Intent intent = new Intent(getActivity(), ReceivedRequestActivity.class);
-                    intent.putExtra("REQUEST", receivedRequestList.get(position));
+                    intent.putExtra("REQUEST", currentRequestsList.get(position));
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), SentRequestActivity.class);
-                    intent.putExtra("REQUEST", sentRequestList.get(position));
+                    intent.putExtra("REQUEST", currentRequestsList.get(position));
                     startActivity(intent);
                 }
             }
         });
 
+        filterAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        currentRequestsList.add(receivedRequestsList.get(i));
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                } else {
+                    // Sent requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        currentRequestsList.add(sentRequestsList.get(i));
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        filterNotAcceptedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        if ((receivedRequestsList.get(i).getLongitude() == 1000.0) && (receivedRequestsList.get(i).getLatitude() == 1000.0)) {
+                            currentRequestsList.add(receivedRequestsList.get(i));
+                        }
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                } else {
+                    // Sent requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        if ((sentRequestsList.get(i).getLongitude() == 1000.0) && (sentRequestsList.get(i).getLatitude() == 1000.0)) {
+                            currentRequestsList.add(sentRequestsList.get(i));
+                        }
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        filterAcceptedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        Request tempRequest = receivedRequestsList.get(i);
+                        if (!(tempRequest.isReturnRequest())) {
+                            db.collection("books")
+                                    .document(tempRequest.getBookRequestedID())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Book tempBook = documentSnapshot.toObject(Book.class);
+                                            if (tempBook.getStatus().equals("Accepted")) {
+                                                currentRequestsList.add(tempRequest);
+                                                currentAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                } else {
+                    // Sent requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        Request tempRequest = sentRequestsList.get(i);
+                        if (!(tempRequest.isReturnRequest())) {
+                            db.collection("books")
+                                    .document(tempRequest.getBookRequestedID())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Book tempBook = documentSnapshot.toObject(Book.class);
+                                            if (tempBook.getStatus().equals("Accepted")) {
+                                                currentRequestsList.add(tempRequest);
+                                                currentAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                }
+            }
+        });
+
+        filterExchangedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        Request tempRequest = receivedRequestsList.get(i);
+                        if (!(tempRequest.isReturnRequest())) {
+                            db.collection("books")
+                                    .document(tempRequest.getBookRequestedID())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Book tempBook = documentSnapshot.toObject(Book.class);
+                                            if (tempBook.getStatus().equals("Borrowed")) {
+                                                currentRequestsList.add(tempRequest);
+                                                currentAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                } else {
+                    // Sent requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        Request tempRequest = sentRequestsList.get(i);
+                        if (!(tempRequest.isReturnRequest())) {
+                            db.collection("books")
+                                    .document(tempRequest.getBookRequestedID())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Book tempBook = documentSnapshot.toObject(Book.class);
+                                            if (tempBook.getStatus().equals("Borrowed")) {
+                                                currentRequestsList.add(tempRequest);
+                                                currentAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                }
+            }
+        });
+
+        filterReturnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tabPosition == 0) {
+                    // Received requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < receivedRequestsList.size(); i++) {
+                        if (receivedRequestsList.get(i).isReturnRequest()) {
+                            currentRequestsList.add(receivedRequestsList.get(i));
+                        }
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                } else {
+                    // Sent requests tab
+                    currentRequestsList.clear();
+                    for (int i = 0; i < sentRequestsList.size(); i++) {
+                        if (sentRequestsList.get(i).isReturnRequest()) {
+                            currentRequestsList.add(sentRequestsList.get(i));
+                        }
+                    }
+                    currentAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override

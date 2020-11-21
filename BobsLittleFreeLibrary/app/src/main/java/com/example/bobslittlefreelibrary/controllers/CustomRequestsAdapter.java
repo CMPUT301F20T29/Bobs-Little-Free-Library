@@ -43,7 +43,7 @@ public class CustomRequestsAdapter extends ArrayAdapter<Request> {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.content, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.content_requests, parent, false);
         }
 
         Request request = requests.get(position);

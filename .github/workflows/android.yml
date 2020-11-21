@@ -19,6 +19,10 @@ jobs:
         java-version: 1.8
     - name: Make gradlew executable
       run: chmod +x ./BobsLittleFreeLibrary/gradlew
+    - name: Update gradlew
+      run: git update-index --chmod=+x gradlew
+    - name: Make gradew executable
+      run: git commit -m "Make gradlew executable"
     - name: Build with Gradle
       run: ./BobsLittleFreeLibrary/gradlew build
     - name: Run Unit Tests

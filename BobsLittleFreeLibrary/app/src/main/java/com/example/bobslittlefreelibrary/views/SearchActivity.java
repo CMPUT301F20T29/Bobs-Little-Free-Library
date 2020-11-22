@@ -1,8 +1,10 @@
 package com.example.bobslittlefreelibrary.views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,8 +14,17 @@ import android.widget.SearchView;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.BookAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
 
 
 // Ideas for this Activity have been taken from Youtube Tutorials by the channel "Code with Cal"
@@ -23,6 +34,9 @@ public class SearchActivity extends AppCompatActivity {
 
     // setting up the ArrayList
     public static ArrayList<Book> searchBookList = new ArrayList<Book>();
+
+    // setting up the ID list for book
+    public static ArrayList<String> searchBookIDList = new ArrayList<>();
 
     // making a reference to the listView
     private ListView listView;
@@ -38,6 +52,10 @@ public class SearchActivity extends AppCompatActivity {
 
     // filter button
     private Button filterButton;
+
+    // Firebase items
+    FirebaseUser user; // I don't think that I need this for now, so I'm just gonna focus on databse  for now
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     // layouts for the different filter options
@@ -143,6 +161,38 @@ public class SearchActivity extends AppCompatActivity {
      */
     private void setupData() {
 
+
+        db.collection("books").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    searchBookList.clear();
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        Log.d(TAG, document.getId() + " => " +document.getData());
+                        Book book = document.toObject(Book.class);
+                        searchBookList.add(book);
+                        searchBookIDList.add(document.getId());
+                    }
+
+                }
+                else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+        /*
+
+        This was test data that was used before firebase instantiation
+
         Book book1 = new Book("Test Title 1", "Test Author 1", "1-56619-909-3", "Nice", "123", "available");
         searchBookList.add(book1);
 
@@ -173,7 +223,7 @@ public class SearchActivity extends AppCompatActivity {
         Book book10 = new Book("Very Nice Book", "Test Author 7", "1-56619-909-1", "I like this book", "567", "available");
         searchBookList.add(book10);
 
-
+        */
 
 
     }

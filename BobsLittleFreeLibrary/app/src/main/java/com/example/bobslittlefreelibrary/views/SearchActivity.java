@@ -1,11 +1,16 @@
 package com.example.bobslittlefreelibrary.views;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentHostCallback;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,8 +19,11 @@ import android.widget.SearchView;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.BookAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -54,8 +62,10 @@ public class SearchActivity extends AppCompatActivity {
     private Button filterButton;
 
     // Firebase items
-    FirebaseUser user; // I don't think that I need this for now, so I'm just gonna focus on databse  for now
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
 
     // layouts for the different filter options
@@ -73,11 +83,36 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+
         searchOptions();
         setLayoutsAndButtons();
         setupData();
         setupList();
         hideFilters();
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Select which activity to go to based on owner of book.
+                if (user.getUid().equals(searchBookList.get(position).getOwnerID())) {
+                    Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", searchBookIDList.get(position));
+                    intent.putExtra("BOOK", searchBookList.get(position));  // Send book to be displayed in book view activity
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(SearchActivity.this, PublicBookViewActivity.class);
+                    intent.putExtra("BOOK_ID", searchBookIDList.get(position));
+                    intent.putExtra("BOOK", searchBookList.get(position));
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+
+
+
     }
 
 

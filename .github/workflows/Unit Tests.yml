@@ -22,4 +22,4 @@ jobs:
         run: ./BobsLittleFreeLibrary/gradlew build
       - name: Run Unit tests
         working-directory: ./BobsLittleFreeLibrary
-        run: ./gradlew BookTest
+        run: ./gradlew BookTest --status --scan

@@ -91,27 +91,6 @@ public class SearchActivity extends AppCompatActivity {
         hideFilters();
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Select which activity to go to based on owner of book.
-                if (user.getUid().equals(searchBookList.get(position).getOwnerID())) {
-                    Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", searchBookIDList.get(position));
-                    intent.putExtra("BOOK", searchBookList.get(position));  // Send book to be displayed in book view activity
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(SearchActivity.this, PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", searchBookIDList.get(position));
-                    intent.putExtra("BOOK", searchBookList.get(position));
-                    startActivity(intent);
-                }
-
-            }
-        });
-
-
-
 
     }
 

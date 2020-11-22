@@ -18,9 +18,11 @@ jobs:
       with:
         java-version: 1.8
     - name: Make gradlew executable
-      run: chmod +x ./BobsLittleFreeLibrary/gradlew
+      working-directory: ./BobsLittleFreeLibrary
+      run: chmod +x ./gradlew
     - name: Build with Gradle
-      run: ./BobsLittleFreeLibrary/gradlew build
+      working-directory: ./BobsLittleFreeLibrary
+      run: ./gradlew build
     - name: Run Unit tests
-      working-directory: ./app
-      run: ./BobsLittleFreeLibrary/gradlew BookTest
+      working-directory: ./BobsLittleFreeLibrary
+      run: .gradlew BookTest

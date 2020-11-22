@@ -26,4 +26,4 @@ jobs:
     - name: Get Gradle Tasks
       run: ./BobsLittleFreeLibrary/gradlew tasks --stacktrace
     - name: Run Unit tests
-      run: ./BobsLittleFreeLibrary/gradlew BookTest --stacktrace
+      run: ./BobsLittleFreeLibrary/gradlew BobsLittleFreeLibrary/app/src/test/java/com/example/bobslittlefreelibrary/BookTest --stacktrace

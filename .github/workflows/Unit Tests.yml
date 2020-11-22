@@ -22,4 +22,4 @@ jobs:
     - name: Build with Gradle
       run: ./BobsLittleFreeLibrary/gradlew build
     - name: Run Unit tests
-      run: ./gradlew testDebugUnitTest
+      run: ./BobsLittleFreeLibrary/gradlew testDebugUnitTest

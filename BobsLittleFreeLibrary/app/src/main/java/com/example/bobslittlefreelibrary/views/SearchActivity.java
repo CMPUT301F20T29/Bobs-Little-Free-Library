@@ -87,6 +87,7 @@ public class SearchActivity extends AppCompatActivity {
         searchOptions();
         setLayoutsAndButtons();
         setupData();
+        setUpOnClickListener();
         setupList();
         hideFilters();
 
@@ -197,7 +198,11 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
+        listView = (ListView) findViewById(R.id.bookSearchListView);
 
+        // make reference to the BookAdapter that we created
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, searchBookList);
+        listView.setAdapter(adapter);
 
 
 
@@ -245,11 +250,7 @@ public class SearchActivity extends AppCompatActivity {
     // Method for setting up the populated list view
     private void setupList() {
 
-        listView = (ListView) findViewById(R.id.bookSearchListView);
 
-        // make reference to the BookAdapter that we created
-        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, searchBookList);
-        listView.setAdapter(adapter);
 
     }
 
@@ -338,6 +339,30 @@ public class SearchActivity extends AppCompatActivity {
             hideFilters();
         }
 
+    }
+
+    // On click listener for items
+    private void setUpOnClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Book selectedBook = (Book) (listView.getItemAtPosition(position));
+
+                if (user.getUid().equals(selectedBook.getOwnerID())) {
+                    Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
+                    intent.putExtra("BOOK", selectedBook);
+                    startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(SearchActivity.this, PublicBookViewActivity.class);
+                    intent.putExtra("BOOK", selectedBook);
+                    startActivity(intent);
+
+                }
+
+
+            }
+        });
     }
 
 

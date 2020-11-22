@@ -21,5 +21,7 @@ jobs:
       run: chmod +x ./BobsLittleFreeLibrary/gradlew
     - name: Build with Gradle
       run: ./BobsLittleFreeLibrary/gradlew build
+    - name: Get Gradle Tasks
+      run: ./BobsLittleFreeLibrary/gradlew tasks --stacktrace
     - name: Run Unit tests
       run: ./BobsLittleFreeLibrary/gradlew testDebugUnitTest

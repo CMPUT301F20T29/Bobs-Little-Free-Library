@@ -40,9 +40,19 @@ jobs:
         working-directory: ./BobsLittleFreeLibrary
         run: ./gradlew test
 
-      - name: Run Intent tests
-        working-directory: ./BobsLittleFreeLibrary
-        run: ./gradlew connectedAndroidTest
+
+      - name: Run Instrumentation Tests
+        uses: reactivecircus/android-emulator-runner@v2.6.1
+        with:
+          api-level: 23
+          target: default
+          arch: x86
+          profile: Nexus 6
+          script: ./gradlew connectedCheck --stacktrace
+
+      # - name: Run Intent tests
+      #   working-directory: ./BobsLittleFreeLibrary
+      #   run: ./gradlew connectedAndroidTest
 
       - name: Build Project
         working-directory: ./BobsLittleFreeLibrary

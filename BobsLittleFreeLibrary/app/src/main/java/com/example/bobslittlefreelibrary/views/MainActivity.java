@@ -1,19 +1,34 @@
 package com.example.bobslittlefreelibrary.views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.ScanFragment;
+import com.example.bobslittlefreelibrary.models.Book;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.example.bobslittlefreelibrary.views.requests.RequestsFragment;
 import com.example.bobslittlefreelibrary.views.books.BooksFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 /**
  * This activity is the first activity to be launched after logging in. It houses a container for fragments and a bottom navigation bar
@@ -23,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
 
     private String lastActiveTab;
     private BottomNavigationView bottomNavigationView;
-    private String username = null;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
         setContentView(R.layout.activity_main);
 
         // brings up information about the user; in this case, log email
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
         Log.d("userEmail",user.getEmail().toString());
 
         // Setup Bottom Nav view
@@ -90,14 +107,6 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
     }
 
     /**
-     * Gets the username of the user
-     * @return Returns a String that contains the username of the user.
-     * */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
      * Updates the value of lastActiveTab
      * @param tabName the name of the tab to be set as last active
      * */
@@ -105,16 +114,33 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
         lastActiveTab = tabName;
     }
 
-    /**
-     * Sets the value of the user's username for later use and prevent re-querying of the same value
-     * @param username the username to be stored
-     * */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public void onIsbnFound(String isbn) {
-        
+        // Assuming there is only one copy of the book with this ISBN in the db
+        db.collection("books").whereEqualTo("isbn", isbn)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<DocumentSnapshot> documents = (ArrayList<DocumentSnapshot>) queryDocumentSnapshots.getDocuments();
+                DocumentSnapshot document = documents.get(0); // Should only be one
+                Book bookToShow = document.toObject(Book.class);
+                if (bookToShow.getStatus().equals("Accepted") || bookToShow.getStatus().equals("Borrowed")) {
+                    Log.d("TEMP", "go to exchange activity");
+                } else {
+                    // Go to a book view activity based on owner
+                    if (user.getUid().equals(bookToShow.getOwnerID())) {
+                        Intent intent = new Intent(MainActivity.this, MyBookViewActivity.class);
+                        intent.putExtra("BOOK_ID", document.getId());
+                        intent.putExtra("BOOK", bookToShow);  // Send book to be displayed in book view activity
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, PublicBookViewActivity.class);
+                        intent.putExtra("BOOK_ID", document.getId());
+                        intent.putExtra("BOOK", bookToShow);
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
     }
 }

@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
+        app:singleSelection="true"
         app:layout_constraintStart_toStartOf = "parent"
         app:layout_constraintTop_toTopOf = "parent">
 
@@ -56,10 +57,12 @@
         <com.google.android.material.chip.Chip
             android:text="All"
             android:layout_width="wrap_content"
+            style="@style/CustomChipStyle"
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.chip.Chip
             android:text="Available"
+            style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

@@ -28,7 +28,6 @@
                 android:id="@+id/bookSearchName"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_above="@+id/name_text"
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginEnd="11dp"
@@ -37,7 +36,7 @@
                 android:padding="0dp"
                 app:autoSizeMaxTextSize="30dp"
                 app:autoSizeMinTextSize="5dp"
-                app:autoSizeTextType="uniform"></TextView>
+                app:autoSizeTextType="uniform"/>
 
             <TextView
                 android:id="@+id/bookSearchAuthor"
@@ -50,7 +49,7 @@
                 android:paddingLeft="0dp"
                 app:autoSizeMaxTextSize="24dp"
                 app:autoSizeMinTextSize="5dp"
-                app:autoSizeTextType="uniform"></TextView>
+                app:autoSizeTextType="uniform"/>
 
 
         </RelativeLayout>

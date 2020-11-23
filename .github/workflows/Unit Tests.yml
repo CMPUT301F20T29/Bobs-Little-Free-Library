@@ -20,17 +20,17 @@ jobs:
       - name: Access Places Key
         env:
             APOD_API_KEY: ${{ secrets.PLACES_API_KEY }}
-        run: echo PLACES_API_KEY=\"$PLACES_API_KEY\" >> ./local.properties
+        run: echo PLACES_API_KEY=\"$PLACES_API_KEY\" >> ./BobsLittleFreeLibrary/local.properties
 
       - name: Access Maps Key
         env:
             APOD_API_KEY: ${{ secrets.MAPS_API_KEY }}
-        run: echo MAPS_API_KEY=\"$MAPS_API_KEY\" >> ./local.properties
+        run: echo MAPS_API_KEY=\"$MAPS_API_KEY\" >> ./BobsLittleFreeLibrary/local.properties
 
       - name: Access Books Key
         env:
             APOD_API_KEY: ${{ secrets.BOOKS_API_KEY }}
-        run: echo BOOKS_API_KEY=\"$BOOKS_API_KEY\" >> ./local.properties
+        run: echo BOOKS_API_KEY=\"$BOOKS_API_KEY\" >> ./BobsLittleFreeLibrary/local.properties
 
       - name: Run Unit tests
         working-directory: ./BobsLittleFreeLibrary

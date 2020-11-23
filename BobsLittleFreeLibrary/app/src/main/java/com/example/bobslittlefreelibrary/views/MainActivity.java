@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.ScanFragment;
 import com.example.bobslittlefreelibrary.views.requests.RequestsFragment;
 import com.example.bobslittlefreelibrary.views.books.BooksFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
  * This activity is the first activity to be launched after logging in. It houses a container for fragments and a bottom navigation bar
  * that allows the user to switch between 3 fragments: BooksFragment, HomeFragment, and RequestsFragment
  * */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ScanFragment.OnFragmentInteractionListener {
 
     private String lastActiveTab;
     private BottomNavigationView bottomNavigationView;
@@ -110,5 +111,10 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public void onIsbnFound(String isbn) {
+        
     }
 }

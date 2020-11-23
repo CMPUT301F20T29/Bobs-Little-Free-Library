@@ -32,6 +32,9 @@ jobs:
             APOD_API_KEY: ${{ secrets.BOOKS_API_KEY }}
         run: echo booksApiKey=\"$BOOKS_API_KEY\" >> ./BobsLittleFreeLibrary/local.properties
 
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
       - name: Run Unit tests
         working-directory: ./BobsLittleFreeLibrary
         run: ./gradlew test

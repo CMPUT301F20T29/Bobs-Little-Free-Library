@@ -40,6 +40,10 @@ jobs:
         working-directory: ./BobsLittleFreeLibrary
         run: ./gradlew test
 
+      - name: Run Intent tests
+        working-directory: ./BobsLittleFreeLibrary
+        run: ./gradlew connectedAndroidTest
+
       - name: Build Project
         working-directory: ./BobsLittleFreeLibrary
         run: ./gradlew assemble

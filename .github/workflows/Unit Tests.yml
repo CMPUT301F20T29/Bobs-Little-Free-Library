@@ -21,5 +21,4 @@ jobs:
       - name: Build with Gradle
         run: ./BobsLittleFreeLibrary/gradlew build
       - name: Run Unit tests
-        working-directory: ./BobsLittleFreeLibrary
-        run: bash ./gradlew BookTest --stacktrace
+        run: bash ./BobsLittleFreeLibrary/gradlew BookTest --stacktrace

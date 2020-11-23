@@ -85,23 +85,23 @@ public class SearchActivity extends AppCompatActivity {
 
 
         searchOptions();
-        setLayoutsAndButtons();
+        //setLayoutsAndButtons();
         setupData();
         setUpOnClickListener();
         setupList();
-        hideFilters();
+        //hideFilters();
 
 
 
     }
 
-
+    /*
     // This method sets the filter button and the layouts to its corresponding ID in the XML file
     private void setLayoutsAndButtons() {
         filterButton = (Button) findViewById(R.id.filterButton);
-        filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
-        filterLayout2 = (LinearLayout) findViewById(R.id.secondLinearLayout);
-        filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
+        //filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
+        //filterLayout2 = (LinearLayout) findViewById(R.id.secondLinearLayout);
+        //filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
     }
 
 
@@ -122,6 +122,7 @@ public class SearchActivity extends AppCompatActivity {
         filterLayout3.setVisibility(View.VISIBLE);
         filterButton.setText("HIDE");
     }
+     */
 
 
     // This method searches for the items of ListView based on what is being typed in the Search Bar of SearchView
@@ -329,6 +330,7 @@ public class SearchActivity extends AppCompatActivity {
 
     // display filters if filter button is pressed
     // hide filters if it is pressed again
+    /*
     public void filterButtonPressed(View view) {
 
         if (filterHidden == true) {
@@ -341,6 +343,8 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+     */
+
     // On click listener for items
     private void setUpOnClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -351,6 +355,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (user.getUid().equals(selectedBook.getOwnerID())) {
                     Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
                     intent.putExtra("BOOK", selectedBook);
+
                     startActivity(intent);
 
                 } else {

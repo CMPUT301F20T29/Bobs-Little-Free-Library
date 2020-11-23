@@ -33,6 +33,7 @@ jobs:
         run: echo booksApiKey=\"$BOOKS_API_KEY\" >> ./BobsLittleFreeLibrary/local.properties
 
       - name: Change wrapper permissions
+        working-directory: ./BobsLittleFreeLibrary
         run: chmod +x ./gradlew
 
       - name: Run Unit tests

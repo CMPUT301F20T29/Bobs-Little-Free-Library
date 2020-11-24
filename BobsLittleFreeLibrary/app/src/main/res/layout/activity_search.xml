@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/filterButton"
-            style="@style/FilterButton"
+            style="@style/SecondaryButton"
             android:textColor="@color/White"
             android:layout_width="wrap_content"
             android:layout_alignParentRight="true"

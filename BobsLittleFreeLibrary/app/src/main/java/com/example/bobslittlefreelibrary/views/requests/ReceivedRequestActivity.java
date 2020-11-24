@@ -273,6 +273,10 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                     if (hasSelectedMap) {
                         // Change the status of the book to Accepted
                         db.collection("books").document(currentRequest.getBookRequestedID()).update("status", "Accepted");
+                        db.collection("books").document(currentBook.getBookID())
+                                .update("currentRequestID", currentRequest.getRequestID());
+                        db.collection("books").document(currentBook.getBookID())
+                                .update("currentBorrowerID", currentRequest.getReqSenderID());
 
                         // Go through each request for the book, delete if not current request
                         // and if it is current request update the information.
@@ -324,7 +328,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                                     notificationMessage = String.format(notificationMessage, currentBook.getTitle(), thisUser.getUsername());
                                     String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                                    Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp.toString(), currentRequest.getBookRequestedID(), currentRequest.getReqSenderID());
+                                    Notification notification = new Notification(NotificationType.ACCEPT, notificationMessage, timestamp, currentRequest.getBookRequestedID(), currentRequest.getReqSenderID());
                                     db.collection("notifications").add(notification);
                                 }
                             }

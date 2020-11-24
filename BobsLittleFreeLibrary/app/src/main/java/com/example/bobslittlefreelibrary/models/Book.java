@@ -18,7 +18,9 @@ public class Book implements Serializable {
     private String pictureURL;
     private String dateAdded;
     private int numberOfRequests;
-    private String borrowerUsername;
+    private int numberOfValidScans;
+    private String currentBorrowerUsername;
+    private String currentBorrowerID;
     private String currentRequestID;
     private String bookID;
 
@@ -47,7 +49,9 @@ public class Book implements Serializable {
         this.pictureURL = pictureURL;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrowerUsername = null;
+        this.numberOfValidScans = 0;
+        this.currentBorrowerUsername = null;
+        this.currentBorrowerID = null;
         this.currentRequestID = null;
         this.bookID = null;
     }
@@ -70,7 +74,9 @@ public class Book implements Serializable {
         this.status = status;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrowerUsername = null;
+        this.numberOfValidScans = 0;
+        this.currentBorrowerUsername = null;
+        this.currentBorrowerID = null;
         this.currentRequestID = null;
         this.bookID = null;
     }
@@ -128,11 +134,24 @@ public class Book implements Serializable {
         return numberOfRequests;
     }
     /**
-     * this method returns the name of the current borrower of a book object.
-     * @return Returns borrower
-     *
+     * This method returns the number of valid scans for the Book object.
+     * @return Returns numberOfValidScans
      * */
-    public String getBorrowerUsername() { return borrowerUsername; }
+    public int getNumberOfValidScans() {
+        return numberOfValidScans;
+    }
+    /**
+     * this method returns the name of the current borrower of a book object.
+     * @return Returns currentBorrowerUsername
+     * */
+    public String getCurrentBorrowerUsername() { return currentBorrowerUsername; }
+    /**
+     * this method returns the ID of the current borrower of a book object.
+     * @return Returns currentBorrowerID
+     * */
+    public String getCurrentBorrowerID() {
+        return currentBorrowerID;
+    }
     /**
      * This method returns the ID the current accepted borrow/return request for this Book.
      * @return Returns currentRequestID
@@ -196,10 +215,24 @@ public class Book implements Serializable {
         this.numberOfRequests = numberOfRequests;
     }
     /**
+     * This method sets the number of valid scans of the Book object.
+     * @param numberOfValidScans The number of scans to be set
+     * */
+    public void setNumberOfValidScans(int numberOfValidScans) {
+        this.numberOfValidScans = numberOfValidScans;
+    }
+    /**
      * This method sets the username of the borrower of a Book.
      * @param username The username to be set
      * */
-    public void setBorrowerUsername(String username) { this.borrowerUsername = username; }
+    public void setCurrentBorrowerUsername(String username) { this.currentBorrowerUsername = username; }
+    /**
+     * This method sets the ID of the borrower of a Book.
+     * @param currentBorrowerID The ID to be set
+     * */
+    public void setCurrentBorrowerID(String currentBorrowerID) {
+        this.currentBorrowerID = currentBorrowerID;
+    }
     /**
      * This method sets the ID of the current borrow/return request active for this Book.
      * @param currentRequestID The ID of the request document to be set

@@ -226,13 +226,19 @@ public class AddBookActivity extends AppCompatActivity implements
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             isbnInput = findViewById(R.id.isbn_input);
             String isbn = isbnInput.getText().toString();
-            boolean validIsbn = (isbn.length() == 1 || isbn.length() == 13);
-            if (validIsbn) {
+            boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
+
+
+            if (!isbn.isEmpty()) {
                 autoFillButton.setVisibility(View.VISIBLE);
+                if (validIsbn) {
+                    autoFillButton.setEnabled(true);
+                } else {
+                    autoFillButton.setEnabled(false);
+                }
             } else {
                 autoFillButton.setVisibility(View.GONE);
             }
-
         }
 
         @Override

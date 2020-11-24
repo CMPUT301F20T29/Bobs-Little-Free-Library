@@ -429,7 +429,6 @@ public class SearchActivity extends AppCompatActivity {
                 if (user.getUid().equals(selectedBook.getOwnerID())) {
                     Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
                     intent.putExtra("BOOK", selectedBook);
-
                     startActivity(intent);
 
                 } else {

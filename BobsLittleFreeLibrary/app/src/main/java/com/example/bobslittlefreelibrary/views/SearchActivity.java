@@ -298,6 +298,13 @@ public class SearchActivity extends AppCompatActivity {
 
     // all books are displayed
     public void allFilterPressed(View view) {
+
+        // when all is clicked, all the other filters should be cleared to all since it also involves deselection
+        availableFilterSelected=false;
+        requestedFilterSelected=false;
+        acceptedFilterSelected=false;
+        borrowedFilterSelected=false;
+
         currentFilter = "all";
         searchView.setQuery("", false);
         searchView.clearFocus();
@@ -309,24 +316,80 @@ public class SearchActivity extends AppCompatActivity {
 
     // looking for books with available status
     public void availableFilterPressed(View view) {
-        filterBookList("available");
+        if (availableFilterSelected == false) {
+            filterBookList("available");
+
+            // toggle the boolean to true
+            availableFilterSelected = true;
+
+            // other filters will be toggled to false
+            requestedFilterSelected = false;
+            acceptedFilterSelected = false;
+            borrowedFilterSelected = false; 
+        } else {
+            // all filter pressed actions
+            allFilterPressed(view);
+        }
+
     }
 
     // looking for books with requested status
     public void requestedFilterPressed(View view) {
-        filterBookList("requested");
+        if (requestedFilterSelected == false) {
+            filterBookList("requested");
+
+            // toggle the boolean to true
+            requestedFilterSelected = true;
+
+            // other filters will be toggled to false
+            availableFilterSelected = false;
+            acceptedFilterSelected = false;
+            borrowedFilterSelected  = false;
+        } else {
+            // all filter pressed actions
+            allFilterPressed(view);
+        }
+
 
     }
 
     // looking for books with accepted status
     public void acceptedFilterPressed(View view) {
-        filterBookList("accepted");
+        if (acceptedFilterSelected == false) {
+            filterBookList("accepted");
+
+            // toggle the boolean to true
+            acceptedFilterSelected  = true;
+
+            // other filters will be toggled to false
+            availableFilterSelected = false;
+            requestedFilterSelected = false;
+            borrowedFilterSelected  = false;
+        } else {
+            // all filter pressed  actions
+            allFilterPressed(view);
+        }
+
 
     }
 
     // looking for books with borrowed status
     public void borrowedFilterPressed(View view) {
-        filterBookList("borrowed");
+        if (borrowedFilterSelected  == false) {
+            filterBookList("borrowed");
+
+            // toggle the boolean to true
+            borrowedFilterSelected = true;
+
+            // other filtered will be toggled to false
+            availableFilterSelected = false;
+            requestedFilterSelected  = false;
+            acceptedFilterSelected = false;
+        } else {
+            // all filter pressed actions
+            allFilterPressed(view);
+        }
+
 
     }
 

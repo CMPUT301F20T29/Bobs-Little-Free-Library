@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                         startActivity(intent);
                     }
                 } else {
-                    if (bookToShow.getNumberOfValidScans() == 2) {
+                    if (bookToShow.getNumberOfValidScans() == 1) {
                         db.collection("requests").document(bookToShow.getCurrentRequestID())
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override

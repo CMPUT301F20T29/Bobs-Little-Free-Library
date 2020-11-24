@@ -18,6 +18,8 @@ public class Book implements Serializable {
     private String pictureURL;
     private String dateAdded;
     private int numberOfRequests;
+    private String borrower;
+    private String bookID;
 
     /**
      * This is an empty constructor for a Book object
@@ -34,7 +36,7 @@ public class Book implements Serializable {
      * @param status This is the status of the Book.
      * @param pictureURL This is the url of the picture/cover of the Book.
      * */
-    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String pictureURL){
+    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String pictureURL, String bookID){
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -42,8 +44,10 @@ public class Book implements Serializable {
         this.ownerID = ownerID;
         this.status = status;
         this.pictureURL = pictureURL;
+        this.bookID = bookID;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
+        this.borrower = null;
     }
 
     /**
@@ -55,15 +59,17 @@ public class Book implements Serializable {
      * @param ownerID This is the ID of the Owner of the Book as a String.
      * @param status This is the status of the Book.
      * */
-    public Book(String title, String author, String ISBN, String description, String ownerID, String status){
+    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String bookID){
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.description = description;
         this.ownerID = ownerID;
         this.status = status;
+        this.bookID = bookID;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
+        this.borrower = null;
     }
 
     // Methods
@@ -119,7 +125,31 @@ public class Book implements Serializable {
         return numberOfRequests;
     }
 
+    /**
+     * this method returns the name of the current borrower of a book object
+     * @return Returns borrower
+     *
+     * */
+    public String getBorrower() { return borrower; }
+
+
+    /**
+     * This method returns the ID of a Book
+     * @return Returns the bookID
+     * */
+    public String getBookID() { return bookID; }
+
+
+
+
     // Setters
+
+    /**
+     * This method sets the ID of a Book object .
+     * @return Returns none
+     * */
+    public void setBookID(String bookID) { this.bookID = bookID;}
+
     /**
      * This method sets the title of the Book object.
      * @param title The title to be set
@@ -162,4 +192,10 @@ public class Book implements Serializable {
     public void setNumberOfRequests(int numberOfRequests) {
         this.numberOfRequests = numberOfRequests;
     }
+
+    /**
+     * This method sets the name of a Book borrower.
+     * @return Returns nothing
+     * */
+    public void setBorrower(String borrower) { this.borrower = borrower; }
 }

@@ -36,7 +36,7 @@ public class Book implements Serializable {
      * @param status This is the status of the Book.
      * @param pictureURL This is the url of the picture/cover of the Book.
      * */
-    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String pictureURL, String bookID){
+    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String pictureURL){
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -44,7 +44,7 @@ public class Book implements Serializable {
         this.ownerID = ownerID;
         this.status = status;
         this.pictureURL = pictureURL;
-        this.bookID = bookID;
+        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
         this.borrower = null;
@@ -59,14 +59,14 @@ public class Book implements Serializable {
      * @param ownerID This is the ID of the Owner of the Book as a String.
      * @param status This is the status of the Book.
      * */
-    public Book(String title, String author, String ISBN, String description, String ownerID, String status, String bookID){
+    public Book(String title, String author, String ISBN, String description, String ownerID, String status){
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.description = description;
         this.ownerID = ownerID;
         this.status = status;
-        this.bookID = bookID;
+        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
         this.borrower = null;

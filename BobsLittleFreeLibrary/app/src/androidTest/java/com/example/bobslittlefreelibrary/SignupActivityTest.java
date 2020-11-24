@@ -1,25 +1,47 @@
 package com.example.bobslittlefreelibrary;
 
-import android.widget.Button;
-import android.widget.EditText;
 
+import android.content.ComponentName;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
+import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.users.SignupActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
-import org.junit.After;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertTrue;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
+@LargeTest
+@RunWith(AndroidJUnit4.class)
 public class SignupActivityTest {
 
     private Solo solo;
@@ -28,74 +50,191 @@ public class SignupActivityTest {
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
-     * Runs before all tests and creates solo instance.
+     * Runs before all tests and creates the solo instance
      * @throws Exception
-     */
+     * */
     @Before
     public void setUp() throws Exception{
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-        Button testBtn = (Button) solo.getView("signUpBtn");
-        solo.clickOnView(testBtn);
     }
 
-    /**
-     * Checks if all sign up mistakes are caught first,
-     * then check if user is taken to Main Activity after successful sign up.
-     */
     @Test
-    public void SignupChecklist() {
+    public void loginActivityTest() {
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.signUpBtn), withText("Sign Up"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                5),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+
         solo.assertCurrentActivity("Wrong Activity", SignupActivity.class);
-        solo.enterText(0, "");
-        solo.enterText(1, "");
-        solo.enterText(2, "");
-        solo.enterText(3, "");
-        solo.enterText(4, "");
-        solo.clickOnButton("Sign Up");
-        assertTrue(solo.waitForText("Email is empty\n - Password is empty\n - Username is empty\n - Address is empty", 1, 200));
-        solo.enterText(0, "abcd");
-        solo.enterText(1, "asdfasdfsfdsfsdfasdfsda");
-        solo.enterText(2, "aa");
-        solo.enterText(3, "aab");
-        solo.enterText(4, "8510 111 Street");
-        solo.clickOnButton("Sign Up");
-        assertTrue(solo.waitForText("Email is not in correct format\n - Username is too long\n - Password is too short\n - Password confirmation is not the same as password", 1, 200));
-        solo.clearEditText(0);
-        solo.clearEditText(1);
-        solo.clearEditText(2);
-        solo.clearEditText(3);
-        solo.clearEditText(4);
-        solo.enterText(0, "test123@gmail.com");
-        solo.enterText(1, "sarah11");
-        solo.enterText(2, "choco123");
-        solo.enterText(3, "choco123");
-        solo.enterText(4, "8510 111 Street");
-        solo.clickOnButton("Sign Up");
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.signup), withText("Sign Up"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
         solo.assertCurrentActivity("Wrong Activity", SignupActivity.class);
-        solo.clearEditText(0);
-        solo.clearEditText(1);
-        solo.clearEditText(2);
-        solo.clearEditText(3);
-        solo.clearEditText(4);
-        solo.enterText((EditText) solo.getView(R.id.email_signup), "tester@gmail.com");
-        solo.enterText(1, "sarah11");
-        solo.enterText(2, "choco123");
-        solo.enterText(3, "choco123");
-        solo.enterText(4, "8510 111 Street");
-        solo.clickOnButton("Sign Up");
-        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.email_signup),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText.perform(replaceText("tester123"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText2 = onView(
+                allOf(withId(R.id.username_signup),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                3),
+                        isDisplayed()));
+        appCompatEditText2.perform(replaceText("tester123"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.username_signup), withText("tester123"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                3),
+                        isDisplayed()));
+        appCompatEditText3.perform(pressImeActionButton());
+
+        ViewInteraction appCompatEditText4 = onView(
+                allOf(withId(R.id.password_signup),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                5),
+                        isDisplayed()));
+        appCompatEditText4.perform(replaceText("as1234"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText5 = onView(
+                allOf(withId(R.id.password_signup), withText("as1234"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                5),
+                        isDisplayed()));
+        appCompatEditText5.perform(pressImeActionButton());
+
+        ViewInteraction appCompatEditText6 = onView(
+                allOf(withId(R.id.confirm_password),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                7),
+                        isDisplayed()));
+        appCompatEditText6.perform(replaceText("as1111"), closeSoftKeyboard());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.signup), withText("Sign Up"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
+
+        solo.assertCurrentActivity("Wrong Activity", SignupActivity.class);
+
+        ViewInteraction appCompatEditText7 = onView(
+                allOf(withId(R.id.confirm_password), withText("as1111"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                7),
+                        isDisplayed()));
+        appCompatEditText7.perform(replaceText("as1234"));
+
+        ViewInteraction appCompatEditText8 = onView(
+                allOf(withId(R.id.confirm_password), withText("as1234"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                7),
+                        isDisplayed()));
+        appCompatEditText8.perform(closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText9 = onView(
+                allOf(withId(R.id.email_signup), withText("tester123"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText9.perform(replaceText("tester123@gmail.com"));
+
+        ViewInteraction appCompatEditText10 = onView(
+                allOf(withId(R.id.email_signup), withText("tester123@gmail.com"),
+                        childAtPosition(
+                                allOf(withId(R.id.signup_section),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText10.perform(closeSoftKeyboard());
+
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.signup), withText("Sign Up"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
+
+        solo.assertCurrentActivity("Wrong Activity", SignupActivity.class);
     }
 
-    /**
-     * Deletes the account after test is over
-     */
-    @After
-    public void tearDown(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
-        assert user.getEmail().equals("tester@gmail.com");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user").document(user.getUid()).delete();
-        user.delete();
-    }
+    private static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
 
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
 }

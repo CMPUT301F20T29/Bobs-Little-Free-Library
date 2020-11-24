@@ -22,6 +22,7 @@
         <Button
             android:id="@+id/filterButton"
             style="@style/SecondaryButton"
+            android:textColor="@color/White"
             android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="filterButtonPressed"
@@ -41,81 +42,57 @@
 
 
     <!-- The next three linear layouts are the filter option buttons -->
-    <LinearLayout
-        android:id="@+id/firstLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <!-- they got yeeted out for chips testing -->
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+    <com.google.android.material.chip.ChipGroup
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:id="@+id/filterChips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        app:singleSelection="true"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toTopOf = "parent">
+
+
+        <com.google.android.material.chip.Chip
             android:text="All"
-            android:id="@+id/allBooksFilter"
-            android:background="@color/colorAccent"
-            android:textColor="@color/colorPrimaryLight"
+            android:layout_width="wrap_content"
+            style="@style/CustomChipStyle"
+            android:layout_height="wrap_content"
             android:onClick="allFilterPressed"/>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/secondLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+        <com.google.android.material.chip.Chip
             android:text="Available"
-            android:id="@+id/availableBooksFilter"
-            android:background="@color/colorAccent"
-            android:textColor="@color/colorPrimaryLight"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="availableFilterPressed"/>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+        <com.google.android.material.chip.Chip
             android:text="Requested"
-            android:id="@+id/requestedBooksFilter"
-            android:background="@color/colorAccent"
-            android:textColor="@color/colorPrimaryLight"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="requestedFilterPressed"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/thirdLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+        <com.google.android.material.chip.Chip
             android:text="Accepted"
-            android:id="@+id/acceptedBooksFilter"
-            android:background="@color/colorAccent"
-            android:textColor="@color/colorPrimaryLight"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="acceptedFilterPressed"/>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+        <com.google.android.material.chip.Chip
             android:text="Borrowed"
-            android:id="@+id/borrowedBooksFilter"
-            android:background="@color/colorAccent"
-            android:textColor="@color/colorPrimaryLight"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="borrowedFilterPressed"/>
 
 
-    </LinearLayout>
+    </com.google.android.material.chip.ChipGroup>
 
     <!-- List view for dummy books right now -->
     <ListView

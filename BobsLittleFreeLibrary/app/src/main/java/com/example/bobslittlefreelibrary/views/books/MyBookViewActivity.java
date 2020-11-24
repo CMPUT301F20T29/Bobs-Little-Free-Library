@@ -45,7 +45,6 @@ public class MyBookViewActivity extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
-    private String bookID;
     // UI variables
     private ImageView bookImage;
     private TextView titleText;
@@ -67,7 +66,6 @@ public class MyBookViewActivity extends AppCompatActivity {
         // Get Book object passed from Intent
         Intent intent = getIntent();
         book = (Book) intent.getSerializableExtra("BOOK");
-        bookID = intent.getStringExtra("BOOK_ID");
         // Set references to UI elements
         setupUIReferences();
         // Set UI values
@@ -108,7 +106,6 @@ public class MyBookViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TEMP", "Edit Info button pressed");
                 Intent intent = new Intent(MyBookViewActivity.this, EditBookActivity.class);
-                intent.putExtra("BOOK_ID", bookID);
                 intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
                 startActivity(intent);
                 finish();
@@ -189,8 +186,8 @@ public class MyBookViewActivity extends AppCompatActivity {
                 User userObject = documentSnapshot.toObject(User.class);
 
                 ArrayList<String> usersBooks = userObject.getBookIDs();
-                Log.d("TEMP", "onSuccess: " + bookID);
-                usersBooks.remove(bookID);
+                Log.d("TEMP", "onSuccess: " + book.getBookID());
+                usersBooks.remove(book.getBookID());
 
                 HashMap newBooksMap = new HashMap<String, ArrayList>();
                 newBooksMap.put("bookIDs", usersBooks);
@@ -207,11 +204,11 @@ public class MyBookViewActivity extends AppCompatActivity {
      * */
     private void removeFromBookCollection() {
         // Now remove the book from the books collection
-        DocumentReference bookRef = db.collection("books").document(bookID);
+        DocumentReference bookRef = db.collection("books").document(book.getBookID());
         bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("TAG", "onSuccess: " + bookID);
+                Log.d("TAG", "onSuccess: " + book.getBookID());
                 Log.d("TEMP", "Book document deleted");
                 Toast toast = Toast.makeText(getApplicationContext(), "Book Deleted", Toast.LENGTH_SHORT);
                 toast.show();
@@ -229,7 +226,7 @@ public class MyBookViewActivity extends AppCompatActivity {
      * */
     private void removeBookRequests() {
         db.collection("requests")
-                .whereEqualTo("bookRequestedID", bookID)
+                .whereEqualTo("bookRequestedID", book.getBookID())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

@@ -54,7 +54,6 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
     private Book book;
     private String usersImageFile;
     private HashMap bookUpdateMap;
-    private String bookId;
 
     private Boolean validInput = true;
     private FirebaseFirestore db;
@@ -77,11 +76,6 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
         // Get Book object and id passed from Intent
         Intent intent = getIntent();
-        bookId = intent.getExtras().getString("BOOK_ID");
-        if (bookId == null) {
-            throw new RuntimeException(this.toString()
-                    + " Must pass a bookId to EditBookActivity through extras");
-        }
         book = (Book) intent.getSerializableExtra("BOOK");
 
         // Set image and desc input field
@@ -114,7 +108,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
                     // get book reference
                     db = FirebaseFirestore.getInstance();
-                    bookRef = db.collection("books").document(bookId);
+                    bookRef = db.collection("books").document(book.getBookID());
 
                     // get book
                     bookRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -137,7 +131,6 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
                             exitActivity();
                         }
                     });
-
 
                 } else {
                     showInvalidInputSnackbar(v);

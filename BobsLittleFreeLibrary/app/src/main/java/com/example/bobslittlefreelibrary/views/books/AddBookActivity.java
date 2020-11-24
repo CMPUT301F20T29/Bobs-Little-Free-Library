@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -47,6 +48,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +60,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
@@ -80,6 +83,7 @@ public class AddBookActivity extends AppCompatActivity implements
     private EditText authorInput;
     private EditText descInput;
     private ImageView imageView;
+    private ProgressBar spinner;
 
     // book data
     private String usersImageFile;
@@ -108,8 +112,10 @@ public class AddBookActivity extends AppCompatActivity implements
         descInput = findViewById(R.id.desc_input);
         imageView = findViewById(R.id.image);
         autoFillButton = findViewById(R.id.auto_fill);
+        spinner = findViewById(R.id.progressBar1);
 
         autoFillButton.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
 
         // Add text watcher to EditTexts
         isbnInput.addTextChangedListener(inputFormTextWatcher);
@@ -160,49 +166,23 @@ public class AddBookActivity extends AppCompatActivity implements
                     String author = authorInput.getText().toString();
                     String desc = descInput.getText().toString();
 
-                    // Create new Books object and it to add to firestore
-                    book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
-
-                    db.collection("books")
-                            .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    db.collection("books").whereEqualTo("isbn", isbn)
+                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            bookId = documentReference.getId();
-
-                            // if the user took/selected an image, then upload it to storage, and save it's url to
-                            // the book's document
-                            if (imageUrlFromResponse != null) {
-                                db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
-
-                            } else if (usersImageFile != null) {
-                                uploadImageFile();
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (queryDocumentSnapshots.isEmpty()) {
+                                // Create new Books object and it to add to firestore
+                                book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
+                                addBook(book);
+                                // Return to main activity
+                                finish();
+                            } else {
+                                Log.d(TAG, "onSuccess: HERE");
+                                String msg = "Oops, looks like that book has already been uploaded, please enter a different book.";
+                                Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
                             }
-
-                            // Update the bookIDs array in the user collection
-                            db.collection("users").document(currentUser.getUid()).
-                                    get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User user = documentSnapshot.toObject(User.class);
-
-                                    ArrayList<String> usersBooks = user.getBookIDs();
-                                    Log.d(TAG, "onSuccess: " + bookId);
-                                    usersBooks.add(bookId.toString());
-
-                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                    newBooksMap.put("bookIDs", usersBooks);
-
-                                    Log.d(TAG, "onSuccess: " + usersBooks);
-
-                                    db.collection("users").
-                                            document(currentUser.getUid()).update(newBooksMap);
-                                }
-                            });
                         }
                     });
-
-                    // Return to main activity
-                    finish();
 
                 } else {
                     showInvalidInputSnackbar(v);
@@ -241,7 +221,7 @@ public class AddBookActivity extends AppCompatActivity implements
 
             boolean underCharLimitCheck = (desc.length() < 1000) || (title.length() < 50) || (author.length() < 50);
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
-            boolean validIsbn = (isbn.length() == 1 || isbn.length() == 13);
+            boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
 
             if (!isbn.isEmpty()) {
@@ -257,14 +237,65 @@ public class AddBookActivity extends AppCompatActivity implements
         }
     };
 
+    // Given a book this method adds it as a document int the books collection in firestore,
+    // uploads it's image if nessecary, and sets it's bookID field.
+    private void addBook(Book book) {
+        db.collection("books")
+                .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                bookId = documentReference.getId();
+
+                // if the user took/selected an image, then upload it to storage, and save it's url to
+                // the book's document
+                if (imageUrlFromResponse != null) {
+                    db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
+
+                } else if (usersImageFile != null) {
+                    uploadImageFile();
+                }
+
+                // add bookID to book document
+                Map<String, Object> bookUpdateMap = new HashMap<>();
+                book.setBookID(bookId);
+                bookUpdateMap.put("bookID", bookId);
+                documentReference.update(bookUpdateMap);
+
+                // Update the bookIDs array in the user collection
+                db.collection("users").document(currentUser.getUid()).
+                        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        ArrayList<String> usersBooks = user.getBookIDs();
+                        Log.d(TAG, "onSuccess: " + bookId);
+                        usersBooks.add(bookId.toString());
+
+                        Map<String, Object> newBooksMap = new HashMap<>();
+                        newBooksMap.put("bookIDs", usersBooks);
+
+                        Log.d(TAG, "onSuccess: " + usersBooks);
+
+                        db.collection("users").
+                                document(currentUser.getUid()).update(newBooksMap);
+                    }
+                });
+            }
+        });
+    }
+
     // ScanFragment calls this method when it finds an isbn, here I look up that isbn in the
     // Google Books API and auto-fill the EditTexts according to the response.
     @Override
     public void onIsbnFound(final String isbn) {
         Log.d(TAG, "onIsbnFound: " + isbn);
+        spinner.setVisibility(View.VISIBLE);
         autofillBookData(isbn);
     }
 
+    // Given an isbn this method gets the books' information from the google books API and auto-fills
+    // all fields
     private void autofillBookData(String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + isbn
                 + "&key=" + getString(R.string.BOOKS_API_KEY);
@@ -302,6 +333,7 @@ public class AddBookActivity extends AppCompatActivity implements
                             hideKeyboard(AddBookActivity.this);
                             isbnInput.clearFocus();
                             autoFillButton.setVisibility(View.GONE);
+                            spinner.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

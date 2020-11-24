@@ -18,7 +18,8 @@ public class Book implements Serializable {
     private String pictureURL;
     private String dateAdded;
     private int numberOfRequests;
-    private String borrower;
+    private String borrowerUsername;
+    private String currentRequestID;
     private String bookID;
 
     /**
@@ -44,10 +45,11 @@ public class Book implements Serializable {
         this.ownerID = ownerID;
         this.status = status;
         this.pictureURL = pictureURL;
-        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrower = null;
+        this.borrowerUsername = null;
+        this.currentRequestID = null;
+        this.bookID = null;
     }
 
     /**
@@ -66,10 +68,11 @@ public class Book implements Serializable {
         this.description = description;
         this.ownerID = ownerID;
         this.status = status;
-        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrower = null;
+        this.borrowerUsername = null;
+        this.currentRequestID = null;
+        this.bookID = null;
     }
 
     // Methods
@@ -124,26 +127,26 @@ public class Book implements Serializable {
     public int getNumberOfRequests() {
         return numberOfRequests;
     }
-
     /**
-     * this method returns the name of the current borrower of a book object
+     * this method returns the name of the current borrower of a book object.
      * @return Returns borrower
      *
      * */
-    public String getBorrower() { return borrower; }
-
-
+    public String getBorrowerUsername() { return borrowerUsername; }
     /**
-     * This method returns the ID of a Book
-     * @return Returns the bookID
+     * This method returns the ID the current accepted borrow/return request for this Book.
+     * @return Returns currentRequestID
+     * */
+    public String getCurrentRequestID() {
+        return currentRequestID;
+    }
+    /**
+     * This method returns the ID of a Book's document in the database.
+     * @return Returns bookID
      * */
     public String getBookID() { return bookID; }
 
-
-
-
     // Setters
-
     /**
      * This method sets the ID of a Book object .
      * @return Returns none
@@ -192,10 +195,16 @@ public class Book implements Serializable {
     public void setNumberOfRequests(int numberOfRequests) {
         this.numberOfRequests = numberOfRequests;
     }
-
     /**
-     * This method sets the name of a Book borrower.
-     * @return Returns nothing
+     * This method sets the username of the borrower of a Book.
+     * @param username The username to be set
      * */
-    public void setBorrower(String borrower) { this.borrower = borrower; }
+    public void setBorrowerUsername(String username) { this.borrowerUsername = username; }
+    /**
+     * This method sets the ID of the current borrow/return request active for this Book.
+     * @param currentRequestID The ID of the request document to be set
+     * */
+    public void setCurrentRequestID(String currentRequestID) {
+        this.currentRequestID = currentRequestID;
+    }
 }

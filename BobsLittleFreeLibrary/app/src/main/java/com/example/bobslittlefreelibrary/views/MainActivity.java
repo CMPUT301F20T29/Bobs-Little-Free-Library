@@ -125,7 +125,11 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                 DocumentSnapshot document = documents.get(0); // Should only be one
                 Book bookToShow = document.toObject(Book.class);
 
-                // query for the request of this book
+                // If a borrow request for a book has been accepted, then that specific request should still be alive
+                // so we will query for it and remove it after we perform an exchange transaction
+                // The same goes for if a return request for a book
+                // We require something to query for the request on, or the ID of the specific request document
+
 
                 if (bookToShow.getStatus().equals("Accepted")) {
                     // The book being scanned needs to be handed to the borrower

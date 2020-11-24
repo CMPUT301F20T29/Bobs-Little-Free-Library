@@ -228,7 +228,6 @@ public class AddBookActivity extends AppCompatActivity implements
             String isbn = isbnInput.getText().toString();
             boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
 
-
             if (!isbn.isEmpty()) {
                 autoFillButton.setVisibility(View.VISIBLE);
                 if (validIsbn) {

@@ -124,8 +124,14 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                 ArrayList<DocumentSnapshot> documents = (ArrayList<DocumentSnapshot>) queryDocumentSnapshots.getDocuments();
                 DocumentSnapshot document = documents.get(0); // Should only be one
                 Book bookToShow = document.toObject(Book.class);
-                if (bookToShow.getStatus().equals("Accepted") || bookToShow.getStatus().equals("Borrowed")) {
-                    Log.d("TEMP", "go to exchange activity");
+
+                // query for the request of this book
+
+                if (bookToShow.getStatus().equals("Accepted")) {
+                    // The book being scanned needs to be handed to the borrower
+                    // so first the owner scans it and the borrow request is updated
+                } else if (bookToShow.getStatus().equals("Borrowed")) {
+                    // The book being scanned needs to be returned to the owner
                 } else {
                     // Go to a book view activity based on owner
                     if (user.getUid().equals(bookToShow.getOwnerID())) {

@@ -23,6 +23,7 @@ import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -68,13 +69,18 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
-    // layouts for the different filter options
-    private LinearLayout filterLayout1;
-    private LinearLayout filterLayout2;
-    private LinearLayout filterLayout3;
+    // layouts for the chip group
+    private ChipGroup chipGroup;
 
     // keeps track of whether the filter options are shown or hidden at the specific moment
     boolean filterHidden = true;
+
+    // filter checks
+    boolean allFilterSelected  = false;
+    boolean availableFilterSelected = false;
+    boolean requestedFilterSelected = false;
+    boolean acceptedFilterSelected  = false;
+    boolean borrowedFilterSelected = false;
 
 
     // Methods that run on creation
@@ -85,20 +91,22 @@ public class SearchActivity extends AppCompatActivity {
 
 
         searchOptions();
-        //setLayoutsAndButtons();
+        setLayoutsAndButtons();
         setupData();
         setUpOnClickListener();
         setupList();
-        //hideFilters();
+        hideFilters();
 
 
 
     }
 
-    /*
+
     // This method sets the filter button and the layouts to its corresponding ID in the XML file
     private void setLayoutsAndButtons() {
         filterButton = (Button) findViewById(R.id.filterButton);
+        chipGroup = (ChipGroup) findViewById(R.id.filterChips);
+
         //filterLayout1 = (LinearLayout) findViewById(R.id.firstLinearLayout);
         //filterLayout2 = (LinearLayout) findViewById(R.id.secondLinearLayout);
         //filterLayout3 = (LinearLayout) findViewById(R.id.thirdLinearLayout);
@@ -108,21 +116,24 @@ public class SearchActivity extends AppCompatActivity {
     // This method hides the filters and changes the text of button to filter
     // This is when the user clicks hide to drop off the filters from show
     private void hideFilters() {
-        filterLayout1.setVisibility(View.GONE);
-        filterLayout2.setVisibility(View.GONE);
-        filterLayout3.setVisibility(View.GONE);
+
+        chipGroup.setVisibility(View.GONE);
+        //filterLayout1.setVisibility(View.GONE);
+        //filterLayout2.setVisibility(View.GONE);
+        //filterLayout3.setVisibility(View.GONE);
         filterButton.setText("FILTER");
     }
 
     // This method shows the filters and changes the text of the button to hide
     // This is when the user clicks to display the new changes
     private void showFilters() {
-        filterLayout1.setVisibility(View.VISIBLE);
-        filterLayout2.setVisibility(View.VISIBLE);
-        filterLayout3.setVisibility(View.VISIBLE);
+        chipGroup.setVisibility(View.VISIBLE);
+        //filterLayout1.setVisibility(View.VISIBLE);
+        //filterLayout2.setVisibility(View.VISIBLE);
+        //filterLayout3.setVisibility(View.VISIBLE);
         filterButton.setText("HIDE");
     }
-     */
+
 
 
     // This method searches for the items of ListView based on what is being typed in the Search Bar of SearchView
@@ -330,7 +341,7 @@ public class SearchActivity extends AppCompatActivity {
 
     // display filters if filter button is pressed
     // hide filters if it is pressed again
-    /*
+
     public void filterButtonPressed(View view) {
 
         if (filterHidden == true) {
@@ -343,7 +354,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-     */
+
 
     // On click listener for items
     private void setUpOnClickListener() {

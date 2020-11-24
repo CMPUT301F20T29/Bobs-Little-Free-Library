@@ -45,10 +45,11 @@
 
     <com.google.android.material.chip.ChipGroup
         android:theme="@style/Theme.MaterialComponents.Light"
+        android:id="@+id/filterChips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         app:singleSelection="true"
         app:layout_constraintStart_toStartOf = "parent"
         app:layout_constraintTop_toTopOf = "parent">
@@ -58,13 +59,36 @@
             android:text="All"
             android:layout_width="wrap_content"
             style="@style/CustomChipStyle"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:onClick="allFilterPressed"/>
 
         <com.google.android.material.chip.Chip
             android:text="Available"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:onClick="availableFilterPressed"/>
+
+        <com.google.android.material.chip.Chip
+            android:text="Requested"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="requestedFilterPressed"/>
+
+        <com.google.android.material.chip.Chip
+            android:text="Accepted"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="acceptedFilterPressed"/>
+
+        <com.google.android.material.chip.Chip
+            android:text="Borrowed"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="borrowedFilterPressed"/>
 
 
     </com.google.android.material.chip.ChipGroup>

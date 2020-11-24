@@ -7,6 +7,9 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +40,7 @@ import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,14 +59,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-/*
+/**
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
  * have it's info be autofilled by Google Books API.
- *
- * TODO: Save book to user's collection in firestore.
  */
-public class AddBookActivity extends AppCompatActivity implements ScanFragment.OnFragmentInteractionListener,
+public class AddBookActivity extends AppCompatActivity implements
+        ScanFragment.OnFragmentInteractionListener,
         SelectImageFragment.OnFragmentInteractionListener {
 
     final String TAG = "AddBookActivity";
@@ -71,6 +74,7 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private Button scanButton;
     private Button selectImageButton;
     private Button addButton;
+    private Button autoFillButton;
     private EditText isbnInput;
     private EditText titleInput;
     private EditText authorInput;
@@ -103,6 +107,9 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         authorInput = findViewById(R.id.author_input);
         descInput = findViewById(R.id.desc_input);
         imageView = findViewById(R.id.image);
+        autoFillButton = findViewById(R.id.auto_fill);
+
+        autoFillButton.setVisibility(View.GONE);
 
         // Add text watcher to EditTexts
         isbnInput.addTextChangedListener(inputFormTextWatcher);
@@ -129,6 +136,13 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             @Override
             public void onClick(View v) {
                 new SelectImageFragment().show(getSupportFragmentManager(), "CHOOSE");
+            }
+        });
+
+        autoFillButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autofillBookData(isbnInput.getText().toString());
             }
         });
 
@@ -227,8 +241,19 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
 
             boolean underCharLimitCheck = (desc.length() < 1000) || (title.length() < 50) || (author.length() < 50);
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
-            boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
+            boolean validIsbn = (isbn.length() == 1 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
+
+            if (!isbn.isEmpty()) {
+                autoFillButton.setVisibility(View.VISIBLE);
+                if (validIsbn) {
+                    autoFillButton.setEnabled(true);
+                } else {
+                    autoFillButton.setEnabled(false);
+                }
+            } else {
+                autoFillButton.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -237,7 +262,10 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     @Override
     public void onIsbnFound(final String isbn) {
         Log.d(TAG, "onIsbnFound: " + isbn);
+        autofillBookData(isbn);
+    }
 
+    private void autofillBookData(String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + isbn
                 + "&key=" + getString(R.string.BOOKS_API_KEY);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -269,6 +297,11 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             titleInput.setText(title.trim());
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
+
+
+                            hideKeyboard(AddBookActivity.this);
+                            isbnInput.clearFocus();
+                            autoFillButton.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -380,6 +413,18 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                 });
             }
         });
+    }
+
+    // hides keyoboard
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

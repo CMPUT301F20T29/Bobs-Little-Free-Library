@@ -224,20 +224,7 @@ public class AddBookActivity extends AppCompatActivity implements
         }
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            isbnInput = findViewById(R.id.isbn_input);
-            String isbn = isbnInput.getText().toString();
-            boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
 
-            if (!isbn.isEmpty()) {
-                autoFillButton.setVisibility(View.VISIBLE);
-                if (validIsbn) {
-                    autoFillButton.setEnabled(true);
-                } else {
-                    autoFillButton.setEnabled(false);
-                }
-            } else {
-                autoFillButton.setVisibility(View.GONE);
-            }
         }
 
         @Override
@@ -257,6 +244,16 @@ public class AddBookActivity extends AppCompatActivity implements
             boolean validIsbn = (isbn.length() == 1 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
 
+            if (!isbn.isEmpty()) {
+                autoFillButton.setVisibility(View.VISIBLE);
+                if (validIsbn) {
+                    autoFillButton.setEnabled(true);
+                } else {
+                    autoFillButton.setEnabled(false);
+                }
+            } else {
+                autoFillButton.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -295,16 +292,16 @@ public class AddBookActivity extends AppCompatActivity implements
                                 }
                             }
 
-                            autoFillButton.setVisibility(View.GONE);
-
-                            hideKeyboard(AddBookActivity.this);
-                            isbnInput.clearFocus();
-
                             // auto-fill EditTexts
                             isbnInput.setText(isbn);
                             titleInput.setText(title.trim());
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
+
+
+                            hideKeyboard(AddBookActivity.this);
+                            isbnInput.clearFocus();
+                            autoFillButton.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

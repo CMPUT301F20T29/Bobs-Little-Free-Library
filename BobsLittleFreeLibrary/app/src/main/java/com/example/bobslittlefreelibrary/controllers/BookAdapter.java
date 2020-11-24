@@ -31,11 +31,17 @@ public class BookAdapter extends ArrayAdapter<Book> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.book_cell, parent, false);
         }
 
-        TextView tv = (TextView) convertView.findViewById(R.id.bookSearchName);
-        ImageView iv = (ImageView) convertView.findViewById(R.id.bookSearchImage);
+        TextView bookName = (TextView) convertView.findViewById(R.id.bookSearchName);
+        TextView bookAuthor = (TextView) convertView.findViewById(R.id.bookSearchAuthor);
+        ImageView bookSearchImage = (ImageView) convertView.findViewById(R.id.bookSearchImage);
 
-        tv.setText(book.getTitle());
-        //iv.setImageResource();
+        bookName.setText(book.getTitle());
+        bookAuthor.setText(book.getAuthor());
+
+        String pictureURL = book.getPictureURL();
+        if (pictureURL != null) {
+            new DownloadImageTask(bookSearchImage).execute(pictureURL);
+        }
 
         return convertView;
     }

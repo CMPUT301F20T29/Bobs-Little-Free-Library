@@ -16,14 +16,13 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "BOOKS_API_KEY", localProperties['booksApiKey'])
+        resValue("string", "MAPS_API_KEY", localProperties['mapsApiKey'])
+        resValue("string","PLACES_API_KEY", localProperties['placesApiKey'])
     }
 
     buildTypes {
-        debug {
-            resValue("string", "BOOKS_API_KEY", localProperties['booksApiKey'])
-            resValue("string", "MAPS_API_KEY", localProperties['mapsApiKey'])
-            resValue("string","PLACES_API_KEY", localProperties['placesApiKey'])
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

@@ -22,6 +22,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bobslittlefreelibrary.R;
+import com.example.bobslittlefreelibrary.ScanFragment;
 import com.example.bobslittlefreelibrary.controllers.NotificationAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Notification;
@@ -125,7 +126,10 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MyProfileViewActivity.class);
             startActivity(intent);
         });
-        quickScanButton.setOnClickListener(v -> Log.d("TEMP", "Quick Scan Button Pressed"));
+        quickScanButton.setOnClickListener(v -> {
+            Log.d("TEMP", "Quick Scan Button Pressed");
+            new ScanFragment().show(getActivity().getSupportFragmentManager(), "SCAN");
+        });
 
         // Query for latest books and add them to listOfBooks
         db.collection("books")

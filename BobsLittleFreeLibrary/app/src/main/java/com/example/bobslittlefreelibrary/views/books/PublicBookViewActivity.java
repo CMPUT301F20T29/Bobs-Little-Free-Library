@@ -95,6 +95,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
+                                documentReference.update("requestID", documentReference.getId());
                                 Snackbar sb = Snackbar.make(v, "Request Sent", Snackbar.LENGTH_SHORT);
                                 sb.show();
                                 requestButton.setClickable(false);

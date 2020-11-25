@@ -18,11 +18,11 @@ public class Book implements Serializable {
     private String pictureURL;
     private String dateAdded;
     private int numberOfRequests;
-    private int numberOfValidScans;
     private String currentBorrowerUsername;
     private String currentBorrowerID;
     private String currentRequestID;
     private String bookID;
+    private boolean hasOwnerScanned;
 
     /**
      * This is an empty constructor for a Book object
@@ -49,11 +49,11 @@ public class Book implements Serializable {
         this.pictureURL = pictureURL;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.numberOfValidScans = 0;
         this.currentBorrowerUsername = null;
         this.currentBorrowerID = null;
         this.currentRequestID = null;
         this.bookID = null;
+        this.hasOwnerScanned = false;
     }
 
     /**
@@ -74,11 +74,11 @@ public class Book implements Serializable {
         this.status = status;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.numberOfValidScans = 0;
         this.currentBorrowerUsername = null;
         this.currentBorrowerID = null;
         this.currentRequestID = null;
         this.bookID = null;
+        this.hasOwnerScanned = false;
     }
 
     // Methods
@@ -134,13 +134,6 @@ public class Book implements Serializable {
         return numberOfRequests;
     }
     /**
-     * This method returns the number of valid scans for the Book object.
-     * @return Returns numberOfValidScans
-     * */
-    public int getNumberOfValidScans() {
-        return numberOfValidScans;
-    }
-    /**
      * this method returns the name of the current borrower of a book object.
      * @return Returns currentBorrowerUsername
      * */
@@ -164,6 +157,13 @@ public class Book implements Serializable {
      * @return Returns bookID
      * */
     public String getBookID() { return bookID; }
+    /**
+     * This method returns if the owner has scanned the book for an exchange
+     * @return Returns hasOwnerScanned
+     * */
+    public boolean getHasOwnerScanned() {
+        return hasOwnerScanned;
+    }
 
     // Setters
     /**
@@ -215,13 +215,6 @@ public class Book implements Serializable {
         this.numberOfRequests = numberOfRequests;
     }
     /**
-     * This method sets the number of valid scans of the Book object.
-     * @param numberOfValidScans The number of scans to be set
-     * */
-    public void setNumberOfValidScans(int numberOfValidScans) {
-        this.numberOfValidScans = numberOfValidScans;
-    }
-    /**
      * This method sets the username of the borrower of a Book.
      * @param username The username to be set
      * */
@@ -239,5 +232,12 @@ public class Book implements Serializable {
      * */
     public void setCurrentRequestID(String currentRequestID) {
         this.currentRequestID = currentRequestID;
+    }
+    /**
+     * This method sets if the owner has scanned the book for an exchange
+     * @param hasOwnerScanned The value to be set
+     * */
+    public void setHasOwnerScanned(boolean hasOwnerScanned) {
+        this.hasOwnerScanned = hasOwnerScanned;
     }
 }

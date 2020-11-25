@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,8 @@ import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.CustomRequestsAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
+import com.example.bobslittlefreelibrary.views.books.EditBookActivity;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +47,7 @@ public class ShowAllRequestsActivity  extends AppCompatActivity {
         listOfRequests = new ArrayList<>();
         requestsAdapter = new CustomRequestsAdapter(this, listOfRequests, false);
         requestsList.setAdapter(requestsAdapter);
+        Button backButton = findViewById(R.id.show_all_requests_back_button);
 
         Intent intent = getIntent();
         Book book = (Book) intent.getSerializableExtra("BOOK");
@@ -65,5 +70,15 @@ public class ShowAllRequestsActivity  extends AppCompatActivity {
                         }
                     }
                 });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowAllRequestsActivity.this, MyBookViewActivity.class);
+                intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

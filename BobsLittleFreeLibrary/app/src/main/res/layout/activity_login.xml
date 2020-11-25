@@ -69,15 +69,13 @@
         android:layout_below="@+id/login_section"
         android:layout_centerHorizontal="true"
         android:text="Login"
-        style="@style/SubmitButton"
-        android:padding="20sp"
-        android:textSize="24sp"/>
+        style="@style/SubmitButton"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Don't have an account?"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:textColor="@android:color/black"
         android:textStyle=""
         android:layout_centerHorizontal="true"
@@ -92,9 +90,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:text="Sign Up"
-        style="@style/SubmitButton"
-        android:padding="20sp"
-        android:textSize="20sp"/>
+        android:textSize="14sp"
+        style="@style/SecondaryButton"/>
 
 
 </RelativeLayout>

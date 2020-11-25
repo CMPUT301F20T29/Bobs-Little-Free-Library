@@ -7,6 +7,9 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,9 +18,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -36,12 +41,14 @@ import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -53,15 +60,14 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-
-/*
+/**
  * AddBookActivity is an activity where a user can add a book to their collection. Scan book to
  * have it's info be autofilled by Google Books API.
- *
- * TODO: Save book to user's collection in firestore.
  */
-public class AddBookActivity extends AppCompatActivity implements ScanFragment.OnFragmentInteractionListener,
+public class AddBookActivity extends AppCompatActivity implements
+        ScanFragment.OnFragmentInteractionListener,
         SelectImageFragment.OnFragmentInteractionListener {
 
     final String TAG = "AddBookActivity";
@@ -71,11 +77,13 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
     private Button scanButton;
     private Button selectImageButton;
     private Button addButton;
+    private Button autoFillButton;
     private EditText isbnInput;
     private EditText titleInput;
     private EditText authorInput;
     private EditText descInput;
     private ImageView imageView;
+    private ProgressBar spinner;
 
     // book data
     private String usersImageFile;
@@ -103,6 +111,11 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
         authorInput = findViewById(R.id.author_input);
         descInput = findViewById(R.id.desc_input);
         imageView = findViewById(R.id.image);
+        autoFillButton = findViewById(R.id.auto_fill);
+        spinner = findViewById(R.id.progressBar1);
+
+        autoFillButton.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
 
         // Add text watcher to EditTexts
         isbnInput.addTextChangedListener(inputFormTextWatcher);
@@ -132,6 +145,13 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             }
         });
 
+        autoFillButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autofillBookData(isbnInput.getText().toString());
+            }
+        });
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,49 +166,23 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                     String author = authorInput.getText().toString();
                     String desc = descInput.getText().toString();
 
-                    // Create new Books object and it to add to firestore
-                    book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
-
-                    db.collection("books")
-                            .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    db.collection("books").whereEqualTo("isbn", isbn)
+                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            bookId = documentReference.getId();
-
-                            // if the user took/selected an image, then upload it to storage, and save it's url to
-                            // the book's document
-                            if (imageUrlFromResponse != null) {
-                                db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
-
-                            } else if (usersImageFile != null) {
-                                uploadImageFile();
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (queryDocumentSnapshots.isEmpty()) {
+                                // Create new Books object and it to add to firestore
+                                book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
+                                addBook(book);
+                                // Return to main activity
+                                finish();
+                            } else {
+                                Log.d(TAG, "onSuccess: HERE");
+                                String msg = "Oops, looks like that book has already been uploaded, please enter a different book.";
+                                Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
                             }
-
-                            // Update the bookIDs array in the user collection
-                            db.collection("users").document(currentUser.getUid()).
-                                    get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User user = documentSnapshot.toObject(User.class);
-
-                                    ArrayList<String> usersBooks = user.getBookIDs();
-                                    Log.d(TAG, "onSuccess: " + bookId);
-                                    usersBooks.add(bookId.toString());
-
-                                    HashMap newBooksMap = new HashMap<String, ArrayList>();
-                                    newBooksMap.put("bookIDs", usersBooks);
-
-                                    Log.d(TAG, "onSuccess: " + usersBooks);
-
-                                    db.collection("users").
-                                            document(currentUser.getUid()).update(newBooksMap);
-                                }
-                            });
                         }
                     });
-
-                    // Return to main activity
-                    finish();
 
                 } else {
                     showInvalidInputSnackbar(v);
@@ -229,15 +223,80 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
             boolean emptyCheck = (isbn.isEmpty() || title.isEmpty() || author.isEmpty());
             boolean validIsbn = (isbn.length() == 10 || isbn.length() == 13);
             validInput = underCharLimitCheck && !emptyCheck && validIsbn;
+
+            if (!isbn.isEmpty()) {
+                autoFillButton.setVisibility(View.VISIBLE);
+                if (validIsbn) {
+                    autoFillButton.setEnabled(true);
+                } else {
+                    autoFillButton.setEnabled(false);
+                }
+            } else {
+                autoFillButton.setVisibility(View.GONE);
+            }
         }
     };
+
+    // Given a book this method adds it as a document int the books collection in firestore,
+    // uploads it's image if nessecary, and sets it's bookID field.
+    private void addBook(Book book) {
+        db.collection("books")
+                .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                bookId = documentReference.getId();
+
+                // if the user took/selected an image, then upload it to storage, and save it's url to
+                // the book's document
+                if (imageUrlFromResponse != null) {
+                    db.collection("books").document(bookId).update("pictureURL", imageUrlFromResponse);
+
+                } else if (usersImageFile != null) {
+                    uploadImageFile();
+                }
+
+                // add bookID to book document
+                Map<String, Object> bookUpdateMap = new HashMap<>();
+                book.setBookID(bookId);
+                bookUpdateMap.put("bookID", bookId);
+                documentReference.update(bookUpdateMap);
+
+                // Update the bookIDs array in the user collection
+                db.collection("users").document(currentUser.getUid()).
+                        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        ArrayList<String> usersBooks = user.getBookIDs();
+                        Log.d(TAG, "onSuccess: " + bookId);
+                        usersBooks.add(bookId.toString());
+
+                        Map<String, Object> newBooksMap = new HashMap<>();
+                        newBooksMap.put("bookIDs", usersBooks);
+
+                        Log.d(TAG, "onSuccess: " + usersBooks);
+
+                        db.collection("users").
+                                document(currentUser.getUid()).update(newBooksMap);
+                    }
+                });
+            }
+        });
+    }
 
     // ScanFragment calls this method when it finds an isbn, here I look up that isbn in the
     // Google Books API and auto-fill the EditTexts according to the response.
     @Override
     public void onIsbnFound(final String isbn) {
         Log.d(TAG, "onIsbnFound: " + isbn);
+        spinner.setVisibility(View.VISIBLE);
+        autofillBookData(isbn);
+    }
 
+    // Given an isbn this method gets the books' information from the google books API and auto-fills
+    // all fields
+    private void autofillBookData(String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + isbn
                 + "&key=" + getString(R.string.BOOKS_API_KEY);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -269,6 +328,12 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                             titleInput.setText(title.trim());
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
+
+
+                            hideKeyboard(AddBookActivity.this);
+                            isbnInput.clearFocus();
+                            autoFillButton.setVisibility(View.GONE);
+                            spinner.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -380,6 +445,18 @@ public class AddBookActivity extends AppCompatActivity implements ScanFragment.O
                 });
             }
         });
+    }
+
+    // hides keyoboard
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

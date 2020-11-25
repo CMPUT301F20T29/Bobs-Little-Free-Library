@@ -111,8 +111,6 @@
         android:layout_below="@+id/signup_section"
         android:layout_centerHorizontal="true"
         android:text="Sign Up"
-        style="@style/SubmitButton"
-        android:padding="20sp"
-        android:textSize="24sp"/>
+        style="@style/SubmitButton"/>
 
 </RelativeLayout>

@@ -47,7 +47,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
     private String username;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Book book;
-    private String bookID;
     private boolean userAlreadyRequested;
     private String notificationMessage;
     // UI Variables
@@ -70,7 +69,6 @@ public class PublicBookViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Class variables
         book = (Book) intent.getSerializableExtra("BOOK");
-        bookID = intent.getStringExtra("BOOK_ID");
         // Set references to UI elements
         setupUIReferences();
         checkAlreadyRequested();
@@ -91,12 +89,13 @@ public class PublicBookViewActivity extends AppCompatActivity {
                 // Get access to requests collection
                 CollectionReference requestCollectionRef = db.collection("requests");
                 // Create Request Object
-                Request request = new Request(user.getUid(), book.getOwnerID(), bookID, book.getPictureURL(), book.getTitle());
+                Request request = new Request(user.getUid(), book.getOwnerID(), book.getBookID(), book.getPictureURL(), book.getTitle());
                 // Add request to db
                 requestCollectionRef.add(request)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
+                                documentReference.update("requestID", documentReference.getId());
                                 Snackbar sb = Snackbar.make(v, "Request Sent", Snackbar.LENGTH_SHORT);
                                 sb.show();
                                 requestButton.setClickable(false);
@@ -107,11 +106,11 @@ public class PublicBookViewActivity extends AppCompatActivity {
                         });
 
                 // Update Book document
-                db.collection("books").document(bookID)
+                db.collection("books").document(book.getBookID())
                         .update("numberOfRequests", book.getNumberOfRequests() + 1);
                 if (book.getNumberOfRequests() == 0) { // The book object we are getting the value from has not been updated yet so the number of requests would still be n - 1
                     // Update book status
-                    db.collection("books").document(bookID)
+                    db.collection("books").document(book.getBookID())
                             .update("status", "Requested");
                 }
 
@@ -127,7 +126,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                             notificationMessage = String.format(notificationMessage, book.getTitle(), thisUser.getUsername());
                             String timestamp = java.text.DateFormat.getDateInstance().format(new Date());
 
-                            Notification notification = new Notification(NotificationType.BORROW, notificationMessage, timestamp, bookID, book.getOwnerID());
+                            Notification notification = new Notification(NotificationType.BORROW, notificationMessage, timestamp, book.getBookID(), book.getOwnerID());
                             db.collection("notifications").add(notification);
                         }
                     }
@@ -166,7 +165,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
     private void checkAlreadyRequested() {
         // Check if the user has already requested this book
         db.collection("requests")
-                .whereEqualTo("bookRequestedID", bookID)
+                .whereEqualTo("bookRequestedID", book.getBookID())
                 .whereEqualTo("reqSenderID", user.getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

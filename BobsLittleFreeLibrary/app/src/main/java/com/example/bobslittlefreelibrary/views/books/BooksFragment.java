@@ -108,7 +108,23 @@ public class BooksFragment extends Fragment{
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            dataList.clear();
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                Log.d(TAG, document.getId() + " => " +document.getData());
+                                Book book = document.toObject(Book.class);
+                                dataList.add(book);
+                                bookIDList.add(document.getId());
+                                bookAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        db.collection("books").whereEqualTo("currentBorrowerID", user.getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 Log.d(TAG, document.getId() + " => " +document.getData());
                                 Book book = document.toObject(Book.class);

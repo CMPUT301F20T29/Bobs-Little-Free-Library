@@ -33,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This activity provides a location to display all the information that pertains to a Book owned by the User
@@ -189,7 +190,7 @@ public class MyBookViewActivity extends AppCompatActivity {
                 Log.d("TEMP", "onSuccess: " + book.getBookID());
                 usersBooks.remove(book.getBookID());
 
-                HashMap newBooksMap = new HashMap<String, ArrayList>();
+                Map<String, Object> newBooksMap = new HashMap<>();
                 newBooksMap.put("bookIDs", usersBooks);
 
                 Log.d("TEMP", "onSuccess: " + usersBooks);

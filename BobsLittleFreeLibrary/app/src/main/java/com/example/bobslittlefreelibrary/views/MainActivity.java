@@ -225,9 +225,6 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                                                     .update("currentRequestID", null);
                                             db.collection("requests").document(bookToShow.getCurrentRequestID())
                                                     .delete();
-                                            // Reduce number of requests the book has
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("numberOfRequests", bookToShow.getNumberOfRequests() - 1);
                                         }
                                     } else {
                                         Log.d("TEMP", "No request found");

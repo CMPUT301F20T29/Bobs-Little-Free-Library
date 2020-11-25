@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/CAtext"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Current Address:"/>
+
+    <TextView
+        android:id="@+id/current_addy"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/CAtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="addy"/>
+
+    <TextView
+        android:id="@+id/NAtext"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/current_addy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="New Address:"/>
+
+    <fragment android:id="@+id/autocomplete_fragment"
+
+        android:layout_below="@+id/NAtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        />
+
+    <TextView
+        android:id="@+id/Ptext"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/autocomplete_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Phone:"/>
+
+    <EditText
+        android:layout_below="@+id/Ptext"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/phoneNumb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7806196579"/>
+
+    <TextView
+        android:id="@+id/Btext"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/phoneNumb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Bio:"/>
+
+    <TextView
+        android:id="@+id/bio"
+        android:layout_below="@+id/Btext"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="Bio description here"/>
+
+
+
+</RelativeLayout>

@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
 
     <Button
-        android:id="@+id/back_Button"
-        style="@style/BackButton"
-        android:text="Back" />
+        android:id="@+id/show_all_requests_back_button"
+        style="@style/BackButton"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/dividerVertical" />
 
     <ListView
+        android:id="@+id/show_all_requests_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
     </ListView>
-
-
 </LinearLayout>

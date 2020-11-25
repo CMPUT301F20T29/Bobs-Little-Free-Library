@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,19 +21,16 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.ScanFragment;
-import com.example.bobslittlefreelibrary.controllers.NotificationAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
-import com.example.bobslittlefreelibrary.models.Notification;
-import com.example.bobslittlefreelibrary.models.NotificationType;
-import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
+import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
+import com.example.bobslittlefreelibrary.views.users.PublicProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -63,15 +58,12 @@ import java.util.ArrayList;
  * */
 public class HomeFragment extends Fragment {
 
-    // Variables
+    // Class Variables
     private FirebaseUser user;
     private FirebaseFirestore db;
-    private ImageButton profileButton;
     private ViewPager2 viewPager;
     private FragmentStateAdapter pagerAdapter;
     private ArrayList<Book> listOfBooks;
-    private ArrayList<String> listOfBookIDS;
-    private CardView notificationCard;
     private TextView numberOfNotifs;
 
     @Override
@@ -80,7 +72,6 @@ public class HomeFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
         listOfBooks = new ArrayList<>();
-        listOfBookIDS = new ArrayList<>();
     }
 
     @Nullable
@@ -93,14 +84,14 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity)getActivity()).setLastActiveTab("HOME");
-        Log.d("TEMP", "Home Fragment view has been created");
 
         // Setup references to UI elements
         ImageButton searchButton = getView().findViewById(R.id.home_search_button); // getView() cannot be called in onCreate() since the view isn't inflated yet (onCreate --> onCreateView() --> onActivityCreated()
-        profileButton = getView().findViewById(R.id.home_user_profile_button);
+        ImageButton profileButton = getView().findViewById(R.id.home_user_profile_button);
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
-        notificationCard = getView().findViewById(R.id.notifs_card);
+        CardView notificationCard = getView().findViewById(R.id.notifs_card);
         numberOfNotifs = getView().findViewById(R.id.num_of_notifs);
+
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
         pagerAdapter = new LatestBooksPagerAdapter(getActivity());
@@ -115,19 +106,26 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Query for User document to convert into object to pass to profile view (if it is pressed)
+        db.collection("users").document(user.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        User userObject = document.toObject(User.class);
+                        profileButton.setOnClickListener(v -> {
+                            Intent intent = new Intent(getActivity(), MyProfileViewActivity.class);
+                            intent.putExtra("USER", userObject);
+                            startActivity(intent);
+                        });
+                    }
+                });
+
         // Setup listeners
         searchButton.setOnClickListener(v -> {
-            Log.d("TEMP", "Search Button Pressed");
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             startActivity(intent);
         });
-        profileButton.setOnClickListener(v -> {
-            Log.d("TEMP", "User Profile Button Pressed");
-            Intent intent = new Intent(getActivity(), MyProfileViewActivity.class);
-            startActivity(intent);
-        });
         quickScanButton.setOnClickListener(v -> {
-            Log.d("TEMP", "Quick Scan Button Pressed");
             new ScanFragment().show(getActivity().getSupportFragmentManager(), "SCAN");
         });
 
@@ -140,7 +138,8 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                addBookToList(document);
+                                Book currentBook = document.toObject(Book.class);
+                                listOfBooks.add(currentBook);
                                 pagerAdapter.notifyDataSetChanged();  // Update pagerAdapter
                             }
                         } else {
@@ -150,12 +149,9 @@ public class HomeFragment extends Fragment {
                 });
 
         notificationCard.setOnClickListener(v -> {
-            Log.d("TEMP", "User Profile Button Pressed");
             Intent intent = new Intent(getActivity(), NotificationsActivity.class);
             startActivity(intent);
         });
-
-
         // Added functionality to viewpager to update the ImageView inside the fragment page when a page is selected.
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -173,23 +169,11 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * This method adds Books and bookIDs to corresponding ArrayLists
-     * @param document the document of the book object to draw values from.
-     * */
-    private void addBookToList(QueryDocumentSnapshot document) {
-        Book currentBook = document.toObject(Book.class);
-        String bookID = document.getId();
-        listOfBooks.add(currentBook);
-        listOfBookIDS.add(bookID);
-    }
-
-    /**
      * This method gets a reference to the ImageView of a LatestBooksSlidePageFragment and update's the imageView
      * and sets an onClick listener for the ImageView.
      * @param position The position of the current page in the ViewPager
      * */
     private void updateLatestBooksImageView(int position) {
-        Log.d("TAG", "updateLatestBooksImageView: " + position);
         Book currentBook = listOfBooks.get(position);
 
         ImageView imageView = viewPager.findViewWithTag(position);
@@ -210,12 +194,10 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 if (user.getUid().equals(currentBook.getOwnerID())) {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
                     intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", listOfBookIDS.get(position));
                     intent.putExtra("BOOK", currentBook);
                     startActivity(intent);
                 }
@@ -226,7 +208,7 @@ public class HomeFragment extends Fragment {
     /**
      * A simple pager adapter that represents up to 6 LatestBooksSlidePageFragments in sequence.
      * When a new fragment is created, we pass in the position of that fragment to be used when
-     * setting the tag of it's ImageView.
+     * setting the tag of it's UI elements.
      */
     private class LatestBooksPagerAdapter extends FragmentStateAdapter {
 

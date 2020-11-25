@@ -1,6 +1,6 @@
 package com.example.bobslittlefreelibrary.views.requests;
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,25 +12,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.CustomRequestsAdapter;
+import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Request;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-
-
+/**
+ * This activity shows all of the current requests for a single Book object.
+ *
+ * It requires a Book object to be passed in through intents.
+ * */
 public class ShowAllRequestsActivity  extends AppCompatActivity {
 
-    private CustomRequestsAdapter sentRequestsAdapter;
-    private ArrayList<Request> sentRequestList;
-    private CustomRequestsAdapter receivedRequestsAdapter;
-    private ArrayList<Request> receivedRequestList;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CustomRequestsAdapter requestsAdapter;
+    private ArrayList<Request> listOfRequests;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,22 +39,17 @@ public class ShowAllRequestsActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_show_all_requests);
 
         // setting variables needed
-        ListView requestsList = findViewById(R.id.requests_list);
-        sentRequestList = new ArrayList<>();
-        receivedRequestList = new ArrayList<>();
-        receivedRequestsAdapter = new CustomRequestsAdapter(this, receivedRequestList, false);
-        sentRequestsAdapter = new CustomRequestsAdapter(this, sentRequestList, true);
+        ListView requestsList = findViewById(R.id.show_all_requests_list);
+        listOfRequests = new ArrayList<>();
+        requestsAdapter = new CustomRequestsAdapter(this, listOfRequests, false);
+        requestsList.setAdapter(requestsAdapter);
 
-
-
-        // initialize the user and get the user's id and get the database
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userID = user.getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Intent intent = getIntent();
+        Book book = (Book) intent.getSerializableExtra("BOOK");
 
         // query all the received requests, add them to the list and then make an adapter
         db.collection("requests")
-                .whereEqualTo("reqReceiverID", userID)
+                .whereEqualTo("bookRequestedID", book.getBookID())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -61,8 +57,8 @@ public class ShowAllRequestsActivity  extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                receivedRequestList.add(document.toObject(Request.class));
-                                receivedRequestsAdapter.notifyDataSetChanged();
+                                listOfRequests.add(document.toObject(Request.class));
+                                requestsAdapter.notifyDataSetChanged();
                             }
                         } else {
                             Log.d("TEMP", "Error getting documents: ", task.getException());

@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                                             db.collection("books").document(bookToShow.getBookID())
                                                     .update("currentBorrowerUsername", null);
                                             db.collection("books").document(bookToShow.getBookID())
-                                                    .update("numberOfValidScans", 0);
+                                                    .update("hasOwnerScanned", false);
                                             // delete request
                                             db.collection("books").document(bookToShow.getBookID())
                                                     .update("currentRequestID", null);

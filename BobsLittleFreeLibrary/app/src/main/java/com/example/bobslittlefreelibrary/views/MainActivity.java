@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                                             // Set book status to borrowed
                                             db.collection("books").document(bookToShow.getBookID())
                                                     .update("status", "Borrowed");
+                                            db.collection("books").document(bookToShow.getBookID())
+                                                    .update("hasOwnerScanned", false);
                                             // Update borrower username in book
                                             db.collection("users").document(bookToShow.getCurrentBorrowerID())
                                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

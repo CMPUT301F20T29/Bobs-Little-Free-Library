@@ -159,6 +159,10 @@ public class SentRequestActivity extends AppCompatActivity {
                                                    }
                                                });
 
+                                       // Reduce number of requests the book has
+                                       db.collection("books").document(currentBook.getBookID())
+                                               .update("numberOfRequests", currentBook.getNumberOfRequests() - 1);
+
                                        // Create a Notification that will be for the book owner
                                        notificationMessage = "%s wants to return your book %s.";
                                        db.collection("users").document(user.getUid())

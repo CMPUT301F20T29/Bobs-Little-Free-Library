@@ -58,13 +58,13 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
         // Switch to BooksFragment
         solo.clickOnView(solo.getView(R.id.books_page));
-        assertTrue(solo.searchText("Books"));
+        assertTrue(solo.searchText("Bookshelf"));
         // Switch to RequestsFragment
         solo.clickOnView(solo.getView(R.id.requests_page));
-        assertTrue(solo.searchText("Sent"));
+        assertTrue(solo.searchText("Requests"));
         // Switch back to HomeFragment
         solo.clickOnView(solo.getView(R.id.home_page));
-        assertTrue(solo.searchText("Requests Overview"));
+        assertTrue(solo.searchText("Latest Books"));
     }
 
     /**

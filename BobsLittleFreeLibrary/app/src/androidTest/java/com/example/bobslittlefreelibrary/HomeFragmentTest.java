@@ -1,5 +1,7 @@
 package com.example.bobslittlefreelibrary;
 
+import android.view.View;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -19,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * This is a test class that tests the functionality of the UI in HomeFragment
  * The tests use Robotium and ActivityTestRule (which is depreciated). Maybe consider using ActivityScenarioRule and see if robotium works with it?
- * TODO: make test for profile button, quick scan button, and then requests overview after its changed, alter openLatestBook() to handle both MyBookViewActivity and PublicBookViewActivity
  *
  * */
 public class HomeFragmentTest {
@@ -58,7 +59,7 @@ public class HomeFragmentTest {
      * */
     @Test
     public void goToSearchActivity() {
-        solo.clickOnButton("Search");
+        solo.clickOnView(solo.getView(R.id.home_search_button));
         solo.assertCurrentActivity("Did not go to SearchActivity", SearchActivity.class);
     }
 
@@ -67,7 +68,7 @@ public class HomeFragmentTest {
      * */
     @Test
     public void goToMyProfileViewActivity() {
-        solo.clickOnButton(1);
+        solo.clickOnView(solo.getView(R.id.home_user_profile_button));
         solo.assertCurrentActivity("Did not go to MyProfileViewActivity", MyProfileViewActivity.class);
     }
 

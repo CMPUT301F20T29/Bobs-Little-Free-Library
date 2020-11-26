@@ -31,6 +31,14 @@ public class MyProfileViewActivity extends AppCompatActivity {
         TextView addy = findViewById(R.id.user_address);
         TextView phone = findViewById(R.id.phone);
         TextView bio = findViewById(R.id.bio);
+        Button backButton = findViewById(R.id.back_button);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         User user = (User) intent.getSerializableExtra("USER");

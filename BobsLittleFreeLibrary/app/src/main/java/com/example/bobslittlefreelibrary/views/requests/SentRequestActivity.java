@@ -26,6 +26,7 @@ import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
+import com.example.bobslittlefreelibrary.views.users.PublicProfileViewActivity;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,7 +64,7 @@ public class SentRequestActivity extends AppCompatActivity {
     private String notificationMessage;
     private boolean hasSelectedMap = false;
     private TextView requestStatusText;
-
+    private User requestReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class SentRequestActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         userProfileButton.setText((String)documentSnapshot.get("username"));
+                        requestReceiver = documentSnapshot.toObject(User.class);
                     }
                 });
 
@@ -228,8 +230,9 @@ public class SentRequestActivity extends AppCompatActivity {
         userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TEMP", "Borrower Profile button pressed");
-                //TODO
+                Intent intent = new Intent(SentRequestActivity.this, PublicProfileViewActivity.class);
+                intent.putExtra("USER", requestReceiver);
+                startActivity(intent);
             }
         });
 

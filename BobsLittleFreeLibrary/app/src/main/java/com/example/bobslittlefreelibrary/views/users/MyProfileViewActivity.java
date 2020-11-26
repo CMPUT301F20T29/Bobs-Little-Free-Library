@@ -1,26 +1,16 @@
 package com.example.bobslittlefreelibrary.views.users;
 
-import android.app.AppComponentFactory;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bobslittlefreelibrary.EditProfileFragment;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
-import com.example.bobslittlefreelibrary.views.books.EditBookActivity;
-import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MyProfileViewActivity extends AppCompatActivity {
 

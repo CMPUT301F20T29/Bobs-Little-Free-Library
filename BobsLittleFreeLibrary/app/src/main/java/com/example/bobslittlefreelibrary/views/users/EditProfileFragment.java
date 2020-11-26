@@ -1,4 +1,4 @@
-package com.example.bobslittlefreelibrary;
+package com.example.bobslittlefreelibrary.views.users;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.common.api.Status;

@@ -60,16 +60,9 @@ public class  CustomList extends ArrayAdapter<Book> {
 
         }
 
-
-
-
-
-
         if (pictureURL != null) {
             new DownloadImageTask(picture).execute(pictureURL);
         }
-
-
         return view;
     }
 }

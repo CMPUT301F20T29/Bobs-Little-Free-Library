@@ -1,91 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="11dp">
+    android:padding="11dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/sectionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="6dp"
-        android:text="Books"
-        android:textSize="35dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/filterAllButton"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
-        android:text="ALL" />
+        <TextView
+            android:id="@+id/sectionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="11dp"
+            android:text="Book"
+            android:textSize="35dp" />
 
-    <Button
-        android:id="@+id/filterAvailableButton"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_toStartOf="@+id/filterAllButton"
-        android:layout_toLeftOf="@+id/filterAllButton"
-        android:text="Available"
-        android:textSize="10dp" />
 
-    <Button
-        android:id="@+id/filterBorrowedButton"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_toStartOf="@+id/filterAvailableButton"
-        android:layout_toLeftOf="@+id/filterAvailableButton"
-        android:text="Borrowed"
-        android:textSize="10dp" />
+        <Button
+            android:id="@+id/filterButton"
+            style="@style/SecondaryButton"
+            android:textColor="@color/White"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="filterButtonPressed"
+            android:text="filter" />
+
+
+
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="65dp"
-        android:background="?android:attr/dividerVertical"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="1dp"
+        android:layout_marginTop="0dp"
+        android:background="?android:attr/dividerVertical" />
 
-    <ListView
-        android:id="@+id/bookList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="65dp">
-
-    </ListView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_Item"
-        android:layout_width="match_parent"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/filterChips"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="13dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginBottom="11dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/baseline_add_white_18dp" />
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="0dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:singleSelection="true">
 
-</RelativeLayout>
+
+        <com.google.android.material.chip.Chip
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="allFilterPressed"
+            android:text="All" />
+
+        <com.google.android.material.chip.Chip
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="availableFilterPressed"
+            android:text="Available" />
+
+        <com.google.android.material.chip.Chip
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="requestedFilterPressed"
+            android:text="Requested" />
+
+        <com.google.android.material.chip.Chip
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="acceptedFilterPressed"
+            android:text="Accepted" />
+
+        <com.google.android.material.chip.Chip
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="borrowedFilterPressed"
+            android:text="Borrowed" />
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/bookList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_Item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginBottom="11dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:clickable="true"
+            android:focusable="true" />
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

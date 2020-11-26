@@ -188,10 +188,16 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
         String msg = "Please fix the following issues before adding your book:\n";
 
+        String title = titleInput.getText().toString();
+        String author = authorInput.getText().toString();
         String desc = descInput.getText().toString();
 
         if (desc.length() > 1000) { msg += "\n - Description is too long"; }
-        if (desc.isEmpty()) { msg += "\n - Description is empty"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (author.length() > 50) { msg += "\n - Author is too long"; }
+        if (title.isEmpty()) { msg += "\n - Title is empty"; }
+        if (author.isEmpty()) { msg += "\n - Author is empty"; }
 
         Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
         View sbView = sb.getView();

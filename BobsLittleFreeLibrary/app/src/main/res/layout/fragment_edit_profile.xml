@@ -1,77 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/CAtext"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="Current Address:"/>
-
-    <TextView
-        android:id="@+id/current_addy"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/CAtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:text="addy"/>
-
-    <TextView
-        android:id="@+id/NAtext"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/current_addy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="New Address:"/>
-
-    <fragment android:id="@+id/autocomplete_fragment"
-
-        android:layout_below="@+id/NAtext"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="11dp">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        />
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/Ptext"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/autocomplete_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="Phone:"/>
+        <TextView
+            android:id="@+id/NAtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address:"
+            android:textSize="20sp" />
 
-    <EditText
-        android:layout_below="@+id/Ptext"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/phoneNumb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="7806196579"/>
+        <fragment
+            android:id="@+id/autocomplete_fragment2"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/Btext"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/phoneNumb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="Bio:"/>
+        <TextView
+            android:id="@+id/Ptext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone:"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/bio"
-        android:layout_below="@+id/Btext"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:text="Bio description here"/>
+        <EditText
+            android:id="@+id/phoneNumb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="enter number only with no space"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/Btext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bio:"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="max 300 characters"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
 
-
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>

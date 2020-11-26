@@ -14,6 +14,7 @@ public class User implements Serializable  {
     private double latitude;
     private double longitude;
     private String phone;
+    private String bio;
     private ArrayList<String> bookIDs;
 
     /**
@@ -33,7 +34,8 @@ public class User implements Serializable  {
         this.address = address;
         this.latitude = lat;
         this.longitude = lng;
-        this.phone = "";
+        this.phone = null;
+        this.bio = null;
         this.bookIDs = new ArrayList<>();
     }
 
@@ -103,5 +105,13 @@ public class User implements Serializable  {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

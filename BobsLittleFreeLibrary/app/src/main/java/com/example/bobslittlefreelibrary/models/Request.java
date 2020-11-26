@@ -16,6 +16,7 @@ public class Request implements Serializable {
     private double longitude;
     private String bookImageURL;
     private String bookTitle;
+    private String requestID;
     private boolean alreadySeen;
     private boolean isReturnRequest;
 
@@ -43,6 +44,7 @@ public class Request implements Serializable {
         this.longitude = 1000;
         this.bookImageURL = bookImageURL;
         this.bookTitle = bookTitle;
+        this.requestID = null;
         this.alreadySeen = false;
         this.isReturnRequest = false;       // by default the request is a borrow request
     }
@@ -166,5 +168,19 @@ public class Request implements Serializable {
      * */
     public void setAlreadySeen() {
         this.alreadySeen = true;
+    }
+    /**
+     * This method returns the ID of this request object.
+     * @return requestID
+     * */
+    public String getRequestID() {
+        return requestID;
+    }
+    /**
+     * This method sets the ID value of this request object.
+     * @param requestID The ID to be set.
+     * */
+    public void setRequestID(String requestID) {
+        this.requestID = requestID;
     }
 }

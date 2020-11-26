@@ -18,8 +18,11 @@ public class Book implements Serializable {
     private String pictureURL;
     private String dateAdded;
     private int numberOfRequests;
-    private String borrower;
+    private String currentBorrowerUsername;
+    private String currentBorrowerID;
+    private String currentRequestID;
     private String bookID;
+    private boolean hasOwnerScanned;
 
     /**
      * This is an empty constructor for a Book object
@@ -44,10 +47,13 @@ public class Book implements Serializable {
         this.ownerID = ownerID;
         this.status = status;
         this.pictureURL = pictureURL;
-        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrower = null;
+        this.currentBorrowerUsername = null;
+        this.currentBorrowerID = null;
+        this.currentRequestID = null;
+        this.bookID = null;
+        this.hasOwnerScanned = false;
     }
 
     /**
@@ -66,10 +72,13 @@ public class Book implements Serializable {
         this.description = description;
         this.ownerID = ownerID;
         this.status = status;
-        this.bookID = null;
         this.dateAdded = getDateNow();
         this.numberOfRequests = 0;
-        this.borrower = null;
+        this.currentBorrowerUsername = null;
+        this.currentBorrowerID = null;
+        this.currentRequestID = null;
+        this.bookID = null;
+        this.hasOwnerScanned = false;
     }
 
     // Methods
@@ -124,26 +133,39 @@ public class Book implements Serializable {
     public int getNumberOfRequests() {
         return numberOfRequests;
     }
-
     /**
-     * this method returns the name of the current borrower of a book object
-     * @return Returns borrower
-     *
+     * this method returns the name of the current borrower of a book object.
+     * @return Returns currentBorrowerUsername
      * */
-    public String getBorrower() { return borrower; }
-
-
+    public String getCurrentBorrowerUsername() { return currentBorrowerUsername; }
     /**
-     * This method returns the ID of a Book
-     * @return Returns the bookID
+     * this method returns the ID of the current borrower of a book object.
+     * @return Returns currentBorrowerID
+     * */
+    public String getCurrentBorrowerID() {
+        return currentBorrowerID;
+    }
+    /**
+     * This method returns the ID the current accepted borrow/return request for this Book.
+     * @return Returns currentRequestID
+     * */
+    public String getCurrentRequestID() {
+        return currentRequestID;
+    }
+    /**
+     * This method returns the ID of a Book's document in the database.
+     * @return Returns bookID
      * */
     public String getBookID() { return bookID; }
-
-
-
+    /**
+     * This method returns if the owner has scanned the book for an exchange
+     * @return Returns hasOwnerScanned
+     * */
+    public boolean getHasOwnerScanned() {
+        return hasOwnerScanned;
+    }
 
     // Setters
-
     /**
      * This method sets the ID of a Book object .
      * @return Returns none
@@ -192,10 +214,30 @@ public class Book implements Serializable {
     public void setNumberOfRequests(int numberOfRequests) {
         this.numberOfRequests = numberOfRequests;
     }
-
     /**
-     * This method sets the name of a Book borrower.
-     * @return Returns nothing
+     * This method sets the username of the borrower of a Book.
+     * @param username The username to be set
      * */
-    public void setBorrower(String borrower) { this.borrower = borrower; }
+    public void setCurrentBorrowerUsername(String username) { this.currentBorrowerUsername = username; }
+    /**
+     * This method sets the ID of the borrower of a Book.
+     * @param currentBorrowerID The ID to be set
+     * */
+    public void setCurrentBorrowerID(String currentBorrowerID) {
+        this.currentBorrowerID = currentBorrowerID;
+    }
+    /**
+     * This method sets the ID of the current borrow/return request active for this Book.
+     * @param currentRequestID The ID of the request document to be set
+     * */
+    public void setCurrentRequestID(String currentRequestID) {
+        this.currentRequestID = currentRequestID;
+    }
+    /**
+     * This method sets if the owner has scanned the book for an exchange
+     * @param hasOwnerScanned The value to be set
+     * */
+    public void setHasOwnerScanned(boolean hasOwnerScanned) {
+        this.hasOwnerScanned = hasOwnerScanned;
+    }
 }

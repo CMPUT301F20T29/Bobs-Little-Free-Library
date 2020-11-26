@@ -1,77 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".views.templates.BlankTemplateActivity"
     android:layout_gravity="start"
+    android:orientation="vertical"
     android:padding="11dp"
-    >
+    tools:context=".views.templates.BlankTemplateActivity">
+
 
     <!--        Top buttons begin-->
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/top_buttons">
-
-        <Button
-            android:id="@+id/back_button"
-            android:text="Back"
-            style="@style/BackButton"/>
-        <Button
-            android:id="@+id/edit_button"
-            android:text="Edit"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            style="@style/SecondaryButton"/>
-    </RelativeLayout>
-    <!--        Top buttons end-->
-
-    <TextView
-        android:id="@+id/user_name"
-        android:text="Lee Sin"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/top_buttons"
-        style="@style/ViewTitle"
-        />
-
-    <TextView
-        android:id="@+id/user_email"
-        android:text="morello@riot.com"
-        android:layout_below="@+id/user_name"
-        style="@style/FormLabel"
-        />
-
-    <TextView
-        android:id="@+id/user_address"
-        android:text="Summoner's Rift, California"
-        android:layout_below="@+id/user_email"
-        style="@style/FormLabel"
-        />
-
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/books_owned"
-        android:text="Books Owned"
-        android:layout_below="@+id/user_address"
-        style="@style/ViewTitle"
-        />
-
-    <ScrollView
-        android:layout_below="@+id/books_owned"
+    <LinearLayout
+        android:id="@+id/profile_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <ListView
+        <RelativeLayout
+            android:id="@+id/top_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/back_button"
+                style="@style/BackButton"
+                android:text="Back" />
+
+            <Button
+                android:id="@+id/edit_button"
+                style="@style/SecondaryButton"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="Edit" />
+        </RelativeLayout>
+
+        <View android:id="@+id/profile_divider0"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="10dp"
+            android:background="?android:attr/dividerVertical" />
+        <!--        Top buttons end-->
+
+        <TextView
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/books_listView"/>
+            android:id="@+id/user_name"
+            style="@style/ViewTitle"
+            android:text="Lee Sin" />
 
-    </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_email"
+            android:gravity="center"
+            android:text="morello@riot.com" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_address"
+            android:gravity="center"
+            android:text="Summoner's Rift, California" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phone"
+            android:gravity="center"
+            android:text="(Optional) Phone Number" />
 
 
+        <View android:id="@+id/profile_divider1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="10dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bio"
+            android:gravity="center"
+            android:text="Add bio by pressing EDIT button"
+            style="@style/FormLabel"/>
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/log_out"
+        style="@style/SecondaryButton"
+        android:text="Log Out"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+
+        />
 
 </RelativeLayout>

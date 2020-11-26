@@ -3,6 +3,7 @@ package com.example.bobslittlefreelibrary.views.users;
 import android.app.AppComponentFactory;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bobslittlefreelibrary.EditProfileFragment;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
+import com.example.bobslittlefreelibrary.views.books.EditBookActivity;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,11 +35,22 @@ public class MyProfileViewActivity extends AppCompatActivity {
         TextView phone = findViewById(R.id.phone);
         TextView bio = findViewById(R.id.bio);
         Button backButton = findViewById(R.id.back_button);
+        Button logOutButton = findViewById(R.id.log_out);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MyProfileViewActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finishAffinity();
             }
         });
 

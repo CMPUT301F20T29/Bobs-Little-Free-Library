@@ -171,7 +171,7 @@ public class EditProfileFragment extends AppCompatDialogFragment {
             }
         }
         if (bio.length()>0) {
-            if (bio.length() > 300) {
+            if (bio.length() > 50) {
                 Snackbar.make(v, "Bio is too long", Snackbar.LENGTH_SHORT).show();
                 return false;
             }

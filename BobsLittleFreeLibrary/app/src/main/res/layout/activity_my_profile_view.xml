@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profileView"
     android:layout_width="match_parent"
@@ -10,8 +10,10 @@
     android:padding="11dp"
     tools:context=".views.templates.BlankTemplateActivity">
 
+
     <!--        Top buttons begin-->
     <LinearLayout
+        android:id="@+id/profile_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -87,7 +89,16 @@
             style="@style/FormLabel"/>
 
 
+
     </LinearLayout>
 
+    <Button
+        android:id="@+id/log_out"
+        style="@style/SecondaryButton"
+        android:text="Log Out"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
 
-</androidx.core.widget.NestedScrollView>
+        />
+
+</RelativeLayout>

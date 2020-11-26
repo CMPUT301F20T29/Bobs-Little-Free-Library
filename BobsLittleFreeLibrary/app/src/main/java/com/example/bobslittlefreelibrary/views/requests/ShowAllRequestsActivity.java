@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -70,6 +71,16 @@ public class ShowAllRequestsActivity  extends AppCompatActivity {
                         }
                     }
                 });
+
+        requestsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                // Based on which tab the user is on, it will decide which activity to go to
+                Intent intent = new Intent(ShowAllRequestsActivity.this, ReceivedRequestActivity.class);
+                intent.putExtra("REQUEST", listOfRequests.get(position));
+                startActivity(intent);
+            }
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

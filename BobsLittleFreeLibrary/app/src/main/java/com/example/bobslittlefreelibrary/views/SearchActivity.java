@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity {
                 // going through all the books available in the populated list and finding the ones that match the search query
 
                 for (Book book: searchBookList) {
-                    if(book.getTitle().toLowerCase().contains(s.toLowerCase())) {
+                    if(book.getTitle().toLowerCase().contains(s.toLowerCase()) || book.getDescription().toLowerCase().contains(s.toLowerCase())) {
 
                         // if the user toggles to all, then just care about what\s being searched
                         if (currentFilter.equals("all")) {
@@ -207,7 +207,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
         listView = (ListView) findViewById(R.id.bookSearchListView);

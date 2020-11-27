@@ -16,12 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.bobslittlefreelibrary.controllers.BookAdapter;
 import com.example.bobslittlefreelibrary.controllers.CustomList;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import com.google.android.material.chip.Chip;
+
+
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +65,22 @@ public class BooksFragment extends Fragment {
     FirebaseFirestore db;
     ChipGroup chips;
 
+
+    private String currentFilter = "all";
+    private Button filterButton;
+    private ChipGroup chipGroup;
+
+    // keeps track of whether the filter options are shown or hidden at the specific moment
+    boolean filterHidden = true;
+
+    // filter checks
+    boolean allFilterSelected  = false;
+    boolean availableFilterSelected = false;
+    boolean requestedFilterSelected = false;
+    boolean acceptedFilterSelected  = false;
+    boolean borrowedFilterSelected = false;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +111,13 @@ public class BooksFragment extends Fragment {
         bookAdapter = new CustomList(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
 
+
+        ArrayList<Book> filteredBooks = new ArrayList<Book>();
+
+
         chips = getActivity().findViewById(R.id.filterChips);
         chips.setVisibility(View.GONE);
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -134,6 +160,87 @@ public class BooksFragment extends Fragment {
                         }
                     }
                 });
+
+        Chip AllButton = getActivity().findViewById(R.id.filterAllChip);
+        AllButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                filteredBooks.clear();
+                for (Book book: dataList) {
+                    filteredBooks.add(book);
+                }
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                bookList.setAdapter(adapter);
+            }
+        });
+
+        Chip AvailableBookButton = getActivity().findViewById(R.id.filterAvailableChip);
+        AvailableBookButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                filteredBooks.clear();
+                for (Book book: dataList) {
+                    if(book.getStatus().toLowerCase().contains("available")){
+                        filteredBooks.add(book);
+                    }
+                }
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                bookList.setAdapter(adapter);
+            }
+        });
+
+
+
+        Chip RequestedButton = getActivity().findViewById(R.id.filterRequestedChip);
+        RequestedButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                filteredBooks.clear();
+                for (Book book: dataList) {
+                    if(book.getStatus().toLowerCase().contains("requested")){
+                        filteredBooks.add(book);
+                    }
+                }
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                bookList.setAdapter(adapter);
+            }
+        });
+
+
+        Chip AcceptedButton = getActivity().findViewById(R.id.filterAcceptedChip);
+        AcceptedButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                filteredBooks.clear();
+                for (Book book: dataList) {
+                    if(book.getStatus().toLowerCase().contains("accepted")){
+                        filteredBooks.add(book);
+                    }
+                }
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                bookList.setAdapter(adapter);
+            }
+        });
+
+        Chip BorrowedButton = getActivity().findViewById(R.id.filterBorrowedChip);
+        BorrowedButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                filteredBooks.clear();
+                for (Book book: dataList) {
+                    if(book.getStatus().toLowerCase().contains("borrowed")){
+                        filteredBooks.add(book);
+                    }
+                }
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                bookList.setAdapter(adapter);
+            }
+        });
+
+
+
+
+
         //Click listener linking to AddBookActivity
         final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item);
         addItemButton.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +250,11 @@ public class BooksFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+
+
         //Click listener linking to filter activity
         Button filterButton = getActivity().findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -153,11 +265,10 @@ public class BooksFragment extends Fragment {
                     chips.setVisibility(View.VISIBLE);
                 }
 
-                //TODO: Add filter button actions
-                //TextView status = getActivity().findViewById(R.id.statusText);
-                //status.setText("/*Skippidi-pap-pap*/");
+             
             }
         });
+
         // In event of an element of the list of books being clicked either
         // PublicBookView or MyBookView are called
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -176,5 +287,8 @@ public class BooksFragment extends Fragment {
                 }
             }
         });
+
+
     }
+
 }

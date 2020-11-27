@@ -18,7 +18,7 @@
         android:id="@+id/top_buttons">
 
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/notifs_back_button"
             android:text="Back"
             style="@style/BackButton"/>
 

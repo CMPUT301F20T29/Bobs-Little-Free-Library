@@ -3,18 +3,25 @@ package com.example.bobslittlefreelibrary.views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.controllers.NotificationAdapter;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.models.Notification;
+import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.example.bobslittlefreelibrary.views.books.PublicBookViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +36,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private ArrayList<Notification> listOfNotifications;
     private FirebaseUser user;
     private FirebaseFirestore db;
+    private ListView notificationView;
     private ArrayList<String> listOfNotifIDs;
     private ArrayList<Book> listOfNotifBooks;
     private NotificationAdapter notificationAdapter;
@@ -49,8 +57,8 @@ public class NotificationsActivity extends AppCompatActivity {
         listOfNotifBooks = new ArrayList<>();
 
         // get views
-        ListView notificationView = findViewById(R.id.notifs_list_view);
-        backButton = findViewById(R.id.back_button);
+        notificationView = findViewById(R.id.notifs_list_view);
+        backButton = findViewById(R.id.notifs_back_button);
 
         // Setup adapter for requests overview
         notificationAdapter = new NotificationAdapter(this, listOfNotifications);
@@ -68,16 +76,6 @@ public class NotificationsActivity extends AppCompatActivity {
                             listOfNotifications.add(notification);
                             listOfNotifIDs.add(document.getId());
                             notificationAdapter.notifyDataSetChanged();
-
-                            // Add a Book object to listOfNotifBooks for setting onclick functionality
-                            db.collection("books").document(notification.getBookID())
-                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot document) {
-                                    Book book = document.toObject(Book.class);
-                                    listOfNotifBooks.add(book);
-                                }
-                            });
                         }
                     }
                 });
@@ -90,8 +88,8 @@ public class NotificationsActivity extends AppCompatActivity {
         });
 
 
-/*// Setup Requests Overview listeners
-        notificationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Setup Requests Overview listeners
+        /*notificationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Select which activity to go to based on the owner of the book.
@@ -111,28 +109,29 @@ public class NotificationsActivity extends AppCompatActivity {
             }
         });*/
         // Listener for deleting a notification
-//        notificationView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                // Delete the notification from db
-//                Notification notificationToRemove = (Notification) notificationView.getItemAtPosition(position);
-//                Book bookToRemove = listOfNotifBooks.get(position);
-//                String notifIDToRemove = listOfNotifIDs.get(position);
-//                db.collection("notifications").document(listOfNotifIDs.get(position)).delete()
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                Snackbar sb = Snackbar.make(getView(), "Notification Deleted", Snackbar.LENGTH_SHORT);
-//                                sb.show();
-//                            }
-//                        });
-//                // Delete all data related to the notification
-//                listOfNotifications.remove(notificationToRemove);
-//                listOfNotifBooks.remove(bookToRemove);
-//                listOfNotifIDs.remove(notifIDToRemove);
-//                notificationAdapter.notifyDataSetChanged();
-//                return true;
-//            }
-//        });
+        notificationView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("NOTIF", "Start deleting notification");
+                // Delete the notification from db
+                Notification notificationToRemove = (Notification) notificationView.getItemAtPosition(position);
+                String notifIDToRemove = listOfNotifIDs.get(position);
+                db.collection("notifications").document(listOfNotifIDs.get(position)).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Notification Deleted", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        });
+                // Delete all data related to the notification
+                listOfNotifications.remove(notificationToRemove);
+                listOfNotifIDs.remove(notifIDToRemove);
+                notificationAdapter.notifyDataSetChanged();
+
+                Log.d("NOTIF", " deleting notification finished");
+                return true;
+            }
+        });
     }
 }

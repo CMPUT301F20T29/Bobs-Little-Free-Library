@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:background="@android:color/darker_gray"
             android:clickable="true">
 
             <ImageView
@@ -93,7 +92,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="75dp" />
 
         <Button
             android:id="@+id/open_map_button"
@@ -101,11 +100,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Select Location"
+            style="@style/SecondaryButton"
             />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="75dp" />
 
         <!-- Other info starts -->
         <RelativeLayout
@@ -153,6 +153,13 @@
             android:text="Request Status"
             android:textSize="30sp" />
 
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/dividerVertical" />
+
         <!-- Buttons -->
         <LinearLayout
             android:id="@+id/button_container"
@@ -165,13 +172,15 @@
                 android:id="@+id/accept_request_button"
                 android:layout_width="125dp"
                 android:layout_height="wrap_content"
-                android:text="Accept" />
+                android:text="Accept"
+                style="@style/PositiveButtonStyle"/>
 
             <Button
                 android:id="@+id/decline_request_button"
                 android:layout_width="125dp"
                 android:layout_height="wrap_content"
-                android:text="Decline" />
+                android:text="Decline"
+                style="@style/NegativeButtonStyle"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -29,6 +29,8 @@ import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,11 +51,14 @@ public class RequestsFragment extends Fragment {
     private ArrayList<Request> currentRequestsList;
     private CustomRequestsAdapter currentAdapter;
     private int tabPosition = 0;
-    private Button filterAllButton;
-    private Button filterNotAcceptedButton;
-    private Button filterAcceptedButton;
-    private Button filterExchangedButton;
-    private Button filterReturnButton;
+    private ChipGroup chipGroup;
+    private boolean filterHidden = true;
+    private Button filterButton;
+    private Chip filterAllButton;
+    private Chip filterNotAcceptedButton;
+    private Chip filterAcceptedButton;
+    private Chip filterExchangedButton;
+    private Chip filterReturnButton;
 
     @Nullable
     @Override
@@ -74,6 +79,8 @@ public class RequestsFragment extends Fragment {
         currentRequestsList = new ArrayList<>();
         currentAdapter = new CustomRequestsAdapter(context, currentRequestsList, false);
         requestsList.setAdapter(currentAdapter);                                // we start with received tab and set the adapter
+        chipGroup = view.findViewById(R.id.filterChips);
+        filterButton = view.findViewById(R.id.filterButton);
         filterAllButton = view.findViewById(R.id.filterAllButton);
         filterNotAcceptedButton = view.findViewById(R.id.filterNotAcceptedButton);
         filterAcceptedButton = view.findViewById(R.id.filterAcceptedButton);
@@ -88,6 +95,9 @@ public class RequestsFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userID = user.getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // hide the filter buttons
+        hideFilters();
 
         // query all the received requests, add them to the list
         // add to current list too because we display received first, and notify the adapter
@@ -178,6 +188,19 @@ public class RequestsFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), SentRequestActivity.class);
                     intent.putExtra("REQUEST", currentRequestsList.get(position));
                     startActivity(intent);
+                }
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (filterHidden == true) {
+                    filterHidden = false;
+                    showFilters();
+                } else {
+                    filterHidden = true;
+                    hideFilters();
                 }
             }
         });
@@ -356,5 +379,19 @@ public class RequestsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity)getActivity()).setLastActiveTab("REQS");
+    }
+
+    // This method hides the filters and changes the text of button to filter
+    // This is when the user clicks hide to drop off the filters from show
+    private void hideFilters() {
+        chipGroup.setVisibility(View.GONE);
+        filterButton.setText("FILTER");
+    }
+
+    // This method shows the filters and changes the text of the button to hide
+    // This is when the user clicks to display the new changes
+    private void showFilters() {
+        chipGroup.setVisibility(View.VISIBLE);
+        filterButton.setText("HIDE");
     }
 }

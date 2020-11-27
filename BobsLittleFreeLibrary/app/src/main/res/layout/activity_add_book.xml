@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    android:id="@+id/scroll_view"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,19 +9,21 @@
     android:layout_gravity="start"
     android:padding="11dp">
 
-    <RelativeLayout
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,9 +72,10 @@
             </RelativeLayout>
             <!--        Title end-->
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:id="@+id/form_container"
                 >
 
@@ -90,7 +92,6 @@
                 <EditText
                     android:id="@+id/isbn_input"
                     android:inputType="textPersonName"
-                    android:layout_below="@+id/isbn_label"
                     style="@style/FormInput"
                     />
 
@@ -98,8 +99,6 @@
                     android:id="@+id/auto_fill"
                     style="@style/SecondaryButton"
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/isbn_input"
-
                     android:text="auto-fill"/>
                 <!--ISBN Field End-->
 
@@ -107,13 +106,11 @@
                 <TextView
                     android:id="@+id/title_label"
                     android:text="Title"
-                    android:layout_below="@+id/auto_fill"
                     style="@style/FormLabel"
                     />
 
                 <EditText
                     android:id="@+id/title_input"
-                    android:layout_below="@+id/title_label"
                     android:inputType="textMultiLine"
                     style="@style/FormInput"
                     />
@@ -123,13 +120,11 @@
                 <TextView
                     android:id="@+id/author_label"
                     android:text="Author"
-                    android:layout_below="@+id/title_input"
                     style="@style/FormLabel"
                     />
 
                 <EditText
                     android:id="@+id/author_input"
-                    android:layout_below="@+id/author_label"
                     android:inputType="textPersonName"
                     style="@style/FormInput"
                     />
@@ -139,13 +134,11 @@
                 <TextView
                     android:id="@+id/desc_label"
                     android:text="Description"
-                    android:layout_below="@+id/author_input"
                     style="@style/FormLabel"
                     />
 
                 <EditText
                     android:id="@+id/desc_input"
-                    android:layout_below="@+id/desc_label"
                     android:inputType="textMultiLine"
                     style="@style/FormInput"
                     />
@@ -155,8 +148,7 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/image_label"
-                    android:layout_below="@+id/desc_input">
+                    android:id="@+id/image_label">
 
                     <TextView
                         android:id="@+id/image_label_text"
@@ -176,20 +168,18 @@
                 <!--        Image Label end-->
 
                 <ImageView
-                        android:id="@+id/image"
-                        android:layout_below="@+id/image_label"
-                        style="@style/BookImage" />
+                    android:id="@+id/image"
+                    style="@style/BookImage" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/add_button"
-                android:layout_below="@+id/form_container"
                 android:text="Add"
                 style="@style/SubmitButton"
                 />
 
         </LinearLayout>
-    </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>
 

@@ -216,6 +216,7 @@ public class MyBookViewActivity extends AppCompatActivity {
      * This method runs a query that removes the book document for this book from the books collection
      * */
     private void removeFromBookCollection() {
+        String userID = user.getUid();
         // Now remove the book from the books collection
         DocumentReference bookRef = db.collection("books").document(book.getBookID());
         bookRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -230,6 +231,18 @@ public class MyBookViewActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("TEMP", "Error deleting Book document", e);
+            }
+        });
+
+        // Remove book id from user's bookIDs array 
+        DocumentReference userRef = db.collection("users").document(userID);
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                user.getBookIDs().remove(book.getBookID());
+
+                userRef.update("bookIDs", user.getBookIDs());
             }
         });
     }

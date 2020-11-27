@@ -3,8 +3,10 @@ package com.example.bobslittlefreelibrary;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.SearchActivity;
 import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -26,15 +28,12 @@ public class MainActivityTest {
 
     private Solo solo;
 
-    /**
-     *
-     * */
     @Rule
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
      * Runs before all tests and creates the solo instance
-     * @throws Exception
+     * @throws Exception if setup cannot be completed.
      * */
     @Before
     public void setup() throws Exception {
@@ -61,18 +60,36 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Started on the wrong Activity", MainActivity.class);
         // Switch to BooksFragment
         solo.clickOnView(solo.getView(R.id.books_page));
-        assertTrue(solo.searchText("Books"));
+        assertTrue(solo.searchText("Bookshelf"));
         // Switch to RequestsFragment
         solo.clickOnView(solo.getView(R.id.requests_page));
-        assertTrue(solo.searchText("Sent"));
+        assertTrue(solo.searchText("Requests"));
         // Switch back to HomeFragment
         solo.clickOnView(solo.getView(R.id.home_page));
-        assertTrue(solo.searchText("Requests Overview"));
+        assertTrue(solo.searchText("Latest Books"));
+    }
+
+    /**
+     * This test checks if the search button in the Home fragment works
+     * */
+    @Test
+    public void goToSearchActivity() {
+        solo.clickOnView(solo.getView(R.id.home_search_button));
+        solo.assertCurrentActivity("Did not go to SearchActivity", SearchActivity.class);
+    }
+
+    /**
+     * This test checks if the profile button Home fragment works
+     * */
+    @Test
+    public void goToMyProfileViewActivity() {
+        solo.clickOnView(solo.getView(R.id.home_user_profile_button));
+        solo.assertCurrentActivity("Did not go to MyProfileViewActivity", MyProfileViewActivity.class);
     }
 
     /**
      * Closes the activity after each test
-     * @throws Exception
+     * @throws Exception if the currently opened activities cannot be closed.
      * */
     @After
     public void tearDown() throws Exception {

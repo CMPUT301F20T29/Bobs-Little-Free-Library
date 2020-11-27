@@ -31,6 +31,10 @@ public class RequestTest {
         return "Behavior Modification: Principles and Procedures";
     }
 
+    private String mockRequestID() {
+        return "ivvrKqbEewHYozRi67lq";
+    }
+
     private double mockLat() {
         return -34;
     }
@@ -61,5 +65,25 @@ public class RequestTest {
         assertTrue(testRequest.isReturnRequest());
         testRequest.setReturnRequest(false);
         assertFalse(testRequest.isReturnRequest());
+    }
+
+    @Test
+    public void testSetIsAlreadySeen() {
+        Request testRequest = mockRequest();
+
+        assertFalse(testRequest.isAlreadySeen());
+
+        testRequest.setAlreadySeen();
+        assertTrue(testRequest.isAlreadySeen());
+    }
+
+    @Test
+    public void testSetRequestID() {
+        Request testRequest = mockRequest();
+        String requestID = mockRequestID();
+
+        assertEquals(testRequest.getRequestID(), null);
+        testRequest.setRequestID(requestID);
+        assertEquals(testRequest.getRequestID(), requestID);
     }
 }

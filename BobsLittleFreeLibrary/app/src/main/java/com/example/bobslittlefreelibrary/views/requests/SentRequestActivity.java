@@ -291,6 +291,14 @@ public class SentRequestActivity extends AppCompatActivity {
                                                                 Log.w("TEMP", "Error deleting document", e);
                                                             }
                                                         });
+                                                // Reduce number of requests the book has
+                                                db.collection("books").document(currentBook.getBookID())
+                                                        .update("numberOfRequests", currentBook.getNumberOfRequests() - 1);
+                                                if (currentBook.getNumberOfRequests() - 1 == 0 && !currentRequest.isReturnRequest()) {
+                                                    // Update book status
+                                                    db.collection("books").document(currentBook.getBookID())
+                                                            .update("status", "Available");
+                                                }
                                             }
                                         }
                                     } else {

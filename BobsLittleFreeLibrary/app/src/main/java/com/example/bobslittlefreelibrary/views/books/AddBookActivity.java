@@ -148,6 +148,8 @@ public class AddBookActivity extends AppCompatActivity implements
         autoFillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(AddBookActivity.this);
+                isbnInput.clearFocus();
                 autofillBookData(isbnInput.getText().toString());
             }
         });
@@ -279,6 +281,9 @@ public class AddBookActivity extends AppCompatActivity implements
 
                         db.collection("users").
                                 document(currentUser.getUid()).update(newBooksMap);
+
+                        db.collection("books").document(bookId)
+                                .update("ownerUsername", user.getUsername());
                     }
                 });
             }
@@ -329,7 +334,6 @@ public class AddBookActivity extends AppCompatActivity implements
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
 
-
                             hideKeyboard(AddBookActivity.this);
                             isbnInput.clearFocus();
                             autoFillButton.setVisibility(View.GONE);
@@ -342,6 +346,9 @@ public class AddBookActivity extends AppCompatActivity implements
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                String msg = "We couldn't find that book, please check if the isbn is correct.";
+                View view = findViewById(R.id.scroll_view);
+                Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });

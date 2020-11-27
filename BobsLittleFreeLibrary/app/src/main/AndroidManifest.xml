@@ -49,6 +49,7 @@
         <activity android:name=".views.templates.SomeAssetsActivity" />
         <activity android:name=".views.templates.BlankTemplateActivity" />
         <activity android:name=".views.templates.FormTemplateActivity" />
+        <activity android:name=".views.requests.ShowAllRequestsActivity" />
         <activity android:name=".views.users.SignupActivity" />
         <activity android:name=".views.users.LoginActivity">
             <intent-filter>

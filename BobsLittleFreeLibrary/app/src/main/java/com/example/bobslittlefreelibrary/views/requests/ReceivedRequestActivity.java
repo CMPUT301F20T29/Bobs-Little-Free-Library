@@ -27,6 +27,7 @@ import com.example.bobslittlefreelibrary.models.Request;
 import com.example.bobslittlefreelibrary.controllers.DownloadImageTask;
 import com.example.bobslittlefreelibrary.models.User;
 import com.example.bobslittlefreelibrary.views.books.MyBookViewActivity;
+import com.example.bobslittlefreelibrary.views.users.PublicProfileViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -64,6 +65,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
     private String notificationMessage;
     private boolean hasSelectedMap = false;
     private TextView requestStatusText;
+    private User requestSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         userProfileButton.setText((String)documentSnapshot.get("username"));
+                        requestSender = documentSnapshot.toObject(User.class);
                     }
                 });
 
@@ -123,8 +126,10 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                             declineRequestButton.setVisibility(View.INVISIBLE);
                             mapButton.setVisibility(View.INVISIBLE);
                             requestStatusText.setText("Borrowed");
+                            requestStatusText.setTextColor(getResources().getColor(R.color.borrowed_red));
                         } else if (bookStatus.equals("Accepted")) {
                             requestStatusText.setText("Accepted");
+                            requestStatusText.setTextColor(getResources().getColor(R.color.accepted_yellow));
                             mapButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -162,8 +167,9 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         userProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
-                Log.d("TEMP", "Borrower Profile button pressed");
+                Intent intent = new Intent(ReceivedRequestActivity.this, PublicProfileViewActivity.class);
+                intent.putExtra("USER", requestSender);
+                startActivity(intent);
             }
         });
 
@@ -171,6 +177,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
             requestStatusText.setText("Returning");
+            requestStatusText.setTextColor(getResources().getColor(R.color.requested_blue));
             mapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,6 +192,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             mapButton.setText("View Location");
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
             requestStatusText.setText("Request Not Accepted");
+            requestStatusText.setTextColor(getResources().getColor(R.color.available_green));
             db.collection("users")
                     .document(currentRequest.getReqReceiverID())
                     .get()

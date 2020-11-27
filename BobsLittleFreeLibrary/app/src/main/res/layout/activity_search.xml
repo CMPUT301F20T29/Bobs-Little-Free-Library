@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="11dp"
     tools:context=".views.SearchActivity">
 
     <!-- Top Buttons -->
@@ -22,12 +23,10 @@
         <Button
             android:id="@+id/filterButton"
             style="@style/SecondaryButton"
-            android:textColor="@color/White"
             android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="filterButtonPressed"
-            android:text="filter" />
-
+            android:text="Filter" />
 
     </RelativeLayout>
 
@@ -38,7 +37,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bookSearchBar"
         android:iconifiedByDefault="false"
-        android:queryHint="Search Bob's Little Free Library"></SearchView>
+        android:queryHint="Search Bob's Little Free Library"/>
 
 
     <!-- The next three linear layouts are the filter option buttons -->
@@ -56,12 +55,6 @@
         app:layout_constraintTop_toTopOf = "parent">
 
 
-        <com.google.android.material.chip.Chip
-            android:text="All"
-            android:layout_width="wrap_content"
-            style="@style/CustomChipStyle"
-            android:layout_height="wrap_content"
-            android:onClick="allFilterPressed"/>
 
         <com.google.android.material.chip.Chip
             android:text="Available"
@@ -77,19 +70,7 @@
             android:layout_height="wrap_content"
             android:onClick="requestedFilterPressed"/>
 
-        <com.google.android.material.chip.Chip
-            android:text="Accepted"
-            style="@style/CustomChipStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="acceptedFilterPressed"/>
 
-        <com.google.android.material.chip.Chip
-            android:text="Borrowed"
-            style="@style/CustomChipStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="borrowedFilterPressed"/>
 
 
     </com.google.android.material.chip.ChipGroup>

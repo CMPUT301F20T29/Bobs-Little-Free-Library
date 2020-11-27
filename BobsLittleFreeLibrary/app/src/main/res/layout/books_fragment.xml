@@ -10,30 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/sectionText"
-            android:layout_width="wrap_content"
+        <!--        Title begin-->
+        <RelativeLayout
+            android:id="@+id/title_container"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginTop="11dp"
-            android:text="Book"
-            android:textSize="35dp" />
+            >
 
+            <TextView
+                android:id="@+id/title_text"
+                android:text="Bookshelf"
+                style="@style/ViewTitle"
+                />
 
-        <Button
-            android:id="@+id/filterButton"
-            style="@style/SecondaryButton"
-            android:textColor="@color/White"
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:onClick="filterButtonPressed"
-            android:text="filter" />
+            <Button
+                android:id="@+id/filterButton"
+                style="@style/SecondaryButton"
+                android:layout_alignParentRight="true"
+                android:onClick="filterButtonPressed"
+                android:text="filter" />
 
-
+        </RelativeLayout>
+        <!--        Title end-->
 
     </RelativeLayout>
-
 
     <View
         android:id="@+id/divider"
@@ -44,7 +44,7 @@
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/filterChips"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="0dp"

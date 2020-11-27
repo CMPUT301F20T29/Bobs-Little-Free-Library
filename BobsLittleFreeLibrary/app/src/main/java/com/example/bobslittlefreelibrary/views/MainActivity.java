@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
         // brings up information about the user; in this case, log email
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
-        Log.d("userEmail",user.getEmail().toString());
+        Log.d("userEmail",user.getEmail());
 
         // Setup Bottom Nav view
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -133,12 +133,10 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                     // Go to a book view activity based on owner
                     if (user.getUid().equals(bookToShow.getOwnerID())) {
                         Intent intent = new Intent(MainActivity.this, MyBookViewActivity.class);
-                        intent.putExtra("BOOK_ID", document.getId());
                         intent.putExtra("BOOK", bookToShow);  // Send book to be displayed in book view activity
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(MainActivity.this, PublicBookViewActivity.class);
-                        intent.putExtra("BOOK_ID", document.getId());
                         intent.putExtra("BOOK", bookToShow);
                         startActivity(intent);
                     }
@@ -236,6 +234,9 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                         if (user.getUid().equals(bookToShow.getOwnerID())) {
                             db.collection("books").document(bookToShow.getBookID())
                                     .update("hasOwnerScanned", true);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "The owner of the book must scan first to initiate an exchange.", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     }
                 }

@@ -14,6 +14,7 @@ public class Book implements Serializable {
     private String ISBN;
     private String description;
     private String ownerID;
+    private String ownerUsername;
     private String status;
     private String pictureURL;
     private String dateAdded;
@@ -117,6 +118,11 @@ public class Book implements Serializable {
      * */
     public String getOwnerID() { return this.ownerID; }
     /**
+     * This method returns the username of the Owner of a Book object.
+     * @return Returns ownerUsername
+     * */
+    public String getOwnerUsername() { return ownerUsername; }
+    /**
      * This method returns the ISBN of a Book object.
      * @return Returns ISBN
      * */
@@ -202,6 +208,12 @@ public class Book implements Serializable {
      * @param ownerID The ownerID to be set
      * */
     public void setOwnerID(String ownerID) { this.ownerID = ownerID; }
+    /**
+     * This method sets the ownerUsername of the Book object.
+     * @param ownerUsername The ownerUsername to be set
+     * */
+    public void setOwnerUsername(String ownerUsername) { this.ownerUsername = ownerUsername; }
+
     /**
      * This method sets the ISBN of the Book object.
      * @param ISBN The ISBN to be set

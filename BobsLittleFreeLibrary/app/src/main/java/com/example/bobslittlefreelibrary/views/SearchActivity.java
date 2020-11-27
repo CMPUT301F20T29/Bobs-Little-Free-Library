@@ -89,12 +89,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-
+        setupData();
         searchOptions();
         setLayoutsAndButtons();
-        setupData();
         setUpOnClickListener();
-        setupList();
         hideFilters();
 
 
@@ -159,7 +157,7 @@ public class SearchActivity extends AppCompatActivity {
                 // going through all the books available in the populated list and finding the ones that match the search query
 
                 for (Book book: searchBookList) {
-                    if(book.getTitle().toLowerCase().contains(s.toLowerCase())) {
+                    if(book.getTitle().toLowerCase().contains(s.toLowerCase()) || book.getDescription().toLowerCase().contains(s.toLowerCase())) {
 
                         // if the user toggles to all, then just care about what\s being searched
                         if (currentFilter.equals("all")) {
@@ -177,6 +175,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, filteredBooks);
                 listView.setAdapter(adapter);
+
 
                 return false;
             }
@@ -197,8 +196,13 @@ public class SearchActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                         Log.d(TAG, document.getId() + " => " +document.getData());
                         Book book = document.toObject(Book.class);
-                        searchBookList.add(book);
-                        searchBookIDList.add(document.getId());
+                        if (book.getStatus().toLowerCase().contains("available")) {
+                            searchBookList.add(book);
+                            searchBookIDList.add(document.getId());
+                        } else if (book.getStatus().toLowerCase().contains("requested")) {
+                            searchBookList.add(book);
+                            searchBookIDList.add(document.getId());
+                        }
                     }
 
                 }
@@ -207,7 +211,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
         listView = (ListView) findViewById(R.id.bookSearchListView);
@@ -259,12 +262,27 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    // Method for setting up the populated list view
-    private void setupList() {
+    // Method for rinsing out the accepted and borrowed books
+    /*
+    private void rinse() {
+        ArrayList<Book> rinsedList = new ArrayList<Book>();
+        String availableStatus = "available";
+        String requestedStatus = "requested";
+        for (Book book: searchBookList) {
+            if (book.getStatus().toLowerCase().contains(availableStatus)) {
+                rinsedList.add(book);
+            }
+            else if (book.getStatus().toLowerCase().contains(requestedStatus)) {
+                rinsedList.add(book);
+            }
+        }
 
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, rinsedList);
+        listView.setAdapter(adapter);
 
 
     }
+     */
 
 
 
@@ -429,7 +447,6 @@ public class SearchActivity extends AppCompatActivity {
                 if (user.getUid().equals(selectedBook.getOwnerID())) {
                     Intent intent = new Intent(SearchActivity.this, MyBookViewActivity.class);
                     intent.putExtra("BOOK", selectedBook);
-
                     startActivity(intent);
 
                 } else {

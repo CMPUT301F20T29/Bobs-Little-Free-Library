@@ -55,12 +55,6 @@
         app:layout_constraintTop_toTopOf = "parent">
 
 
-        <com.google.android.material.chip.Chip
-            android:text="All"
-            android:layout_width="wrap_content"
-            style="@style/CustomChipStyle"
-            android:layout_height="wrap_content"
-            android:onClick="allFilterPressed"/>
 
         <com.google.android.material.chip.Chip
             android:text="Available"
@@ -76,19 +70,7 @@
             android:layout_height="wrap_content"
             android:onClick="requestedFilterPressed"/>
 
-        <com.google.android.material.chip.Chip
-            android:text="Accepted"
-            style="@style/CustomChipStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="acceptedFilterPressed"/>
 
-        <com.google.android.material.chip.Chip
-            android:text="Borrowed"
-            style="@style/CustomChipStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="borrowedFilterPressed"/>
 
 
     </com.google.android.material.chip.ChipGroup>

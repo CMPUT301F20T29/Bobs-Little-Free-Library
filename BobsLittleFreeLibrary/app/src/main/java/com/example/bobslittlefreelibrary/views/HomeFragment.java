@@ -97,15 +97,6 @@ public class HomeFragment extends Fragment {
         pagerAdapter = new LatestBooksPagerAdapter(getActivity());
         viewPager.setAdapter(pagerAdapter);
 
-        // Get number of notifications
-        db.collection("notifications").whereEqualTo("userID", user.getUid())
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                numberOfNotifs.setText(String.valueOf(queryDocumentSnapshots.size()));
-            }
-        });
-
         // Query for User document to convert into object to pass to profile view (if it is pressed)
         db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -163,9 +154,17 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        // Is called when the user switches away from the fragment
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+
+        // Get number of notifications
+        db.collection("notifications").whereEqualTo("userID", user.getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                numberOfNotifs.setText(String.valueOf(queryDocumentSnapshots.size()));
+            }
+        });
     }
 
     /**

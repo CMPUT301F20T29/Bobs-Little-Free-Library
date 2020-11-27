@@ -45,7 +45,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
     // views
     private Button backButton;
     private Button selectImageButton;
-    private Button addButton;
+    private Button editButton;
     private EditText titleInput;
     private EditText authorInput;
     private EditText descInput;
@@ -66,7 +66,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
         // get views
         backButton = findViewById(R.id.back_button);
-        addButton = findViewById(R.id.add_button);
+        editButton = findViewById(R.id.add_button);
         selectImageButton = findViewById(R.id.image_label_button);
         titleInput = findViewById(R.id.title_input);
         authorInput = findViewById(R.id.author_input);
@@ -103,7 +103,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
             }
         });
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -114,6 +114,7 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
                     // get book reference
                     db = FirebaseFirestore.getInstance();
+                    Log.d(TAG, "onClick: " + book.getBookID());
                     bookRef = db.collection("books").document(book.getBookID());
 
                     // get book

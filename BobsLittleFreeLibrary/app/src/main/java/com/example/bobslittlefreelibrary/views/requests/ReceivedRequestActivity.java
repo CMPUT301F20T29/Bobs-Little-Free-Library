@@ -126,8 +126,10 @@ public class ReceivedRequestActivity extends AppCompatActivity {
                             declineRequestButton.setVisibility(View.INVISIBLE);
                             mapButton.setVisibility(View.INVISIBLE);
                             requestStatusText.setText("Borrowed");
+                            requestStatusText.setTextColor(getResources().getColor(R.color.borrowed_red));
                         } else if (bookStatus.equals("Accepted")) {
                             requestStatusText.setText("Accepted");
+                            requestStatusText.setTextColor(getResources().getColor(R.color.accepted_yellow));
                             mapButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -175,6 +177,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
         // when the request has not been accepted
         if (currentRequest.isReturnRequest()) {
             requestStatusText.setText("Returning");
+            requestStatusText.setTextColor(getResources().getColor(R.color.requested_blue));
             mapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -189,6 +192,7 @@ public class ReceivedRequestActivity extends AppCompatActivity {
             mapButton.setText("View Location");
         } else if ((currentRequest.getLatitude() == 1000.0) && (currentRequest.getLongitude() == 1000.0)) {
             requestStatusText.setText("Request Not Accepted");
+            requestStatusText.setTextColor(getResources().getColor(R.color.available_green));
             db.collection("users")
                     .document(currentRequest.getReqReceiverID())
                     .get()

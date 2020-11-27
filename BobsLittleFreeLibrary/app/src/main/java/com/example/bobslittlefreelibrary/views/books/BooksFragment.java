@@ -22,6 +22,7 @@ import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
-
 
 /**
  *  This fragment manages all interactions and data displayed within
@@ -50,15 +50,15 @@ import static android.content.ContentValues.TAG;
  *
  *  Add FAB starts AddBookActivity
  */
-public class BooksFragment extends Fragment{
+public class BooksFragment extends Fragment {
 
     //Instantiate List of books and firebase variables
     ListView bookList;
     ArrayList<Book> dataList;
-    ArrayList<String> bookIDList;
     ArrayAdapter<Book> bookAdapter;
     FirebaseUser user;
     FirebaseFirestore db;
+    ChipGroup chips;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,12 +87,11 @@ public class BooksFragment extends Fragment{
 
         bookList = getActivity().findViewById(R.id.bookList);
         dataList = new ArrayList<>();
-        bookIDList = new ArrayList<>();
         bookAdapter = new CustomList(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
 
-        TextView titleCard = getActivity().findViewById(R.id.sectionText);
-        titleCard.setText("Books");
+        chips = getActivity().findViewById(R.id.filterChips);
+        chips.setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -112,7 +111,6 @@ public class BooksFragment extends Fragment{
                                 Log.d(TAG, document.getId() + " => " +document.getData());
                                 Book book = document.toObject(Book.class);
                                 dataList.add(book);
-                                bookIDList.add(document.getId());
                                 bookAdapter.notifyDataSetChanged();
                             }
                         } else {
@@ -129,7 +127,6 @@ public class BooksFragment extends Fragment{
                                 Log.d(TAG, document.getId() + " => " +document.getData());
                                 Book book = document.toObject(Book.class);
                                 dataList.add(book);
-                                bookIDList.add(document.getId());
                                 bookAdapter.notifyDataSetChanged();
                             }
                         } else {
@@ -147,9 +144,15 @@ public class BooksFragment extends Fragment{
             }
         });
         //Click listener linking to filter activity
-        Button filterButton = getActivity().findViewById(R.id.filterAllButton);
+        Button filterButton = getActivity().findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (chips.getVisibility() == View.VISIBLE) {
+                    chips.setVisibility(View.GONE);
+                } else {
+                    chips.setVisibility(View.VISIBLE);
+                }
+
                 //TODO: Add filter button actions
                 //TextView status = getActivity().findViewById(R.id.statusText);
                 //status.setText("/*Skippidi-pap-pap*/");
@@ -160,19 +163,17 @@ public class BooksFragment extends Fragment{
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book selectedBook = dataList.get(position);
                 // Select which activity to go to based on owner of book.
-                if (user.getUid().equals(dataList.get(position).getOwnerID())) {
+                if (user.getUid().equals(selectedBook.getOwnerID())) {
                     Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", bookIDList.get(position));
-                    intent.putExtra("BOOK", dataList.get(position));  // Send book to be displayed in book view activity
+                    intent.putExtra("BOOK", selectedBook);  // Send book to be displayed in book view activity
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", bookIDList.get(position));
-                    intent.putExtra("BOOK", dataList.get(position));
+                    intent.putExtra("BOOK", selectedBook);
                     startActivity(intent);
                 }
-
             }
         });
     }

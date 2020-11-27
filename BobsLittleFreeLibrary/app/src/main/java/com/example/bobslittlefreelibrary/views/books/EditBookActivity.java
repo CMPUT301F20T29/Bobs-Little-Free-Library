@@ -32,12 +32,11 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
-/*
+/**
  * EditBookActivity is an activity where a user can add a book to their collection. Scan book to
  * have it's info be autofilled by Google Books API.
- *
- * TODO: Save book to user's collection in firestore.
  */
 public class EditBookActivity extends AppCompatActivity implements SelectImageFragment.OnFragmentInteractionListener {
 
@@ -47,13 +46,14 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
     private Button backButton;
     private Button selectImageButton;
     private Button addButton;
+    private EditText titleInput;
+    private EditText authorInput;
     private EditText descInput;
     private ImageView imageView;
 
     // book data
     private Book book;
     private String usersImageFile;
-    private HashMap bookUpdateMap;
 
     private Boolean validInput = true;
     private FirebaseFirestore db;
@@ -68,6 +68,8 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
         backButton = findViewById(R.id.back_button);
         addButton = findViewById(R.id.add_button);
         selectImageButton = findViewById(R.id.image_label_button);
+        titleInput = findViewById(R.id.title_input);
+        authorInput = findViewById(R.id.author_input);
         descInput = findViewById(R.id.desc_input);
         imageView = findViewById(R.id.image);
 
@@ -82,6 +84,8 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
         if (book.getPictureURL() != null) {
             new DownloadImageTask(imageView).execute(book.getPictureURL());
         }
+        titleInput.setText(book.getTitle());
+        authorInput.setText(book.getAuthor());
         descInput.setText(book.getDescription());
 
         // button onClick Listeners
@@ -104,6 +108,8 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
             public void onClick(View v) {
 
                 if (validInput) {
+                    String title = titleInput.getText().toString();
+                    String author = authorInput.getText().toString();
                     String desc = descInput.getText().toString();
 
                     // get book reference
@@ -116,14 +122,27 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                             Book bookFromDb = documentSnapshot.toObject(Book.class);
-                            bookUpdateMap = new HashMap<String, String>();
+                            Map<String, Object> bookUpdateMap = new HashMap<>();
+
+                            // if title entered and title from db are different then update db
+                            if (!title.equals(bookFromDb.getTitle())) {
+                                bookUpdateMap.put("title", title);
+                                book.setTitle(title);
+                            }
+
+                            // if author entered and author from db are different then update db
+                            if (!desc.equals(bookFromDb.getAuthor())) {
+                                bookUpdateMap.put("author", author);
+                                book.setAuthor(author);
+                            }
 
                             // if description entered and description from db are different then update db
                             if (!desc.equals(bookFromDb.getDescription())) {
                                 bookUpdateMap.put("description", desc);
                                 book.setDescription(desc);
+                            }
 
-                            } else if (usersImageFile != null && !usersImageFile.equals(bookFromDb.getPictureURL())) {
+                            if (usersImageFile != null && !usersImageFile.equals(bookFromDb.getPictureURL())) {
                                 uploadImageFile();
                             }
 
@@ -169,14 +188,20 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
 
         String msg = "Please fix the following issues before adding your book:\n";
 
+        String title = titleInput.getText().toString();
+        String author = authorInput.getText().toString();
         String desc = descInput.getText().toString();
 
         if (desc.length() > 1000) { msg += "\n - Description is too long"; }
-        if (desc.isEmpty()) { msg += "\n - Description is empty"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (title.length() > 50) { msg += "\n - Title is too long"; }
+        if (author.length() > 50) { msg += "\n - Author is too long"; }
+        if (title.isEmpty()) { msg += "\n - Title is empty"; }
+        if (author.isEmpty()) { msg += "\n - Author is empty"; }
 
         Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
         View sbView = sb.getView();
-        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
+        TextView textView = sbView.findViewById(R.id.snackbar_text);
         textView.setMaxLines(6);
         sb.show();
     }
@@ -184,7 +209,6 @@ public class EditBookActivity extends AppCompatActivity implements SelectImageFr
     // Exits EditBookActivity and returns to MainActivity showing BooksFragment
     private void exitActivity(){
         Intent intent = new Intent(EditBookActivity.this, MyBookViewActivity.class);
-        intent.putExtra("BOOK_ID", getIntent().getExtras().getString("BOOK_ID"));
         intent.putExtra("BOOK", book);  // Send book to be displayed in book view activity\
         Log.d(TAG, "exitActivity: " + book.getDescription());
         startActivity(intent);

@@ -43,18 +43,26 @@ public class  CustomList extends ArrayAdapter<Book> {
         TextView bookName = view.findViewById(R.id.book_text);
         TextView authorName = view.findViewById(R.id.name_text);
         ImageView picture = view.findViewById(R.id.bookImage);
+        TextView status = view.findViewById(R.id.status_text);
 
 
 
 
-        //TODO: Set Image View
+
         bookName.setText(book.getTitle());
         authorName.setText(book.getAuthor());
+
+        if (book.getCurrentBorrowerUsername() != null) {
+            status.setText(book.getStatus() + " Current Borrower: " + book.getCurrentBorrowerUsername());
+
+        }else {
+            status.setText(book.getStatus());
+
+        }
+
         if (pictureURL != null) {
             new DownloadImageTask(picture).execute(pictureURL);
         }
-
-
         return view;
     }
 }

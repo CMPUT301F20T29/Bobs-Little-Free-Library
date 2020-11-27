@@ -3,8 +3,10 @@ package com.example.bobslittlefreelibrary;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.SearchActivity;
 import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.MainActivity;
+import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -65,6 +67,24 @@ public class MainActivityTest {
         // Switch back to HomeFragment
         solo.clickOnView(solo.getView(R.id.home_page));
         assertTrue(solo.searchText("Latest Books"));
+    }
+
+    /**
+     * This test checks if the search button in the Home fragment works
+     * */
+    @Test
+    public void goToSearchActivity() {
+        solo.clickOnView(solo.getView(R.id.home_search_button));
+        solo.assertCurrentActivity("Did not go to SearchActivity", SearchActivity.class);
+    }
+
+    /**
+     * This test checks if the profile button Home fragment works
+     * */
+    @Test
+    public void goToMyProfileViewActivity() {
+        solo.clickOnView(solo.getView(R.id.home_user_profile_button));
+        solo.assertCurrentActivity("Did not go to MyProfileViewActivity", MyProfileViewActivity.class);
     }
 
     /**

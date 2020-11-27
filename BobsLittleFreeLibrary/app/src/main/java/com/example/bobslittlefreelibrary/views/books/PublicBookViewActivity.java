@@ -106,7 +106,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                                 Snackbar sb = Snackbar.make(v, "Request Sent", Snackbar.LENGTH_SHORT);
                                 sb.show();
                                 requestButton.setClickable(false);
-                                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                                requestButton.setVisibility(View.INVISIBLE);
                                 bookStatus.setText("Requested");
                                 bookStatus.setTextColor(getResources().getColor(R.color.requested_blue));
                             }
@@ -115,7 +115,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                 // Update Book document
                 db.collection("books").document(book.getBookID())
                         .update("numberOfRequests", book.getNumberOfRequests() + 1);
-                if (book.getNumberOfRequests() == 0) { // The book object we are getting the value from has not been updated yet so the number of requests would still be n - 1
+                if (book.getNumberOfRequests() == 0) { // The book object we are getting the value from has not been updated so the number of requests would still be n - 1
                     // Update book status
                     db.collection("books").document(book.getBookID())
                             .update("status", "Requested");
@@ -179,7 +179,7 @@ public class PublicBookViewActivity extends AppCompatActivity {
                         Log.d("TEMP", "userAlreadyRequested right after query = " + userAlreadyRequested);
                         if (userAlreadyRequested) {
                             requestButton.setClickable(false);
-                            requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                            requestButton.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -210,12 +210,12 @@ public class PublicBookViewActivity extends AppCompatActivity {
             case "Accepted":
                 bookStatus.setTextColor(getResources().getColor(R.color.accepted_yellow));
                 requestButton.setClickable(false);
-                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                requestButton.setVisibility(View.INVISIBLE);
                 break;
             case "Borrowed":
                 bookStatus.setTextColor(getResources().getColor(R.color.borrowed_red));
                 requestButton.setClickable(false);
-                requestButton.setBackgroundColor(getResources().getColor(R.color.disabled_grey));
+                requestButton.setVisibility(View.INVISIBLE);
                 break;
         }
     }

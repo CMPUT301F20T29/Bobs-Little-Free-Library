@@ -53,6 +53,7 @@
 
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filterAllChip"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,6 +61,7 @@
             android:text="All" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filterAvailableChip"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,6 +69,7 @@
             android:text="Available" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filterRequestedChip"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,6 +77,7 @@
             android:text="Requested" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filterAcceptedChip"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,6 +85,7 @@
             android:text="Accepted" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filterBorrowedChip"
             style="@style/CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,12 +119,9 @@
             android:layout_marginRight="11dp"
             android:layout_marginBottom="11dp"
             android:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/baseline_add_white_18dp"
             android:clickable="true"
             android:focusable="true" />
 
-
-
     </RelativeLayout>
-
-
 </LinearLayout>

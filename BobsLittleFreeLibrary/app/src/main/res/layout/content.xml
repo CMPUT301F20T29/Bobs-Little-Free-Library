@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="horizontal"
-        android:padding="11dp">
+        android:padding="1dp">
 
         <ImageView
             android:id="@+id/bookImage"
@@ -43,9 +43,7 @@
                 android:id="@+id/name_text"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginBottom="34dp"
                 android:paddingLeft="0dp"
@@ -57,9 +55,7 @@
                 android:id="@+id/status_text"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="1dp"
                 android:layout_marginBottom="3dp"
                 app:autoSizeMaxTextSize="24dp"
                 app:autoSizeMinTextSize="5dp" />

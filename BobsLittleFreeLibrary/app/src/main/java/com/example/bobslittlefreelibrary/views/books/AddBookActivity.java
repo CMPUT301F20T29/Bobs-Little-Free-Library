@@ -148,6 +148,8 @@ public class AddBookActivity extends AppCompatActivity implements
         autoFillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(AddBookActivity.this);
+                isbnInput.clearFocus();
                 autofillBookData(isbnInput.getText().toString());
             }
         });
@@ -174,8 +176,6 @@ public class AddBookActivity extends AppCompatActivity implements
                                 // Create new Books object and it to add to firestore
                                 book = new Book(title, author, isbn, desc, currentUser.getUid(), "Available");
                                 addBook(book);
-                                // Return to main activity
-                                finish();
                             } else {
                                 Log.d(TAG, "onSuccess: HERE");
                                 String msg = "Oops, looks like that book has already been uploaded, please enter a different book.";
@@ -240,6 +240,7 @@ public class AddBookActivity extends AppCompatActivity implements
     // Given a book this method adds it as a document int the books collection in firestore,
     // uploads it's image if nessecary, and sets it's bookID field.
     private void addBook(Book book) {
+        spinner.setVisibility(View.VISIBLE);
         db.collection("books")
                 .add(book).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -279,6 +280,17 @@ public class AddBookActivity extends AppCompatActivity implements
 
                         db.collection("users").
                                 document(currentUser.getUid()).update(newBooksMap);
+
+                        db.collection("books").document(bookId)
+                                .update("ownerUsername", user.getUsername())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Return to main activity
+                                spinner.setVisibility(View.GONE);
+                                finish();
+                            }
+                        });
                     }
                 });
             }
@@ -329,7 +341,6 @@ public class AddBookActivity extends AppCompatActivity implements
                             authorInput.setText(author.trim());
                             descInput.setText(desc.trim());
 
-
                             hideKeyboard(AddBookActivity.this);
                             isbnInput.clearFocus();
                             autoFillButton.setVisibility(View.GONE);
@@ -342,6 +353,9 @@ public class AddBookActivity extends AppCompatActivity implements
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                String msg = "We couldn't find that book, please check if the isbn is correct.";
+                View view = findViewById(R.id.scroll_view);
+                Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });

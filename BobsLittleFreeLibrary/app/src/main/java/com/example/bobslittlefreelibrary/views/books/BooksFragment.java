@@ -115,10 +115,6 @@ public class BooksFragment extends Fragment {
         ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
 
-
-        TextView titleCard = getActivity().findViewById(R.id.sectionText);
-        titleCard.setText("Books");
-
         chips = getActivity().findViewById(R.id.filterChips);
         chips.setVisibility(View.GONE);
 

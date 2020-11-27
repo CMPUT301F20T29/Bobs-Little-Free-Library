@@ -22,6 +22,7 @@ import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.views.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,6 +58,7 @@ public class BooksFragment extends Fragment {
     ArrayAdapter<Book> bookAdapter;
     FirebaseUser user;
     FirebaseFirestore db;
+    ChipGroup chips;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,8 +90,8 @@ public class BooksFragment extends Fragment {
         bookAdapter = new CustomList(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
 
-        TextView titleCard = getActivity().findViewById(R.id.sectionText);
-        titleCard.setText("Books");
+        chips = getActivity().findViewById(R.id.filterChips);
+        chips.setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -142,9 +144,15 @@ public class BooksFragment extends Fragment {
             }
         });
         //Click listener linking to filter activity
-        Button filterButton = getActivity().findViewById(R.id.filterAllButton);
+        Button filterButton = getActivity().findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (chips.getVisibility() == View.VISIBLE) {
+                    chips.setVisibility(View.GONE);
+                } else {
+                    chips.setVisibility(View.VISIBLE);
+                }
+
                 //TODO: Add filter button actions
                 //TextView status = getActivity().findViewById(R.id.statusText);
                 //status.setText("/*Skippidi-pap-pap*/");

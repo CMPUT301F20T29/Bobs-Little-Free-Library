@@ -152,6 +152,12 @@ public class RequestsFragment extends Fragment {
                         currentRequestsList.add(receivedRequestsList.get(i));
                     }
                     currentAdapter.notifyDataSetChanged();
+                    filterNotAcceptedButton.setChecked(false);
+                    filterAcceptedButton.setChecked(false);
+                    filterExchangedButton.setChecked(false);
+                    filterReturnButton.setChecked(false);
+                    filterAllButton.setChecked(true);
+                    hideFilters();
                 } else {
                     // Sent requests tab
                     currentRequestsList.clear();
@@ -160,6 +166,12 @@ public class RequestsFragment extends Fragment {
                         currentRequestsList.add(sentRequestsList.get(i));
                     }
                     currentAdapter.notifyDataSetChanged();
+                    filterNotAcceptedButton.setChecked(false);
+                    filterAcceptedButton.setChecked(false);
+                    filterExchangedButton.setChecked(false);
+                    filterReturnButton.setChecked(false);
+                    filterAllButton.setChecked(true);
+                    hideFilters();
                 }
             }
 

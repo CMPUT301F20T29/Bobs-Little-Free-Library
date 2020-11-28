@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,7 @@ public class HomeFragment extends Fragment {
     private FragmentStateAdapter pagerAdapter;
     private ArrayList<Book> listOfBooks;
     private TextView numberOfNotifs;
+    private ProgressBar spinner;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class HomeFragment extends Fragment {
         Button quickScanButton = getView().findViewById(R.id.home_quick_scan_button);
         CardView notificationCard = getView().findViewById(R.id.notifs_card);
         numberOfNotifs = getView().findViewById(R.id.num_of_notifs);
+        spinner = getView().findViewById(R.id.progressBar1);
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = getView().findViewById(R.id.home_view_pager);
@@ -185,9 +188,9 @@ public class HomeFragment extends Fragment {
         String pictureURL = currentBook.getPictureURL();  // Get image url
         if (pictureURL != null) {
             new DownloadImageTask(imageView).execute(pictureURL);
-        } else {
-            imageView.setImageResource(R.drawable.blue_book);
         }
+
+        spinner.setVisibility(View.GONE);
         // Select which book view activity pressing on the button leads to
         view.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -108,7 +108,7 @@ public class BooksFragment extends Fragment {
 
         bookList = getActivity().findViewById(R.id.bookList);
         dataList = new ArrayList<>();
-        bookAdapter = new CustomList(getContext(), dataList);
+        bookAdapter = new BookAdapter(getContext(), dataList, false);
         bookList.setAdapter(bookAdapter);
 
 
@@ -169,7 +169,7 @@ public class BooksFragment extends Fragment {
                 for (Book book: dataList) {
                     filteredBooks.add(book);
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                 bookList.setAdapter(adapter);
             }
         });
@@ -184,7 +184,7 @@ public class BooksFragment extends Fragment {
                         filteredBooks.add(book);
                     }
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                 bookList.setAdapter(adapter);
             }
         });
@@ -201,7 +201,7 @@ public class BooksFragment extends Fragment {
                         filteredBooks.add(book);
                     }
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                 bookList.setAdapter(adapter);
             }
         });
@@ -217,7 +217,7 @@ public class BooksFragment extends Fragment {
                         filteredBooks.add(book);
                     }
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                 bookList.setAdapter(adapter);
             }
         });
@@ -232,7 +232,7 @@ public class BooksFragment extends Fragment {
                         filteredBooks.add(book);
                     }
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                 bookList.setAdapter(adapter);
             }
         });

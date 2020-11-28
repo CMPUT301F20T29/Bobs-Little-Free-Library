@@ -102,6 +102,7 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot document) {
+                        Log.d("DEBUG", "Home profile button pressed");
                         User userObject = document.toObject(User.class);
                         profileButton.setOnClickListener(v -> {
                             Intent intent = new Intent(getActivity(), MyProfileViewActivity.class);

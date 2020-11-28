@@ -58,23 +58,16 @@ import static android.content.ContentValues.TAG;
 public class BooksFragment extends Fragment {
 
     //Instantiate List of books and firebase variables
-    ListView bookList;
-    ArrayList<Book> dataList;
-    ArrayAdapter<Book> bookAdapter;
-    FirebaseUser user;
-    FirebaseFirestore db;
-    ChipGroup chips;
+    private ListView bookList;
+    private ArrayList<Book> dataList;
+    private ArrayAdapter<Book> bookAdapter;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+    private ChipGroup chips;
 
 
-    private String currentFilter = "all";
-    private Button filterButton;
-    private ChipGroup chipGroup;
-
-    // keeps track of whether the filter options are shown or hidden at the specific moment
-    boolean filterHidden = true;
 
     // filter checks
-    boolean allFilterSelected  = false;
     boolean availableFilterSelected = false;
     boolean requestedFilterSelected = false;
     boolean acceptedFilterSelected  = false;
@@ -178,14 +171,28 @@ public class BooksFragment extends Fragment {
         AvailableBookButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                filteredBooks.clear();
-                for (Book book: dataList) {
-                    if(book.getStatus().toLowerCase().contains("available")){
+                if(availableFilterSelected == false){
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        if(book.getStatus().toLowerCase().contains("available")){
+                            filteredBooks.add(book);
+                        }
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    availableFilterSelected = true;
+
+                } else{
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
                         filteredBooks.add(book);
                     }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    availableFilterSelected = false;
+
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
-                bookList.setAdapter(adapter);
+
             }
         });
 
@@ -195,14 +202,27 @@ public class BooksFragment extends Fragment {
         RequestedButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                filteredBooks.clear();
-                for (Book book: dataList) {
-                    if(book.getStatus().toLowerCase().contains("requested")){
+                if(requestedFilterSelected == false){
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        if(book.getStatus().toLowerCase().contains("requested")){
+                            filteredBooks.add(book);
+                        }
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    requestedFilterSelected = true;
+
+                }else{
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
                         filteredBooks.add(book);
                     }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    requestedFilterSelected = false;
+
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
-                bookList.setAdapter(adapter);
             }
         });
 
@@ -211,14 +231,27 @@ public class BooksFragment extends Fragment {
         AcceptedButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                filteredBooks.clear();
-                for (Book book: dataList) {
-                    if(book.getStatus().toLowerCase().contains("accepted")){
+                if (acceptedFilterSelected == false){
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        if(book.getStatus().toLowerCase().contains("accepted")){
+                            filteredBooks.add(book);
+                        }
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    acceptedFilterSelected = true;
+
+                }else{
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
                         filteredBooks.add(book);
                     }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    acceptedFilterSelected = false;
+
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
-                bookList.setAdapter(adapter);
             }
         });
 
@@ -226,14 +259,27 @@ public class BooksFragment extends Fragment {
         BorrowedButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                filteredBooks.clear();
-                for (Book book: dataList) {
-                    if(book.getStatus().toLowerCase().contains("borrowed")){
+                if(borrowedFilterSelected == false){
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        if(book.getStatus().toLowerCase().contains("borrowed")){
+                            filteredBooks.add(book);
+                        }
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    borrowedFilterSelected = true;
+
+                }else{
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
                         filteredBooks.add(book);
                     }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    borrowedFilterSelected = false;
+
                 }
-                BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
-                bookList.setAdapter(adapter);
             }
         });
 

@@ -1,5 +1,7 @@
 package com.example.bobslittlefreelibrary;
 
+import android.util.Log;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -83,6 +85,7 @@ public class MainActivityTest {
      * */
     @Test
     public void goToMyProfileViewActivity() {
+        solo.sleep(5000);
         solo.clickOnView(solo.getView(R.id.home_user_profile_button));
         solo.assertCurrentActivity("Did not go to MyProfileViewActivity", MyProfileViewActivity.class);
     }

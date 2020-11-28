@@ -58,8 +58,8 @@ public class MyProfileViewActivity extends AppCompatActivity {
         name.setText(user.getUsername());
         email.setText(user.getEmail());
         addy.setText(user.getAddress());
-        if (user.getPhone()!=null){
-            phone.setText(user.getPhone());
+        if (user.getPhoneNumber()!=null){
+            phone.setText(user.getPhoneNumber());
         }
         if(user.getBio()!=null){
             bio.setText(user.getBio());

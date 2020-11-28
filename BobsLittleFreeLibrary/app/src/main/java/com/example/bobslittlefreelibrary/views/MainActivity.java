@@ -241,6 +241,13 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
                     }
                 }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Book does not exist in the database. If you would like to add a book, please go to the Bookshelf tab.", Toast.LENGTH_SHORT);
+                toast.show();
+                // Because I am too lazy to make it add the book.
+            }
         });
     }
 }

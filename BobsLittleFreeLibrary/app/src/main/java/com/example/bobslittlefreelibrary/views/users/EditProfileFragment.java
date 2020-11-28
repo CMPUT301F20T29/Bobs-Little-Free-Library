@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.User;
-import com.example.bobslittlefreelibrary.views.users.MyProfileViewActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
@@ -29,8 +28,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,8 +70,8 @@ public class EditProfileFragment extends AppCompatDialogFragment {
                 User userFromDb = documentSnapshot.toObject(User.class);
                 address = userFromDb.getAddress();
                 autocompleteFragment.setText(address);
-                if(userFromDb.getPhone()!=null){
-                    phoneEditText.setText(userFromDb.getPhone());
+                if(userFromDb.getPhoneNumber()!=null){
+                    phoneEditText.setText(userFromDb.getPhoneNumber());
                 }
                 if(userFromDb.getBio()!=null){
                     bioEditText.setText(userFromDb.getBio());

@@ -107,6 +107,7 @@ public class BooksFragment extends Fragment {
 
         ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
+        
 
         chips = getActivity().findViewById(R.id.filterChips);
         chips.setVisibility(View.GONE);

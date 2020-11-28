@@ -173,7 +173,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
 
-                BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, filteredBooks);
+                BookAdapter adapter = new BookAdapter(getApplicationContext(), filteredBooks);
                 listView.setAdapter(adapter);
 
 
@@ -216,7 +216,7 @@ public class SearchActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.bookSearchListView);
 
         // make reference to the BookAdapter that we created
-        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, searchBookList);
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), searchBookList);
         listView.setAdapter(adapter);
 
 
@@ -277,7 +277,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
 
-        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, rinsedList);
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), rinsedList);
         listView.setAdapter(adapter);
 
 
@@ -310,7 +310,7 @@ public class SearchActivity extends AppCompatActivity {
 
         }
 
-        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, filteredBooks);
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), filteredBooks);
         listView.setAdapter(adapter);
     }
 
@@ -327,7 +327,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setQuery("", false);
         searchView.clearFocus();
 
-        BookAdapter adapter = new BookAdapter(getApplicationContext(), 0, searchBookList);
+        BookAdapter adapter = new BookAdapter(getApplicationContext(), searchBookList);
         listView.setAdapter(adapter);
 
     }

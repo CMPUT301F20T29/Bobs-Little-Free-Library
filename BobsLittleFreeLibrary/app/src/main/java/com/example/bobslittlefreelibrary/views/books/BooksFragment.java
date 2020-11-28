@@ -307,11 +307,13 @@ public class BooksFragment extends Fragment {
             public void onClick(View v) {
                 if (chips.getVisibility() == View.VISIBLE) {
                     chips.setVisibility(View.GONE);
+                    filterButton.setText("FILTER");
                 } else {
                     chips.setVisibility(View.VISIBLE);
+                    filterButton.setText("HIDE");
                 }
 
-             
+
             }
         });
 

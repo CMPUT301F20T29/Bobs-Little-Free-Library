@@ -63,59 +63,27 @@ public class SearchActivityTest {
     public void filterChipsTest() {
         solo.clickOnButton("FILTER");
 
-        assertTrue(solo.searchText("All"));
         assertTrue(solo.searchText("Available"));
         assertTrue(solo.searchText("Requested"));
-        assertTrue(solo.searchText("Accepted"));
-        assertTrue(solo.searchText("Borrowed"));
 
-        // chip for All filter
-        solo.clickOnButton("All");
-        assertTrue(solo.isTextChecked("All"));
-        assertFalse(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("Requested"));
-        assertFalse(solo.isTextChecked("Accepted"));
-        assertFalse(solo.isTextChecked("Borrowed"));
+
 
         // chip for Available filter
         solo.clickOnButton("Available");
         assertTrue(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("All"));
         assertFalse(solo.isTextChecked("Requested"));
-        assertFalse(solo.isTextChecked("Accepted"));
-        assertFalse(solo.isTextChecked("Borrowed"));
+
 
         // chip for Requested filter
         solo.clickOnButton("Requested");
         assertTrue(solo.isTextChecked("Requested"));
-        assertFalse(solo.isTextChecked("All"));
         assertFalse(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("Accepted"));
-        assertFalse(solo.isTextChecked("Borrowed"));
 
-        // chip for Accepted filter
-        solo.clickOnButton("Accepted");
-        assertTrue(solo.isTextChecked("Accepted"));
-        assertFalse(solo.isTextChecked("All"));
+
+        // click on Requested Again
+        solo.clickOnButton("Requested");
         assertFalse(solo.isTextChecked("Requested"));
         assertFalse(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("Borrowed"));
-
-        // chip for Borrowed filter
-        solo.clickOnButton("Borrowed");
-        assertTrue(solo.isTextChecked("Borrowed"));
-        assertFalse(solo.isTextChecked("All"));
-        assertFalse(solo.isTextChecked("Requested"));
-        assertFalse(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("Accepted"));
-
-        // click on Borrowed Again
-        solo.clickOnButton("Borrowed");
-        assertFalse(solo.isTextChecked("Borrowed"));
-        assertFalse(solo.isTextChecked("All"));
-        assertFalse(solo.isTextChecked("Requested"));
-        assertFalse(solo.isTextChecked("Available"));
-        assertFalse(solo.isTextChecked("Accepted"));
 
         // click on Hide filter
         solo.clickOnButton("HIDE");

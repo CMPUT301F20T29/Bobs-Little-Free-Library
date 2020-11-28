@@ -107,6 +107,7 @@ public class BooksFragment extends Fragment {
 
         ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
+        
 
         chips = getActivity().findViewById(R.id.filterChips);
         chips.setVisibility(View.GONE);
@@ -307,11 +308,13 @@ public class BooksFragment extends Fragment {
             public void onClick(View v) {
                 if (chips.getVisibility() == View.VISIBLE) {
                     chips.setVisibility(View.GONE);
+                    filterButton.setText("FILTER");
                 } else {
                     chips.setVisibility(View.VISIBLE);
+                    filterButton.setText("HIDE");
                 }
 
-             
+
             }
         });
 

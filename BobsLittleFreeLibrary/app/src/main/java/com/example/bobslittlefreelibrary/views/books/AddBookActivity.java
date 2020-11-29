@@ -149,6 +149,7 @@ public class AddBookActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 hideKeyboard(AddBookActivity.this);
+                spinner.setVisibility(View.VISIBLE);
                 isbnInput.clearFocus();
                 autofillBookData(isbnInput.getText().toString());
             }
@@ -347,15 +348,16 @@ public class AddBookActivity extends AppCompatActivity implements
                             spinner.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
+                            Log.d(TAG, "onErrorResponse: ");
+                            String msg = "We couldn't find that book, please check if the isbn is correct.";
+                            View view = findViewById(R.id.scroll_view);
+                            Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String msg = "We couldn't find that book, please check if the isbn is correct.";
-                View view = findViewById(R.id.scroll_view);
-                Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });

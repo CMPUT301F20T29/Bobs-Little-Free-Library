@@ -126,127 +126,125 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.OnFr
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 ArrayList<DocumentSnapshot> documents = (ArrayList<DocumentSnapshot>) queryDocumentSnapshots.getDocuments();
-                DocumentSnapshot document = documents.get(0); // Should only be one
-                Book bookToShow = document.toObject(Book.class);
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    DocumentSnapshot document = documents.get(0); // Should only be one
+                    Book bookToShow = document.toObject(Book.class);
 
-                if (bookToShow.getStatus().equals("Available") || bookToShow.getStatus().equals("Requested")) {
-                    // Go to a book view activity based on owner
-                    if (user.getUid().equals(bookToShow.getOwnerID())) {
-                        Intent intent = new Intent(MainActivity.this, MyBookViewActivity.class);
-                        intent.putExtra("BOOK", bookToShow);  // Send book to be displayed in book view activity
-                        startActivity(intent);
+                    if (bookToShow.getStatus().equals("Available") || bookToShow.getStatus().equals("Requested")) {
+                        // Go to a book view activity based on owner
+                        if (user.getUid().equals(bookToShow.getOwnerID())) {
+                            Intent intent = new Intent(MainActivity.this, MyBookViewActivity.class);
+                            intent.putExtra("BOOK", bookToShow);  // Send book to be displayed in book view activity
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(MainActivity.this, PublicBookViewActivity.class);
+                            intent.putExtra("BOOK", bookToShow);
+                            startActivity(intent);
+                        }
                     } else {
-                        Intent intent = new Intent(MainActivity.this, PublicBookViewActivity.class);
-                        intent.putExtra("BOOK", bookToShow);
-                        startActivity(intent);
+                        if (bookToShow.getHasOwnerScanned()) {
+                            if (user.getUid().equals(bookToShow.getCurrentBorrowerID())) {
+                                db.collection("requests").document(bookToShow.getCurrentRequestID())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (bookToShow.getStatus().equals("Accepted")) {
+                                                // Need to add book to borrower's bookIDs list
+                                                db.collection("users").document(bookToShow.getCurrentBorrowerID()).
+                                                        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        User user = documentSnapshot.toObject(User.class);
+
+                                                        ArrayList<String> usersBooks = user.getBookIDs();
+                                                        usersBooks.add(bookToShow.getBookID());
+
+                                                        Map<String, Object> newBooksMap = new HashMap<>();
+                                                        newBooksMap.put("bookIDs", usersBooks);
+
+                                                        db.collection("users").
+                                                                document(bookToShow.getCurrentBorrowerID()).update(newBooksMap);
+
+                                                        Toast toast = Toast.makeText(getApplicationContext(), "Borrow exchange completed.", Toast.LENGTH_SHORT);
+                                                        toast.show();
+                                                    }
+                                                });
+                                                // Set book status to borrowed
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("status", "Borrowed");
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("hasOwnerScanned", false);
+                                                // Update borrower username in book
+                                                db.collection("users").document(bookToShow.getCurrentBorrowerID())
+                                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            User user = document.toObject(User.class);
+                                                            db.collection("books").document(bookToShow.getBookID())
+                                                                    .update("currentBorrowerUsername", user.getUsername());
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                // remove the book from borrower's bookIDs
+                                                db.collection("users").document(bookToShow.getCurrentBorrowerID()).
+                                                        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        User user = documentSnapshot.toObject(User.class);
+
+                                                        ArrayList<String> usersBooks = user.getBookIDs();
+                                                        usersBooks.remove(bookToShow.getBookID());
+
+                                                        Map<String, Object> newBooksMap = new HashMap<>();
+                                                        newBooksMap.put("bookIDs", usersBooks);
+
+                                                        db.collection("users").
+                                                                document(bookToShow.getCurrentBorrowerID()).update(newBooksMap);
+
+                                                        Toast toast = Toast.makeText(getApplicationContext(), "Return exchange completed.", Toast.LENGTH_SHORT);
+                                                        toast.show();
+                                                    }
+                                                });
+                                                // Set book status to available
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("status", "Available");
+                                                // Remove borrower info
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("currentBorrowerID", null);
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("currentBorrowerUsername", null);
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("hasOwnerScanned", false);
+                                                // delete request
+                                                db.collection("books").document(bookToShow.getBookID())
+                                                        .update("currentRequestID", null);
+                                                db.collection("requests").document(bookToShow.getCurrentRequestID())
+                                                        .delete();
+                                            }
+                                        } else {
+                                            Log.d("TEMP", "No request found");
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            if (user.getUid().equals(bookToShow.getOwnerID())) {
+                                db.collection("books").document(bookToShow.getBookID())
+                                        .update("hasOwnerScanned", true);
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(), "The owner of the book must scan first to initiate an exchange.", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        }
                     }
                 } else {
-                    if (bookToShow.getHasOwnerScanned()) {
-                        if (user.getUid().equals(bookToShow.getCurrentBorrowerID())) {
-                            db.collection("requests").document(bookToShow.getCurrentRequestID())
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        if (bookToShow.getStatus().equals("Accepted")) {
-                                            // Need to add book to borrower's bookIDs list
-                                            db.collection("users").document(bookToShow.getCurrentBorrowerID()).
-                                                    get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User user = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersBooks = user.getBookIDs();
-                                                    usersBooks.add(bookToShow.getBookID());
-
-                                                    Map<String, Object> newBooksMap = new HashMap<>();
-                                                    newBooksMap.put("bookIDs", usersBooks);
-
-                                                    db.collection("users").
-                                                            document(bookToShow.getCurrentBorrowerID()).update(newBooksMap);
-
-                                                    Toast toast = Toast.makeText(getApplicationContext(), "Borrow exchange completed.", Toast.LENGTH_SHORT);
-                                                    toast.show();
-                                                }
-                                            });
-                                            // Set book status to borrowed
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("status", "Borrowed");
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("hasOwnerScanned", false);
-                                            // Update borrower username in book
-                                            db.collection("users").document(bookToShow.getCurrentBorrowerID())
-                                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot document = task.getResult();
-                                                        User user = document.toObject(User.class);
-                                                        db.collection("books").document(bookToShow.getBookID())
-                                                                .update("currentBorrowerUsername", user.getUsername());
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            // remove the book from borrower's bookIDs
-                                            db.collection("users").document(bookToShow.getCurrentBorrowerID()).
-                                                    get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User user = documentSnapshot.toObject(User.class);
-
-                                                    ArrayList<String> usersBooks = user.getBookIDs();
-                                                    usersBooks.remove(bookToShow.getBookID());
-
-                                                    Map<String, Object> newBooksMap = new HashMap<>();
-                                                    newBooksMap.put("bookIDs", usersBooks);
-
-                                                    db.collection("users").
-                                                            document(bookToShow.getCurrentBorrowerID()).update(newBooksMap);
-
-                                                    Toast toast = Toast.makeText(getApplicationContext(), "Return exchange completed.", Toast.LENGTH_SHORT);
-                                                    toast.show();
-                                                }
-                                            });
-                                            // Set book status to available
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("status", "Available");
-                                            // Remove borrower info
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("currentBorrowerID", null);
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("currentBorrowerUsername", null);
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("hasOwnerScanned", false);
-                                            // delete request
-                                            db.collection("books").document(bookToShow.getBookID())
-                                                    .update("currentRequestID", null);
-                                            db.collection("requests").document(bookToShow.getCurrentRequestID())
-                                                    .delete();
-                                        }
-                                    } else {
-                                        Log.d("TEMP", "No request found");
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        if (user.getUid().equals(bookToShow.getOwnerID())) {
-                            db.collection("books").document(bookToShow.getBookID())
-                                    .update("hasOwnerScanned", true);
-                        } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "The owner of the book must scan first to initiate an exchange.", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
+                    Toast toast = Toast.makeText(getApplicationContext(), "Book does not exist in the database. If you would like to add a book, please go to the Bookshelf tab.", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Book does not exist in the database. If you would like to add a book, please go to the Bookshelf tab.", Toast.LENGTH_SHORT);
-                toast.show();
-                // Because I am too lazy to make it add the book.
             }
         });
     }

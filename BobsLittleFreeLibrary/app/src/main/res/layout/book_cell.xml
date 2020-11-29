@@ -26,13 +26,6 @@
             android:layout_centerVertical="true"
             >
 
-            <TextView
-                android:id="@+id/bookSearchStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/Black"
-                android:text=""
-                android:paddingBottom="3dp"/>
 
             <TextView
                 android:id="@+id/bookSearchName"
@@ -41,18 +34,33 @@
                 android:textColor="@color/Black"
                 android:textSize="26sp"
                 app:autoSizeTextType="uniform"
-                android:paddingBottom="3dp"
-                android:text="Loading..."
+                android:text="The Way of kings"
 
                 />
 
+
             <TextView
-                android:id="@+id/bookSearchAuthor"
-                android:layout_width="match_parent"
+                android:id="@+id/bookSearchStatus"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
                 android:textColor="@color/Black"
-                android:text="" />
+                android:layout_gravity="start"
+                android:textSize="16sp"
+                android:paddingBottom="3dp"
+                android:text="Available" />
+
+
+            <TextView
+                android:id="@+id/owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"
+                android:layout_alignParentRight="true"
+                android:text="Owned by mrl"
+                android:paddingRight="10dp"/>
+
+
+
 
 
         </LinearLayout>

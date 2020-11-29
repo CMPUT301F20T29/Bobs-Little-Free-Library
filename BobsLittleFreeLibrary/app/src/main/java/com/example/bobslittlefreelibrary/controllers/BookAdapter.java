@@ -14,24 +14,18 @@ import com.example.bobslittlefreelibrary.models.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-// Adapter for books in the Search Activity
+// Adapter for books in the SearchActivity and BooksFragment
 public class BookAdapter extends ArrayAdapter<Book> {
-    private Boolean search;
 
-    public BookAdapter(Context context, ArrayList<Book> bookSearchList, Boolean search) {
-        super(context,0, bookSearchList);
-        this.search = search;
-    }
 
     public BookAdapter(Context context, ArrayList<Book> bookSearchList) {
         super(context,0, bookSearchList);
-        this.search = true;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        // The book to display
         Book book = getItem(position);
 
         // Initializing the book cell view
@@ -39,21 +33,20 @@ public class BookAdapter extends ArrayAdapter<Book> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.book_cell, parent, false);
         }
 
+        // Get views
         TextView bookName = (TextView) convertView.findViewById(R.id.bookSearchName);
         TextView bookStatus = (TextView) convertView.findViewById(R.id.bookSearchStatus);
-        TextView bookAuthor = (TextView) convertView.findViewById(R.id.bookSearchAuthor);
+        TextView owner = (TextView) convertView.findViewById(R.id.owner);
         ImageView bookSearchImage = (ImageView) convertView.findViewById(R.id.bookSearchImage);
 
-        if (this.search) {
-            String msg = book.getStatus() + " to borrow from " + book.getOwnerUsername();
-            bookStatus.setText(msg);
-        } else {
-            bookStatus.setText(book.getStatus());
-        }
-        
+        // Set TextViews
+        bookStatus.setText(book.getStatus());
+        bookStatus.setText(book.getStatus());
         bookName.setText(book.getTitle());
-        bookAuthor.setText(book.getAuthor());
+        String ownerText = "Owned by " + book.getOwnerUsername();
+        owner.setText(ownerText);
 
+        // Set books's image
         String pictureURL = book.getPictureURL();
         if (pictureURL != null) {
             new DownloadImageTask(bookSearchImage).execute(pictureURL);

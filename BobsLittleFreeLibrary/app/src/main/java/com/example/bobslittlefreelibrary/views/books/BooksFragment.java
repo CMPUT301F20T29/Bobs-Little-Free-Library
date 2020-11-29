@@ -10,14 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bobslittlefreelibrary.controllers.BookAdapter;
-import com.example.bobslittlefreelibrary.controllers.CustomList;
 import com.example.bobslittlefreelibrary.R;
 import com.example.bobslittlefreelibrary.models.Book;
 import com.example.bobslittlefreelibrary.views.MainActivity;
@@ -65,15 +63,12 @@ public class BooksFragment extends Fragment {
     private FirebaseFirestore db;
     private ChipGroup chips;
 
-
-
     // filter checks
     boolean myBooksFilterSelected = false;
     boolean availableFilterSelected = false;
     boolean requestedFilterSelected = false;
     boolean acceptedFilterSelected  = false;
     boolean borrowedFilterSelected = false;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,17 +97,13 @@ public class BooksFragment extends Fragment {
 
         bookList = getActivity().findViewById(R.id.bookList);
         dataList = new ArrayList<>();
-        bookAdapter = new BookAdapter(getContext(), dataList, false);
+        bookAdapter = new BookAdapter(getContext(), dataList);
         bookList.setAdapter(bookAdapter);
-
 
         ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
-        
-
         chips = getActivity().findViewById(R.id.filterChips);
         chips.setVisibility(View.GONE);
-
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -198,8 +189,6 @@ public class BooksFragment extends Fragment {
             }
         });
 
-
-
         Chip RequestedButton = getActivity().findViewById(R.id.filterRequestedChip);
         RequestedButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -227,7 +216,6 @@ public class BooksFragment extends Fragment {
                 }
             }
         });
-
 
         Chip AcceptedButton = getActivity().findViewById(R.id.filterAcceptedChip);
         AcceptedButton.setOnClickListener(new View.OnClickListener(){
@@ -286,6 +274,7 @@ public class BooksFragment extends Fragment {
         });
 
 
+
         Chip MyBooksButton = getActivity().findViewById(R.id.filterMyBooksChip);
         MyBooksButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -329,10 +318,6 @@ public class BooksFragment extends Fragment {
             }
         });
 
-
-
-
-
         //Click listener linking to filter activity
         Button filterButton = getActivity().findViewById(R.id.filterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -344,8 +329,6 @@ public class BooksFragment extends Fragment {
                     chips.setVisibility(View.VISIBLE);
                     filterButton.setText("HIDE");
                 }
-
-
             }
         });
 
@@ -367,8 +350,5 @@ public class BooksFragment extends Fragment {
                 }
             }
         });
-
-
     }
-
 }

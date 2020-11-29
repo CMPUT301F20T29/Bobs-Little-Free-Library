@@ -86,28 +86,7 @@ public class NotificationsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-        // Setup Requests Overview listeners
-        /*notificationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Select which activity to go to based on the owner of the book.
-                Notification notification = listOfNotifications.get(position);
-                Book currentBook = listOfNotifBooks.get(position);
-                if (currentBook.getOwnerID().equals(user.getUid())) {
-                    Intent intent = new Intent(getActivity(), MyBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", notification.getBookID());
-                    intent.putExtra("BOOK", currentBook);  // Send book to be displayed in book view activity
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), PublicBookViewActivity.class);
-                    intent.putExtra("BOOK_ID", notification.getBookID());
-                    intent.putExtra("BOOK", currentBook);
-                    startActivity(intent);
-                }
-            }
-        });*/
+        
         // Listener for deleting a notification
         notificationView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

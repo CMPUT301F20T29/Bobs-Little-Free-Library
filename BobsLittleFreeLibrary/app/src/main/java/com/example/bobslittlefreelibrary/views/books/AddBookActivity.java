@@ -113,7 +113,6 @@ public class AddBookActivity extends AppCompatActivity implements
         imageView = findViewById(R.id.image);
         autoFillButton = findViewById(R.id.auto_fill);
         spinner = findViewById(R.id.progressBar1);
-
         autoFillButton.setVisibility(View.GONE);
         spinner.setVisibility(View.GONE);
 

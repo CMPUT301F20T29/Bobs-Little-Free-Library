@@ -308,6 +308,7 @@ public class BooksFragment extends Fragment {
 
 
 
+
         //Click listener linking to AddBookActivity
         final FloatingActionButton addItemButton = getActivity().findViewById(R.id.add_Item);
         addItemButton.setOnClickListener(new View.OnClickListener() {

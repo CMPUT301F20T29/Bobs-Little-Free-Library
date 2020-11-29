@@ -68,6 +68,7 @@ public class BooksFragment extends Fragment {
 
 
     // filter checks
+    boolean myBooksFilterSelected = false;
     boolean availableFilterSelected = false;
     boolean requestedFilterSelected = false;
     boolean acceptedFilterSelected  = false;
@@ -283,6 +284,36 @@ public class BooksFragment extends Fragment {
                 }
             }
         });
+
+
+        Chip MyBooksButton = getActivity().findViewById(R.id.filterMyBooksChip);
+        MyBooksButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(myBooksFilterSelected == false){
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        if(book.getOwnerUsername() == user.getDisplayName()){
+                            filteredBooks.add(book);
+                        }
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    myBooksFilterSelected = true;
+
+                }else{
+                    filteredBooks.clear();
+                    for (Book book: dataList) {
+                        filteredBooks.add(book);
+                    }
+                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapter);
+                    myBooksFilterSelected = false;
+
+                }
+            }
+        });
+
 
 
 

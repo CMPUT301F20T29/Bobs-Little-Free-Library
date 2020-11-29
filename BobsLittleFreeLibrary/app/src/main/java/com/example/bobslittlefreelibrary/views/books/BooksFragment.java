@@ -70,6 +70,7 @@ public class BooksFragment extends Fragment {
     boolean acceptedFilterSelected  = false;
     boolean borrowedFilterSelected = false;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +175,10 @@ public class BooksFragment extends Fragment {
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
                     availableFilterSelected = true;
+                    myBooksFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 } else{
                     filteredBooks.clear();
@@ -182,7 +187,11 @@ public class BooksFragment extends Fragment {
                     }
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
+                    myBooksFilterSelected = false;
                     availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }
 
@@ -203,6 +212,10 @@ public class BooksFragment extends Fragment {
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
                     requestedFilterSelected = true;
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }else{
                     filteredBooks.clear();
@@ -211,7 +224,11 @@ public class BooksFragment extends Fragment {
                     }
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
                     requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }
             }
@@ -231,6 +248,10 @@ public class BooksFragment extends Fragment {
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
                     acceptedFilterSelected = true;
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    borrowedFilterSelected = false;
 
                 }else{
                     filteredBooks.clear();
@@ -239,7 +260,11 @@ public class BooksFragment extends Fragment {
                     }
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
-                    acceptedFilterSelected = false;
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }
             }
@@ -259,6 +284,10 @@ public class BooksFragment extends Fragment {
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
                     borrowedFilterSelected = true;
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
 
                 }else{
                     filteredBooks.clear();
@@ -267,6 +296,10 @@ public class BooksFragment extends Fragment {
                     }
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
+                    myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
                     borrowedFilterSelected = false;
 
                 }
@@ -282,13 +315,19 @@ public class BooksFragment extends Fragment {
                 if(myBooksFilterSelected == false){
                     filteredBooks.clear();
                     for (Book book: dataList) {
-                        if(book.getOwnerUsername() == user.getDisplayName()){
+                        if(book.getOwnerID().equals(user.getUid())){
+
                             filteredBooks.add(book);
                         }
                     }
-                    BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
-                    bookList.setAdapter(adapter);
+                    BookAdapter adapterMy = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
+                    bookList.setAdapter(adapterMy);
+
                     myBooksFilterSelected = true;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }else{
                     filteredBooks.clear();
@@ -298,6 +337,10 @@ public class BooksFragment extends Fragment {
                     BookAdapter adapter = new BookAdapter(getActivity().getApplicationContext(), filteredBooks);
                     bookList.setAdapter(adapter);
                     myBooksFilterSelected = false;
+                    availableFilterSelected = false;
+                    requestedFilterSelected = false;
+                    acceptedFilterSelected  = false;
+                    borrowedFilterSelected = false;
 
                 }
             }

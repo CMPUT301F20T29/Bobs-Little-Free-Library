@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.bobslittlefreelibrary.views.NotificationsActivity;
 import com.example.bobslittlefreelibrary.views.SearchActivity;
 import com.example.bobslittlefreelibrary.views.users.LoginActivity;
 import com.example.bobslittlefreelibrary.views.MainActivity;
@@ -78,6 +79,15 @@ public class MainActivityTest {
     public void goToSearchActivity() {
         solo.clickOnView(solo.getView(R.id.home_search_button));
         solo.assertCurrentActivity("Did not go to SearchActivity", SearchActivity.class);
+    }
+
+    /**
+     * This test checks if the search button in the Home fragment works
+     * */
+    @Test
+    public void goToNotificationsActivity() {
+        solo.clickOnView(solo.getView(R.id.notifs_card));
+        solo.assertCurrentActivity("Did not go to NotificationsActivity", NotificationsActivity.class);
     }
 
     /**

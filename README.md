@@ -1,6 +1,6 @@
 # Bob's Little Free Library 
 
-Bob's Little Free Library is a book sharing app created as the term project for [CMPUT 301 - Intro to Software Engineering ](https://www.ualberta.ca/computing-science/undergraduate-studies/course-directory/courses/introduction-to-software-engineering.html) in Fall of 2020. The app is for a comunity of readers that want to upload, borrow, lend, and exchange each other's books with ease. Take a look at a short demo [here](https://drive.google.com/file/d/1G78mErhBzyJEwKd62OLz0UABxwjl0JgC/view?usp=sharing) where two users, Mari and Lucas, go through the process of adding, requesting, and then exchanging a book. This demo showcases the UI design and the basic features of the app, a comprehensive list of it's features can be found below.
+Bob's Little Free Library is a book sharing app created as the term project for [CMPUT 301 - Intro to Software Engineering ](https://www.ualberta.ca/computing-science/undergraduate-studies/course-directory/courses/introduction-to-software-engineering.html) in Fall of 2020. The app is for a community of readers that want to upload, borrow, lend, and exchange each other's books with ease. Take a look at a short demo [here](https://drive.google.com/file/d/1G78mErhBzyJEwKd62OLz0UABxwjl0JgC/view?usp=sharing) where two users, Mari and Lucas, go through the process of adding, requesting, and then exchanging a book. This demo showcases the UI design and the basic features of the app, a comprehensive list of it's features can be found below.
 
 ### Sign Up 
 

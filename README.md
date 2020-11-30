@@ -27,6 +27,23 @@ The **Requests** screen is a place for you to keep track of all the requests tha
 To add a book a user can either scan or enter the isbn from the back of the book, this will automatically get all the book's information like the title, author, and description. The user can also enter this information manually if they choose and if any they make any mistakes can easily go back and edit the book. They can then either select an existing image on their device, or take a new image to attach to this book. 
 
 ### Searching for a Book
+When you click on the *Search* Button in the *Home* screen, you will be directed to the *Search* screen. The *Search* screen houses a list of all the books that are available to borrow and the books that have been requested to borrow. This screen allows you to do the following: 
+
+Search For a Book: 
++ To Search for a book, use the search bar at the top of the screen (below *BACK* button and *FILTER* button).
++ In this search bar, you can search for a book by its title or a keyword in its description. 
+
+Apply Filters: 
++ You can apply filters to filter out books that are either *Available* or *Requested* to borrow. 
++ To do so, click on the *FILTER* button at the top right of the *Search* screen, and this will display the filters that you can apply to the list of books. 
++ Select the *Available* chip to look for books that are Available, or select the *Requested* chip to look for books that have been requested to borrow. 
++ Not selecting a chip or deselecting a chip will display a list of both *Available* and *Requested* books. 
++ to hide the filter chips, you can click on the *HIDE* button which is now present instead of the *FILTER* button.
+
+Search with Applied Filters: 
++ You can perform the above two tasks in combination i.e. you can apply filters and search for books within the applied filter. 
+
+The list displays the title of the book, its author, its current status, and the owner of the book. You can click on any book in the list to view the book, request to borrow it, or edit its information if the book belongs to you. 
 
 ### Requesting and Exchanging a Book
 To request a book a user needs to click on a book that is not theirs, either by searching or from the "Latest Books" section on the home page. If the book has not been accepted or borrowed yet, the user can scroll down to the bottom of the page and hit the "Request Book" button to request the book. For exchanging a book, either the owner of the book needs to accept the request or the borrower needs to request to return the book. After selecting a location and confirming, both parties will meet at the specified location with the book and both parties need to scan the book using the "Quick Scan" function on the home page in order to exchange the book and update the status of the book in the app.

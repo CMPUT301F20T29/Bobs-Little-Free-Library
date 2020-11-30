@@ -3,6 +3,11 @@
 Bob's Little Free Library is a book sharing app created as the term project for [CMPUT 301 - Intro to Software Engineering ](https://www.ualberta.ca/computing-science/undergraduate-studies/course-directory/courses/introduction-to-software-engineering.html) in Fall of 2020. The app is for a community of readers that want to upload, borrow, lend, and exchange each other's books with ease. Take a look at a short demo [here](https://drive.google.com/file/d/1G78mErhBzyJEwKd62OLz0UABxwjl0JgC/view?usp=sharing) where two users, Mari and Lucas, go through the process of adding, requesting, and then exchanging a book. This demo showcases the UI design and the basic features of the app, a comprehensive list of it's features can be found below.
 
 ### Signing Up & Logging in
+Once you start the app, you will be taken to Login screen.
+If it's your first time using the app, sign up by clicking the "SIGN UP" button, and filling in the information on Sign Up page.
++ When adding your address, click on the search bar under "Address" section, type out your address, and click one of the auto completed address that matches yours.
++ After signing up, you'll be automatically taken to main page. Here, you can view and edit your profile by clicking on the profile button at the top.
++ When you edit your profile, you can also add phone number and biography.
 
 ### The Main Screens
 After logging in, you will see the *Home* screen. The **Home** screen houses a few things, starting from the top:	

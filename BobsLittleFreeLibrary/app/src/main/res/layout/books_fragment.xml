@@ -91,6 +91,14 @@
             android:onClick="borrowedFilterPressed"
             android:text="Borrowed" />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/filterMyBooksChip"
+            style="@style/CustomChipStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="MyBooksFilterPressed"
+            android:text="My Books" />
+
 
     </com.google.android.material.chip.ChipGroup>
 

@@ -59,6 +59,7 @@ public class BooksFragmentTest {
         assertTrue(solo.searchText("Requested"));
         assertTrue(solo.searchText("Accepted"));
         assertTrue(solo.searchText("Borrowed"));
+        assertTrue(solo.searchText("My Books"));
 
 
         // chip for Available filter
@@ -68,6 +69,7 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
 
         // chip for Requested filter
         solo.clickOnButton("Requested");
@@ -76,6 +78,7 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
         // click on Requested Again
         solo.clickOnButton("Requested");
         assertFalse(solo.isTextChecked("Requested"));
@@ -83,6 +86,7 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
 
         // chip for Accepted filter
         solo.clickOnButton("Accepted");
@@ -91,6 +95,7 @@ public class BooksFragmentTest {
         assertTrue(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
 
         // chip for Borrowed filter
         solo.clickOnButton("Borrowed");
@@ -99,6 +104,16 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertTrue(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
+
+        // chip for My Books filter
+        solo.clickOnButton("My Books");
+        assertFalse(solo.isTextChecked("Available"));
+        assertFalse(solo.isTextChecked("Requested"));
+        assertFalse(solo.isTextChecked("Accepted"));
+        assertFalse(solo.isTextChecked("Borrowed"));
+        assertFalse(solo.isTextChecked("All"));
+        assertTrue(solo.isTextChecked("My Books"));
 
         // chip for All filter
         solo.clickOnButton("All");
@@ -107,6 +122,7 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertTrue(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
         // chip for All filter again
         solo.clickOnButton("All");
         assertFalse(solo.isTextChecked("Available"));
@@ -114,6 +130,7 @@ public class BooksFragmentTest {
         assertFalse(solo.isTextChecked("Accepted"));
         assertFalse(solo.isTextChecked("Borrowed"));
         assertFalse(solo.isTextChecked("All"));
+        assertFalse(solo.isTextChecked("My Books"));
 
 
 

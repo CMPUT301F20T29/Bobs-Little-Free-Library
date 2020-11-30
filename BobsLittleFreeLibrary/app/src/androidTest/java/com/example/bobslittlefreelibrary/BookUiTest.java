@@ -65,7 +65,6 @@ public class BookUiTest {
 
         solo.assertCurrentActivity("Failed to exit AddBookActivity", MainActivity.class);
         assertTrue(solo.searchText("Title TEST"));
-        assertTrue(solo.searchText("Author TEST"));
 
         // Edit Book
         solo.clickOnText("Title TEST");
